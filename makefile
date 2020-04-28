@@ -2,7 +2,7 @@
 #
 # Use of this source code is governed by the LICENSE file in this repository.
 
-build: binary-build docker-build
+build: binary-build
 
 run: build docker-run
 
