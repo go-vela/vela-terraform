@@ -21,7 +21,7 @@ clean:
 #################################
 binary-build:
 
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -o release/terraform-plugin github.com/go-vela/vela-terraform/cmd/vela-terraform
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -o release/vela-terraform github.com/go-vela/vela-terraform/cmd/vela-terraform
 
 #################################
 ######    Docker Build     ######

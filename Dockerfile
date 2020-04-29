@@ -33,6 +33,6 @@ COPY --from=binary /bin/terraform /bin/terraform
 
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
-COPY release/terraform-plugin /bin/terraform-plugin
+COPY release/vela-terraform /bin/terraform-plugin
 
 ENTRYPOINT ["/bin/terraform-plugin"]
