@@ -16,14 +16,14 @@ type Validate struct {
 
 // Exec formats and runs the commands for removing artifacts in Artifactory.
 func (v *Validate) Exec() error {
-	logrus.Trace("running delete with provided configuration")
+	logrus.Trace("running validate with provided configuration")
 
 	return nil
 }
 
 // Validate verifies the Delete is properly configured.
 func (v *Validate) Validate() error {
-	logrus.Trace("validating delete plugin configuration")
+	logrus.Trace("validating validate plugin configuration")
 
 	return nil
 }
