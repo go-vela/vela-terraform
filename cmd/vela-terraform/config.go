@@ -33,7 +33,7 @@ type (
 	}
 )
 
-// New creates an Artifactory client for managing artifacts.
+// New creates an Terraform client for managing artifacts.
 func (c *Config) New() error {
 	logrus.Trace("creating new Terraform client from plugin configuration")
 
