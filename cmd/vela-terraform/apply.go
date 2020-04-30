@@ -25,7 +25,7 @@ type Apply struct {
 
 	// options
 
-	//p ath to backup the existing state file before modifying. i.e. "-backup=path "
+	// path to backup the existing state file before modifying. i.e. "-backup=path "
 	Backup string
 	// skip interactive approval of plan before applying. i.e. "-auto-approve"
 	AutoApprove bool
@@ -81,7 +81,7 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 
 	// check if LockTimeout is provided
 	if a.LockTimeout > 0 {
-		// add flag for backup from provided apply command
+		// add flag for LockTimeout from provided apply command
 		flags = append(flags, fmt.Sprintf("-lock-timeout=%s", a.LockTimeout))
 	}
 
