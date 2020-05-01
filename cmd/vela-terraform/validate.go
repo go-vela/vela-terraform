@@ -8,22 +8,22 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const validateAction = "validate"
+const validationAction = "validate"
 
-// Validate represents the plugin configuration for validate information.
-type Validate struct {
+// Validation represents the plugin configuration for validate information.
+type Validation struct {
 }
 
 // Exec formats and runs the commands for removing artifacts in Artifactory.
-func (v *Validate) Exec() error {
-	logrus.Trace("running validate with provided configuration")
-
+func (v *Validation) Exec() error {
+	logrus.Trace("running delete with provided configuration")
+  
 	return nil
 }
 
 // Validate verifies the Delete is properly configured.
-func (v *Validate) Validate() error {
-	logrus.Trace("validating validate plugin configuration")
+func (v *Validation) Validate() error {
+	logrus.Trace("validating delete plugin configuration")
 
 	return nil
 }
