@@ -17,7 +17,7 @@ type Validation struct {
 // Exec formats and runs the commands for removing artifacts in Artifactory.
 func (v *Validation) Exec() error {
 	logrus.Trace("running delete with provided configuration")
-  
+
 	return nil
 }
 
