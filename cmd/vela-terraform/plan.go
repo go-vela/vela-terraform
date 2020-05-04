@@ -16,14 +16,14 @@ type Plan struct {
 
 // Exec formats and runs the commands for removing artifacts in Artifactory.
 func (p *Plan) Exec() error {
-	logrus.Trace("running delete with provided configuration")
+	logrus.Trace("running plan with provided configuration")
 
 	return nil
 }
 
 // Validate verifies the Delete is properly configured.
 func (p *Plan) Validate() error {
-	logrus.Trace("validating delete plugin configuration")
+	logrus.Trace("validating plan plugin configuration")
 
 	return nil
 }
