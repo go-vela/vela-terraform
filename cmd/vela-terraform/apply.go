@@ -17,14 +17,8 @@ const applyAction = "apply"
 
 // Apply represents the plugin configuration for apply information.
 type Apply struct {
-
-	// params
-
 	// terraform file or directory to apply
 	Directory string
-
-	// options
-
 	// path to backup the existing state file before modifying. i.e. "-backup=path "
 	Backup string
 	// skip interactive approval of plan before applying. i.e. "-auto-approve"
@@ -146,7 +140,7 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 	// add the required dir param
 	flags = append(flags, dir)
 
-	return exec.Command(_terraform, flags...)
+	return exec.Command(_terraform, append([]string{applyAction}, flags...)...)
 }
 
 // Exec formats and runs the commands for removing artifacts in Artifactory.
