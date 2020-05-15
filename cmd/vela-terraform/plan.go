@@ -46,7 +46,7 @@ type Plan struct {
 	// set a variable in the Terraform configuration. i.e. "-var 'foo=bar'"
 	Var []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
-	VarFile string
+	VarFile []string
 }
 
 // Command formats and outputs the Plan command from
@@ -135,14 +135,20 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 		for _, v := range p.Var {
 			vars += fmt.Sprintf(" %s", v)
 		}
+
 		// add flag for Var from provided plan command
 		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
 	}
 
-	// check if VarFile is provided
+	// check if Var is provided
 	if len(p.VarFile) > 0 {
-		// add flag for VarFile from provided plan command
-		flags = append(flags, fmt.Sprintf("-var-file=%s", p.VarFile))
+		var files string
+		for _, v := range p.VarFile {
+			files += fmt.Sprintf("-var-file=%s ", v)
+		}
+
+		// add flag for Var from provided plan command
+		flags = append(flags, strings.TrimPrefix(files, " "))
 	}
 
 	// add the required dir param
