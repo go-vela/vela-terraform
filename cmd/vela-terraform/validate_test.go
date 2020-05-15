@@ -4,12 +4,72 @@
 
 package main
 
-import "testing"
+import (
+	"fmt"
+	"os/exec"
+	"reflect"
+	"testing"
+)
 
-func TestTerraform_Validate_Exec(t *testing.T) {
+func TestTerraform_Validation_Command(t *testing.T) {
+	// setup types
+	v := &Validation{
+		Directory:      "foobar/",
+		CheckVariables: false,
+		NoColor:        true,
+		Var:            []string{"foo=bar", "bar=foo"},
+		VarFile:        "vars.tf",
+	}
 
+	want := exec.Command(
+		_terraform,
+		validationAction,
+		fmt.Sprintf("-check-variables=%t", v.CheckVariables),
+		"-no-color",
+		fmt.Sprintf("-var=\"%s %s\"", v.Var[0], v.Var[1]),
+		fmt.Sprintf("-var-file=%s", v.VarFile),
+		v.Directory,
+	)
+
+	got := v.Command("foobar/")
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Command is %v, want %v", got, want)
+	}
 }
 
-func TestTerraform_Validate_Validate(t *testing.T) {
+func TestTerraform_Validation_Exec(t *testing.T) {
+	// setup types
+	v := &Validation{
+		Directory: "foobar/",
+	}
 
+	err := v.Exec()
+	if err == nil {
+		t.Errorf("Exec should have returned err")
+	}
+}
+
+func TestTerraform_Validation_Validate(t *testing.T) {
+	// setup types
+	tests := []struct {
+		validation *Validation
+	}{
+		{
+			validation: &Validation{Directory: "foobar/"},
+		},
+		{
+			validation: &Validation{Directory: "foobar.tf"},
+		},
+		{
+			validation: &Validation{Directory: ""},
+		},
+	}
+
+	// run test
+	for _, test := range tests {
+		err := test.validation.Validate()
+		if err != nil {
+			t.Errorf("Validate returned err: %v", err)
+		}
+	}
 }
