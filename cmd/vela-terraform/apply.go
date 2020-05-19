@@ -143,7 +143,7 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 	return exec.Command(_terraform, append([]string{applyAction}, flags...)...)
 }
 
-// Exec formats and runs the commands for removing artifacts in Artifactory.
+// Exec formats and runs the commands for applying Terraform.
 func (a *Apply) Exec() error {
 	logrus.Trace("running apply with provided configuration")
 
