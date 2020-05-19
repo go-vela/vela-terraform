@@ -13,11 +13,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const applyAction = "apply"
+const destroyAction = "destroy"
 
-// Apply represents the plugin configuration for apply information.
-type Apply struct {
-	// terraform file or directory to apply
+// Destroy represents the plugin configuration for destroy information.
+type Destroy struct {
+	// terraform file or directory to destroy
 	Directory string
 	// path to backup the existing state file before modifying. i.e. "-backup=path "
 	Backup string
@@ -27,8 +27,6 @@ type Apply struct {
 	Lock bool
 	// duration to retry a state lock. i.e. "-lock-timeout=0s"
 	LockTimeout time.Duration
-	// ask for input for variables if not directly set. i.e. "-input=true"
-	Input bool
 	// if specified, output won't contain any color. i.e. "-no-color"
 	NoColor bool
 	// limit the number of parallel resource operations. i.e. "-parallelism=n"
@@ -47,77 +45,71 @@ type Apply struct {
 	VarFile []string
 }
 
-// Command formats and outputs the Apply command from
-// the provided configuration to apply to resources.
-func (a *Apply) Command(dir string) *exec.Cmd {
-	logrus.Trace("creating terraform apply command from plugin configuration")
+// Command formats and outputs the Destroy command from
+// the provided configuration to destroy to resources.
+func (a *Destroy) Command(dir string) *exec.Cmd {
+	logrus.Trace("creating terraform destroy command from plugin configuration")
 
 	// variable to store flags for command
 	var flags []string
 
 	// check if Backup is provided
 	if len(a.Backup) > 0 {
-		// add flag for Backup from provided apply command
+		// add flag for Backup from provided destroy command
 		flags = append(flags, fmt.Sprintf("-backup=%s", a.Backup))
 	}
 
 	// check if AutoApprove is provided
 	if a.AutoApprove {
-		// add flag for AutoApprove from provided apply command
+		// add flag for AutoApprove from provided destroy command
 		flags = append(flags, "-auto-approve")
 	}
 
 	// check if Lock is provided
 	if a.Lock {
-		// add flag for Lock from provided apply command
+		// add flag for Lock from provided destroy command
 		flags = append(flags, "-lock=true")
 	}
 
 	// check if LockTimeout is provided
 	if a.LockTimeout > 0 {
-		// add flag for LockTimeout from provided apply command
+		// add flag for LockTimeout from provided destroy command
 		flags = append(flags, fmt.Sprintf("-lock-timeout=%s", a.LockTimeout))
-	}
-
-	// check if Input is provided
-	if a.Input {
-		// add flag for Input from provided apply command
-		flags = append(flags, "-input=true")
 	}
 
 	// check if NoColor is provided
 	if a.NoColor {
-		// add flag for NoColor from provided apply command
+		// add flag for NoColor from provided destroy command
 		flags = append(flags, "-no-color")
 	}
 
 	// check if Parallelism is provided
 	if a.Parallelism > 0 {
-		// add flag for Parallelism from provided apply command
+		// add flag for Parallelism from provided destroy command
 		flags = append(flags, fmt.Sprintf("-parallelism=%d", a.Parallelism))
 	}
 
 	// check if Refresh is provided
 	if a.Refresh {
-		// add flag for Refresh from provided apply command
+		// add flag for Refresh from provided destroy command
 		flags = append(flags, "-refresh=true")
 	}
 
 	// check if State is provided
 	if len(a.State) > 0 {
-		// add flag for State from provided apply command
+		// add flag for State from provided destroy command
 		flags = append(flags, fmt.Sprintf("-state=%s", a.State))
 	}
 
 	// check if StateOut is provided
 	if len(a.StateOut) > 0 {
-		// add flag for StateOut from provided apply command
+		// add flag for StateOut from provided destroy command
 		flags = append(flags, fmt.Sprintf("-state-out=%s", a.StateOut))
 	}
 
 	// check if Target is provided
 	if len(a.Target) > 0 {
-		// add flag for Target from provided apply command
+		// add flag for Target from provided destroy command
 		flags = append(flags, fmt.Sprintf("-target=%s", a.Target))
 	}
 
@@ -127,7 +119,7 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 		for _, v := range a.Var {
 			vars += fmt.Sprintf(" %s", v)
 		}
-		// add flag for Var from provided apply command
+		// add flag for Var from provided destroy command
 		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
 	}
 
@@ -145,17 +137,17 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 	// add the required dir param
 	flags = append(flags, dir)
 
-	return exec.Command(_terraform, append([]string{applyAction}, flags...)...)
+	return exec.Command(_terraform, append([]string{destroyAction}, flags...)...)
 }
 
-// Exec formats and runs the commands for applying Terraform.
-func (a *Apply) Exec() error {
-	logrus.Trace("running apply with provided configuration")
+// Exec formats and runs the commands for removing artifacts in Artifactory.
+func (d *Destroy) Exec() error {
+	logrus.Trace("running destroy with provided configuration")
 
-	// create the apply command for the file
-	cmd := a.Command(a.Directory)
+	// create the destroy command for the file
+	cmd := d.Command(d.Directory)
 
-	// run the apply command for the file
+	// run the destroy command for the file
 	err := execCmd(cmd)
 	if err != nil {
 		return err
@@ -165,14 +157,14 @@ func (a *Apply) Exec() error {
 }
 
 // Validate verifies the Delete is properly configured.
-func (a *Apply) Validate() error {
-	logrus.Trace("validating apply plugin configuration")
+func (d *Destroy) Validate() error {
+	logrus.Trace("validating destroy plugin configuration")
 
-	if len(a.Directory) == 0 {
-		logrus.Warn("terrafrom apply will run in current dir")
+	if len(d.Directory) == 0 {
+		logrus.Warn("terrafrom destroy will run in current dir")
 
 		// set the directory to run in current dir
-		a.Directory = "."
+		d.Directory = "."
 	}
 
 	return nil
