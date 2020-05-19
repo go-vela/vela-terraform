@@ -70,7 +70,7 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 	return exec.Command(_terraform, append([]string{validationAction}, flags...)...)
 }
 
-// Exec formats and runs the commands for removing artifacts in Artifactory.
+// Exec formats and runs the commands for validating Terraform.
 func (v *Validation) Exec() error {
 	logrus.Trace("running validate with provided configuration")
 
