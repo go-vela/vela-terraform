@@ -12,15 +12,14 @@ import (
 	"time"
 )
 
-func TestTerraform_Apply_Command(t *testing.T) {
+func TestTerraform_Destroy_Command(t *testing.T) {
 	// setup types
-	a := &Apply{
+	d := &Destroy{
 		Directory:   "foobar/",
 		Backup:      "backup/",
 		AutoApprove: true,
 		Lock:        true,
 		LockTimeout: 1 * time.Second,
-		Input:       true,
 		NoColor:     true,
 		Parallelism: 1,
 		Refresh:     true,
@@ -33,60 +32,59 @@ func TestTerraform_Apply_Command(t *testing.T) {
 
 	want := exec.Command(
 		_terraform,
-		applyAction,
-		fmt.Sprintf("-backup=%s", a.Backup),
+		destroyAction,
+		fmt.Sprintf("-backup=%s", d.Backup),
 		"-auto-approve",
 		"-lock=true",
-		fmt.Sprintf("-lock-timeout=%s", a.LockTimeout),
-		"-input=true",
+		fmt.Sprintf("-lock-timeout=%s", d.LockTimeout),
 		"-no-color",
-		fmt.Sprintf("-parallelism=%d", a.Parallelism),
+		fmt.Sprintf("-parallelism=%d", d.Parallelism),
 		"-refresh=true",
-		fmt.Sprintf("-state=%s", a.State),
-		fmt.Sprintf("-state-out=%s", a.StateOut),
-		fmt.Sprintf("-target=%s", a.Target),
-		fmt.Sprintf("-var=\"%s %s\"", a.Var[0], a.Var[1]),
-		fmt.Sprintf("-var-file=%s -var-file=%s ", a.VarFile[0], a.VarFile[1]),
-		a.Directory,
+		fmt.Sprintf("-state=%s", d.State),
+		fmt.Sprintf("-state-out=%s", d.StateOut),
+		fmt.Sprintf("-target=%s", d.Target),
+		fmt.Sprintf("-var=\"%s %s\"", d.Var[0], d.Var[1]),
+		fmt.Sprintf("-var-file=%s -var-file=%s ", d.VarFile[0], d.VarFile[1]),
+		d.Directory,
 	)
 
-	got := a.Command("foobar/")
+	got := d.Command("foobar/")
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
 
-func TestTerraform_Apply_Exec_Error(t *testing.T) {
+func TestTerraform_Destroy_Exec_Error(t *testing.T) {
 	// setup types
-	a := &Apply{
+	d := &Destroy{
 		Directory: "foobar/",
 	}
 
-	err := a.Exec()
+	err := d.Exec()
 	if err == nil {
 		t.Errorf("Exec should have returned err")
 	}
 }
 
-func TestTerraform_Apply_Validate(t *testing.T) {
+func TestTerraform_Destroy_Validate(t *testing.T) {
 	// setup types
 	tests := []struct {
-		apply *Apply
+		destroy *Destroy
 	}{
 		{
-			apply: &Apply{Directory: "foobar/"},
+			destroy: &Destroy{Directory: "foobar/"},
 		},
 		{
-			apply: &Apply{Directory: "foobar.tf"},
+			destroy: &Destroy{Directory: "foobar.tf"},
 		},
 		{
-			apply: &Apply{Directory: ""},
+			destroy: &Destroy{Directory: ""},
 		},
 	}
 
 	// run test
 	for _, test := range tests {
-		err := test.apply.Validate()
+		err := test.destroy.Validate()
 		if err != nil {
 			t.Errorf("Validate returned err: %v", err)
 		}
