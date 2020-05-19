@@ -65,7 +65,7 @@ func (f *FMT) Command(dir string) *exec.Cmd {
 	return exec.Command(_terraform, append([]string{fmtAction}, flags...)...)
 }
 
-// Exec formats and runs the commands for removing artifacts in Artifactory.
+// Exec formats and runs the commands for formatting Terraform files.
 func (f *FMT) Exec() error {
 	logrus.Trace("running fmt with provided configuration")
 
