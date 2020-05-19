@@ -44,7 +44,7 @@ type Apply struct {
 	// set a variable in the Terraform configuration. i.e. "-var 'foo=bar'"
 	Var []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
-	VarFile string
+	VarFile []string
 }
 
 // Command formats and outputs the Apply command from
@@ -133,8 +133,13 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 
 	// check if VarFile is provided
 	if len(a.VarFile) > 0 {
-		// add flag for VarFile from provided apply command
-		flags = append(flags, fmt.Sprintf("-var-file=%s", a.VarFile))
+		var files string
+		for _, v := range a.VarFile {
+			files += fmt.Sprintf("-var-file=%s ", v)
+		}
+
+		// add flag for Var from provided plan command
+		flags = append(flags, strings.TrimPrefix(files, " "))
 	}
 
 	// add the required dir param
