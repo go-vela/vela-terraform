@@ -140,7 +140,7 @@ func (a *Destroy) Command(dir string) *exec.Cmd {
 	return exec.Command(_terraform, append([]string{destroyAction}, flags...)...)
 }
 
-// Exec formats and runs the commands for removing artifacts in Artifactory.
+// Exec formats and runs the commands for destroying resources with Terraform.
 func (d *Destroy) Exec() error {
 	logrus.Trace("running destroy with provided configuration")
 
