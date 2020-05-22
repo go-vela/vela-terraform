@@ -259,9 +259,3 @@ func writeNetrc(machine, login, password string) error {
 	path := filepath.Join(home, ".netrc")
 	return ioutil.WriteFile(path, []byte(out), 0600)
 }
-
-const netrcFile = `
-machine %s
-login %s
-password %s
-`

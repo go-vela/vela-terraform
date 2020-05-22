@@ -7,6 +7,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/sirupsen/logrus v1.5.0
+	github.com/spf13/afero v1.2.2
 	github.com/urfave/cli/v2 v2.2.0
 	golang.org/x/sys v0.0.0-20190624142023-c5567b49c5d0 // indirect
 	golang.org/x/text v0.3.2 // indirect
