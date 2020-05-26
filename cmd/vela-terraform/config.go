@@ -37,7 +37,7 @@ type (
 		Targets     []string
 		VarFiles    []string
 
-		// action to perform against Kubernetes
+		// action to perform with Terraform
 		Action string
 		// Netrc is credentials for cloning
 		Netrc *Netrc
