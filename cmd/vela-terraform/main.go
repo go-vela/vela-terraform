@@ -217,8 +217,8 @@ func run(c *cli.Context) error {
 			State:       c.String("state"),
 			StateOut:    c.String("state-out"),
 			Target:      c.String("target"),
-			Var:         c.StringSlice("vars"),
-			VarFile:     c.StringSlice("var-files"),
+			Vars:        c.StringSlice("vars"),
+			VarFiles:    c.StringSlice("var-files"),
 		},
 		// Config configuration
 		Config: Config{

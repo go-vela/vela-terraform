@@ -113,25 +113,25 @@ func (a *Destroy) Command(dir string) *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("-target=%s", a.Target))
 	}
 
-	// check if Var is provided
+	// check if Vars is provided
 	if len(a.Vars) > 0 {
 		var vars string
 		for _, v := range a.Vars {
 			vars += fmt.Sprintf(" %s", v)
 		}
-		// add flag for Var from provided destroy command
+		// add flag for Vars from provided destroy command
 		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
 	}
 
-	// check if VarFile is provided
+	// check if VarFiles is provided
 	if len(a.VarFiles) > 0 {
 		var files string
 		for _, v := range a.VarFiles {
 			files += fmt.Sprintf("-var-file=%s ", v)
 		}
 
-		// add flag for Var from provided plan command
-		flags = append(flags, strings.TrimPrefix(files, " "))
+		// add flag for VarFiles from provided destroy command
+		flags = append(flags, strings.TrimSuffix(files, " "))
 	}
 
 	// add the required dir param

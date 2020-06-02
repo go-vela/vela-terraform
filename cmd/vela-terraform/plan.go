@@ -148,7 +148,7 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 		}
 
 		// add flag for VarFiles from provided plan command
-		flags = append(flags, strings.TrimPrefix(files, " "))
+		flags = append(flags, strings.TrimSuffix(files, " "))
 	}
 
 	// add the required dir param

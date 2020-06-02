@@ -27,7 +27,7 @@ func TestTerraform_Validation_Command(t *testing.T) {
 		fmt.Sprintf("-check-variables=%t", v.CheckVariables),
 		"-no-color",
 		fmt.Sprintf("-var=\"%s %s\"", v.Vars[0], v.Vars[1]),
-		fmt.Sprintf("-var-file=%s -var-file=%s ", v.VarFiles[0], v.VarFiles[1]),
+		fmt.Sprintf("-var-file=%s -var-file=%s", v.VarFiles[0], v.VarFiles[1]),
 		v.Directory,
 	)
 

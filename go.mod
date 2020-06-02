@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/aws/aws-sdk-go v1.30.15 // indirect
+	github.com/google/go-cmp v0.4.1 // indirect
 	github.com/hashicorp/go-getter v1.4.1
 	github.com/joho/godotenv v1.3.0
 	github.com/kr/pretty v0.1.0 // indirect

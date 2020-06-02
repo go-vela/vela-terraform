@@ -28,8 +28,8 @@ type Validation struct {
 	VarFiles []string
 }
 
-// Command formats and outputs the Apply command from
-// the provided configuration to apply to resources.
+// Command formats and outputs the Validate command from
+// the provided configuration to validate to resources.
 func (v *Validation) Command(dir string) *exec.Cmd {
 	logrus.Trace("creating terraform validate command from plugin configuration")
 
@@ -38,13 +38,13 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 
 	// check if CheckVariables is provided
 	if !v.CheckVariables {
-		// add flag for CheckVariables from provided apply command
+		// add flag for CheckVariables from provided validate command
 		flags = append(flags, fmt.Sprintf("-check-variables=%t", v.CheckVariables))
 	}
 
 	// check if NoColor is provided
 	if v.NoColor {
-		// add flag for NoColor from provided apply command
+		// add flag for NoColor from provided validate command
 		flags = append(flags, "-no-color")
 	}
 
@@ -54,7 +54,7 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 		for _, v := range v.Vars {
 			vars += fmt.Sprintf(" %s", v)
 		}
-		// add flag for Var from provided apply command
+		// add flag for Vars from provided validate command
 		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
 	}
 
@@ -65,8 +65,8 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 			files += fmt.Sprintf("-var-file=%s ", v)
 		}
 
-		// add flag for Var from provided plan command
-		flags = append(flags, strings.TrimPrefix(files, " "))
+		// add flag for VarFiles from provided validate command
+		flags = append(flags, strings.TrimSuffix(files, " "))
 	}
 
 	// add the required dir param

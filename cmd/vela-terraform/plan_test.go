@@ -48,7 +48,7 @@ func TestTerraform_Plan_Command(t *testing.T) {
 		fmt.Sprintf("-state=%s", p.State),
 		fmt.Sprintf("-target=%s", p.Target),
 		fmt.Sprintf("-var=\"%s %s\"", p.Vars[0], p.Vars[1]),
-		fmt.Sprintf("-var-file=%s -var-file=%s ", p.VarFiles[0], p.VarFiles[1]),
+		fmt.Sprintf("-var-file=%s -var-file=%s", p.VarFiles[0], p.VarFiles[1]),
 		p.Directory,
 	)
 
