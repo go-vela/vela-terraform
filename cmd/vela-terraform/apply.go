@@ -17,12 +17,12 @@ const applyAction = "apply"
 
 // Apply represents the plugin configuration for apply information.
 type Apply struct {
-	// terraform file or directory to apply
-	Directory string
-	// path to backup the existing state file before modifying. i.e. "-backup=path "
-	Backup string
 	// skip interactive approval of plan before applying. i.e. "-auto-approve"
 	AutoApprove bool
+	// path to backup the existing state file before modifying. i.e. "-backup=path "
+	Backup string
+	// terraform file or directory to apply
+	Directory string
 	// the state file when locking is supported. i.e. -lock=true
 	Lock bool
 	// duration to retry a state lock. i.e. "-lock-timeout=0s"

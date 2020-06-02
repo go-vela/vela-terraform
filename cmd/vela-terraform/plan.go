@@ -17,12 +17,12 @@ const planAction = "plan"
 
 // Plan represents the plugin configuration for plan information.
 type Plan struct {
-	// terraform file or directory to plan
-	Directory string
 	// If set, a plan will be generated to destroy all resources managed by the given configuration and state. i.e. "-destroy"
 	Destroy bool
 	// Return detailed exit codes when the command exits. i.e. "-detailed-exitcode"
 	DetailedExitCode bool
+	// terraform file or directory to plan
+	Directory string
 	// ask for input for variables if not directly set. i.e. "-input=true"
 	Input bool
 	// the state file when locking is supported. i.e. -lock=true
@@ -44,9 +44,9 @@ type Plan struct {
 	// resource to target. i.e. "-target=resource"
 	Target string
 	// set a variable in the Terraform configuration. i.e. "-var 'foo=bar'"
-	Var []string
+	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
-	VarFile []string
+	VarFiles []string
 }
 
 // Command formats and outputs the Plan command from
@@ -129,25 +129,25 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("-target=%s", p.Target))
 	}
 
-	// check if Var is provided
-	if len(p.Var) > 0 {
+	// check if Vars is provided
+	if len(p.Vars) > 0 {
 		var vars string
-		for _, v := range p.Var {
+		for _, v := range p.Vars {
 			vars += fmt.Sprintf(" %s", v)
 		}
 
-		// add flag for Var from provided plan command
+		// add flag for Vars from provided plan command
 		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
 	}
 
-	// check if Var is provided
-	if len(p.VarFile) > 0 {
+	// check if VarFiles is provided
+	if len(p.VarFiles) > 0 {
 		var files string
-		for _, v := range p.VarFile {
+		for _, v := range p.VarFiles {
 			files += fmt.Sprintf("-var-file=%s ", v)
 		}
 
-		// add flag for Var from provided plan command
+		// add flag for VarFiles from provided plan command
 		flags = append(flags, strings.TrimPrefix(files, " "))
 	}
 
