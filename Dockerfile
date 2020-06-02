@@ -2,6 +2,10 @@
 #
 # Use of this source code is governed by the LICENSE file in this repository.
 
+# set a global Docker argument for the default CLI version
+#
+# https://github.com/moby/moby/issues/37345
+ARG TERRAFORM_VERSION=0.12.26
 
 ################################################################################
 ##     docker build --no-cache --target binary -t vela-terraform:binary .     ##
@@ -9,7 +13,7 @@
 
 FROM alpine:latest as binary
 
-ENV TF_VERSION=0.12.24
+ARG TF_VERSION
 
 RUN wget -q https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -O terraform.zip && \
   unzip terraform.zip -d /bin && \
@@ -19,7 +23,7 @@ RUN wget -q https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${T
 ##     docker build --no-cache --target certs -t vela-terraform:certs .     ##
 ##############################################################################
 
-FROM alpine as certs
+FROM alpine:latest as certs
 
 RUN apk add --update --no-cache ca-certificates
 
@@ -28,6 +32,10 @@ RUN apk add --update --no-cache ca-certificates
 ###############################################################
 
 FROM scratch
+
+ARG TERRAFORM_VERSION
+
+ENV PLUGIN_TERRAFORM_VERSION=${TERRAFORM_VERSION}
 
 COPY --from=binary /bin/terraform /bin/terraform
 

@@ -149,6 +149,11 @@ func main() {
 			Usage:   "a list of var files to use. Each value is passed as -var-file=<value>",
 			EnvVars: []string{"PARAMETER_VAR_FILES"},
 		},
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_VERSION", "VELA_TERRAFORM_VERSION", "TERRAFORM_VERSION"},
+			Name:    "version",
+			Usage:   "set terraform version for plugin",
+		},
 	}
 
 	err := app.Run(os.Args)
@@ -185,18 +190,17 @@ func run(c *cli.Context) error {
 		"registry": "https://hub.docker.com/r/target/vela-terraform",
 	}).Info("Vela Terraform Plugin")
 
-	//TODO: allow someone to set the terraform version
-	// // capture custom terraform version requested
-	// version := c.String("terraform.version")
+	// capture custom terraform version requested
+	version := c.String("version")
 
-	// // check if a custom terraform version was requested
-	// if len(version) > 0 {
-	// 	// attempt to install the custom terraform version
-	// 	err := install(version, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// }
+	// check if a custom terraform version was requested
+	if len(version) > 0 {
+		// attempt to install the custom terraform version
+		err := install(version, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
+		if err != nil {
+			return err
+		}
+	}
 
 	// create the plugin
 	plugin := Plugin{
