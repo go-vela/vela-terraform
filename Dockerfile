@@ -13,7 +13,7 @@ ARG TERRAFORM_VERSION=0.12.26
 
 FROM alpine:latest as binary
 
-ARG TF_VERSION
+ARG TERRAFORM_VERSION
 
 RUN wget -q https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -O terraform.zip && \
   unzip terraform.zip -d /bin && \
