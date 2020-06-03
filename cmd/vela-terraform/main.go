@@ -45,7 +45,7 @@ func main() {
 		},
 		&cli.BoolFlag{
 			Name:    "auto-approve",
-			Usage:   "an interactive approval of of running command",
+			Usage:   "skip interactive approval of running command",
 			EnvVars: []string{"PARAMETER_AUTO_APPROVE"},
 		},
 		&cli.StringFlag{
@@ -65,7 +65,7 @@ func main() {
 		},
 		&cli.BoolFlag{
 			Name:    "destroy",
-			Usage:   "will be generated to destroy all resources managed by the given configuration and state",
+			Usage:   "destroy all resources managed by the given configuration and state",
 			EnvVars: []string{"PARAMETER_DESTROY"},
 		},
 		&cli.BoolFlag{
@@ -91,7 +91,7 @@ func main() {
 
 		&cli.BoolFlag{
 			Name:    "lock",
-			Usage:   "the state file when locking is supported",
+			Usage:   "lock the state file when locking is supported",
 			EnvVars: []string{"PARAMETER_LOCK"},
 		},
 		&cli.DurationFlag{
@@ -106,7 +106,7 @@ func main() {
 		},
 		&cli.BoolFlag{
 			Name:    "no-color",
-			Usage:   "the state file when locking is supported",
+			Usage:   "disables colors in output",
 			EnvVars: []string{"PARAMETER_NO_COLOR"},
 		},
 		&cli.StringFlag{
@@ -121,7 +121,7 @@ func main() {
 		},
 		&cli.BoolFlag{
 			Name:    "refresh",
-			Usage:   "update state prior to checking for differences/cal",
+			Usage:   "update state prior to checking for differences",
 			EnvVars: []string{"PARAMETER_REFRESH"},
 		},
 		&cli.StringFlag{
@@ -131,7 +131,7 @@ func main() {
 		},
 		&cli.StringFlag{
 			Name:    "state-out",
-			Usage:   "path to write state to that is different than state",
+			Usage:   "path to write updated state file",
 			EnvVars: []string{"PARAMETER_STATE_OUT"},
 		},
 		&cli.StringFlag{
