@@ -5,13 +5,13 @@
 package main
 
 import (
-	"encoding/json"
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
@@ -38,77 +38,108 @@ func main() {
 	// Plugin Flags
 
 	app.Flags = []cli.Flag{
-
 		&cli.StringSliceFlag{
-			Name:    "actions",
-			Usage:   "a list of actions to have terraform perform",
-			EnvVars: []string{"PARAMETER_ACTIONS"},
+			Name:    "action",
+			Usage:   "the action to have terraform perform",
+			EnvVars: []string{"PARAMETER_ACTION"},
+		},
+		&cli.BoolFlag{
+			Name:    "auto-approve",
+			Usage:   "skip interactive approval of running command",
+			EnvVars: []string{"PARAMETER_AUTO_APPROVE"},
 		},
 		&cli.StringFlag{
-			Name:    "ca_cert",
-			Usage:   "ca cert to add to your environment to allow terraform to use internal/private resources",
-			EnvVars: []string{"PARAMETER_CA_CERT"},
+			Name:    "back-up",
+			Usage:   "path to backup the existing state file",
+			EnvVars: []string{"PARAMETER_BACK_UP"},
+		},
+		&cli.BoolFlag{
+			Name:    "check",
+			Usage:   "validate if the input is formatted",
+			EnvVars: []string{"PARAMETER_CHECK"},
+		},
+		&cli.BoolFlag{
+			Name:    "check-variables",
+			Usage:   "command will check whether all required variables have been specified",
+			EnvVars: []string{"PARAMETER_CHECK_VARIABLES"},
+		},
+		&cli.BoolFlag{
+			Name:    "destroy",
+			Usage:   "destroy all resources managed by the given configuration and state",
+			EnvVars: []string{"PARAMETER_DESTROY"},
+		},
+		&cli.BoolFlag{
+			Name:    "detailed-exit-code",
+			Usage:   "return detailed exit codes when the command exits",
+			EnvVars: []string{"PARAMETER_DETAILED_EXIT_CODE"},
+		},
+		&cli.BoolFlag{
+			Name:    "diff",
+			Usage:   "diffs of formatting changes",
+			EnvVars: []string{"PARAMETER_DIFF"},
 		},
 		&cli.StringFlag{
-			Name:  "env-file",
-			Usage: "source env file",
+			Name:    "directory",
+			Usage:   "the directory for action to be performed on",
+			EnvVars: []string{"PARAMETER_DIRECTORY"},
+		},
+		&cli.BoolFlag{
+			Name:    "input",
+			Usage:   "ask for input for variables if not directly set",
+			EnvVars: []string{"PARAMETER_INPUT"},
+		},
+
+		&cli.BoolFlag{
+			Name:    "lock",
+			Usage:   "lock the state file when locking is supported",
+			EnvVars: []string{"PARAMETER_LOCK"},
+		},
+		&cli.DurationFlag{
+			Name:    "lock-timeout",
+			Usage:   "duration to retry a state lock",
+			EnvVars: []string{"PARAMETER_LOCK_TIMEOUT"},
+		},
+		&cli.IntFlag{
+			Name:    "module-depth",
+			Usage:   "specifies the depth of modules to show in the output",
+			EnvVars: []string{"PARAMETER_MODULE_DEPTH"},
+		},
+		&cli.BoolFlag{
+			Name:    "no-color",
+			Usage:   "disables colors in output",
+			EnvVars: []string{"PARAMETER_NO_COLOR"},
 		},
 		&cli.StringFlag{
-			Name:    "init_options",
-			Usage:   "options for the init command. See https://www.terraform.io/docs/commands/init.html",
-			EnvVars: []string{"PARAMETER_INIT_OPTIONS"},
-		},
-		&cli.StringFlag{
-			Name:    "fmt_options",
-			Usage:   "options for the fmt command. See https://www.terraform.io/docs/commands/fmt.html",
-			EnvVars: []string{"PARAMETER_FMT_OPTIONS"},
+			Name:    "out",
+			Usage:   "write a plan file to the given path",
+			EnvVars: []string{"PARAMETER_OUT"},
 		},
 		&cli.IntFlag{
 			Name:    "parallelism",
-			Usage:   "The number of concurrent operations as Terraform walks its graph",
+			Usage:   "number of concurrent operations as Terraform walks its graph",
 			EnvVars: []string{"PARAMETER_PARALLELISM"},
 		},
-		&cli.StringFlag{
-			Name:    "netrc.machine",
-			Usage:   "netrc machine",
-			EnvVars: []string{"VELA_NETRC_MACHINE"},
-		},
-		&cli.StringFlag{
-			Name:    "netrc.username",
-			Usage:   "netrc username",
-			EnvVars: []string{"VELA_NETRC_USERNAME"},
-		},
-		&cli.StringFlag{
-			Name:    "netrc.password",
-			Usage:   "netrc password",
-			EnvVars: []string{"VELA_NETRC_PASSWORD"},
-		},
-		&cli.StringFlag{
-			Name:    "role_arn_to_assume",
-			Usage:   "A role to assume before running the terraform commands",
-			EnvVars: []string{"PARAMETER_ROLE_ARN_TO_ASSUME"},
-		},
-		&cli.StringFlag{
-			Name:    "root_dir",
-			Usage:   "The root directory where the terraform files live. When unset, the top level directory will be assumed",
-			EnvVars: []string{"PARAMETER_ROOT_DIR"},
-		},
-		&cli.StringFlag{
-			Name:    "secrets",
-			Usage:   "a map of secrets to pass to the Terraform `plan` and `apply` commands. Each value is passed as a `<key>=<ENV>` option",
-			EnvVars: []string{"PARAMETER_SECRETS"},
-		},
 		&cli.BoolFlag{
-			Name:    "sensitive",
-			Usage:   "whether or not to suppress terraform commands to stdout",
-			EnvVars: []string{"PARAMETER_SENSITIVE"},
+			Name:    "refresh",
+			Usage:   "update state prior to checking for differences",
+			EnvVars: []string{"PARAMETER_REFRESH"},
+		},
+		&cli.StringFlag{
+			Name:    "state",
+			Usage:   "path to read and save state",
+			EnvVars: []string{"PARAMETER_STATE"},
+		},
+		&cli.StringFlag{
+			Name:    "state-out",
+			Usage:   "path to write updated state file",
+			EnvVars: []string{"PARAMETER_STATE_OUT"},
+		},
+		&cli.StringFlag{
+			Name:    "target",
+			Usage:   "resource to target",
+			EnvVars: []string{"PARAMETER_TARGET"},
 		},
 		&cli.StringSliceFlag{
-			Name:    "targets",
-			Usage:   "targets to run apply or plan on",
-			EnvVars: []string{"PARAMETER_TARGETS"},
-		},
-		&cli.StringFlag{
 			Name:    "vars",
 			Usage:   "a map of variables to pass to the Terraform `plan` and `apply` commands. Each value is passed as a `<key>=<value>` option",
 			EnvVars: []string{"PARAMETER_VARS"},
@@ -117,6 +148,11 @@ func main() {
 			Name:    "var_files",
 			Usage:   "a list of var files to use. Each value is passed as -var-file=<value>",
 			EnvVars: []string{"PARAMETER_VAR_FILES"},
+		},
+		&cli.StringFlag{
+			EnvVars: []string{"PARAMETER_VERSION", "VELA_TERRAFORM_VERSION", "TERRAFORM_VERSION"},
+			Name:    "version",
+			Usage:   "set terraform version for plugin",
 		},
 	}
 
@@ -154,47 +190,93 @@ func run(c *cli.Context) error {
 		"registry": "https://hub.docker.com/r/target/vela-terraform",
 	}).Info("Vela Terraform Plugin")
 
-	if c.String("env-file") != "" {
-		_ = godotenv.Load(c.String("env-file"))
-	}
+	// capture custom terraform version requested
+	version := c.String("version")
 
-	var vars map[string]string
-	if c.String("vars") != "" {
-		if err := json.Unmarshal([]byte(c.String("vars")), &vars); err != nil {
-			panic(err)
-		}
-	}
-	var secrets map[string]string
-	if c.String("secrets") != "" {
-		if err := json.Unmarshal([]byte(c.String("secrets")), &secrets); err != nil {
-			panic(err)
+	// check if a custom terraform version was requested
+	if len(version) > 0 {
+		// attempt to install the custom terraform version
+		err := install(version, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
+		if err != nil {
+			return err
 		}
 	}
 
-	initOptions := InitOptions{}
-	json.Unmarshal([]byte(c.String("init_options")), &initOptions)
-	fmtOptions := FmtOptions{}
-	json.Unmarshal([]byte(c.String("fmt_options")), &fmtOptions)
-
+	// create the plugin
 	plugin := Plugin{
-		Config: Config{
-			Actions:     c.StringSlice("actions"),
-			Vars:        vars,
-			Secrets:     secrets,
-			InitOptions: initOptions,
-			FmtOptions:  fmtOptions,
-			Cacert:      c.String("ca_cert"),
-			Sensitive:   c.Bool("sensitive"),
-			RoleARN:     c.String("role_arn_to_assume"),
-			RootDir:     c.String("root_dir"),
+		// Apply configuration
+		Apply: &Apply{
+			AutoApprove: c.Bool("auto-approve"),
+			Backup:      c.String("backup"),
+			Directory:   c.String("directory"),
+			Lock:        c.Bool("lock"),
+			LockTimeout: c.Duration("lock-timeout"),
+			NoColor:     c.Bool("no-color"),
 			Parallelism: c.Int("parallelism"),
-			Targets:     c.StringSlice("targets"),
-			VarFiles:    c.StringSlice("var_files"),
+			Refresh:     c.Bool("refresh"),
+			State:       c.String("state"),
+			StateOut:    c.String("state-out"),
+			Target:      c.String("target"),
+			Vars:        c.StringSlice("vars"),
+			VarFiles:    c.StringSlice("var-files"),
 		},
-		Netrc: Netrc{
-			Login:    c.String("netrc.username"),
-			Machine:  c.String("netrc.machine"),
-			Password: c.String("netrc.password"),
+		// Config configuration
+		Config: Config{
+			Action: c.String("action"),
+			Netrc: &Netrc{
+				Login:    c.String("netrc.username"),
+				Machine:  c.String("netrc.machine"),
+				Password: c.String("netrc.password"),
+			},
+		},
+		// Destroy configuration
+		Destroy: &Destroy{
+			AutoApprove: c.Bool("auto-approve"),
+			Backup:      c.String("backup"),
+			Directory:   c.String("directory"),
+			Lock:        c.Bool("lock"),
+			LockTimeout: c.Duration("lock-timeout"),
+			NoColor:     c.Bool("no-color"),
+			Parallelism: c.Int("parallelism"),
+			Refresh:     c.Bool("refresh"),
+			State:       c.String("state"),
+			StateOut:    c.String("state-out"),
+			Target:      c.String("target"),
+			Vars:        c.StringSlice("vars"),
+			VarFiles:    c.StringSlice("var-files"),
+		},
+		// FMT configuration
+		FMT: &FMT{
+			Check:     c.Bool("check"),
+			Diff:      c.Bool("diff"),
+			Directory: c.String("directory"),
+			List:      c.Bool("list"),
+			Write:     c.Bool("write"),
+		},
+		// Plan configuration
+		Plan: &Plan{
+			Destroy:          c.Bool("destroy"),
+			DetailedExitCode: c.Bool("detailed-exit-code"),
+			Directory:        c.String("directory"),
+			Input:            c.Bool("input"),
+			Lock:             c.Bool("lock"),
+			LockTimeout:      c.Duration("lock-timeout"),
+			ModuleDepth:      c.Int("module-depth"),
+			NoColor:          c.Bool("no-color"),
+			Parallelism:      c.Int("parallelism"),
+			Refresh:          c.Bool("refresh"),
+			State:            c.String("state"),
+			Target:           c.String("target"),
+			Vars:             c.StringSlice("vars"),
+			VarFiles:         c.StringSlice("var-files"),
+		},
+		// Validation configuration
+		Validation: &Validation{
+			CheckVariables: c.Bool("check-variables"),
+			Directory:      c.String("directory"),
+			NoColor:        c.Bool("no-color"),
+			Vars:           c.StringSlice("vars"),
+			VarFiles:       c.StringSlice("var-files"),
 		},
 	}
 

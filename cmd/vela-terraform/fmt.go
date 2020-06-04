@@ -15,16 +15,16 @@ const fmtAction = "fmt"
 
 // FMT represents the plugin configuration for fmt information.
 type FMT struct {
+	// Check if the input is formatted
+	Check bool
+	// Display diffs of formatting changes
+	Diff bool
 	// terraform file or directory to fmt
 	Directory string
 	// List files whose formatting differs
 	List bool
 	// Write result to source file instead of STDOUT
 	Write bool
-	// Display diffs of formatting changes
-	Diff bool
-	// Check if the input is formatted
-	Check bool
 }
 
 // Command formats and outputs the FMT command from

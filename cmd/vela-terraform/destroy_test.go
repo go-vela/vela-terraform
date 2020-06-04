@@ -26,15 +26,15 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 		State:       "state.tf",
 		StateOut:    "stateout.tf",
 		Target:      "target.tf",
-		Var:         []string{"foo=bar", "bar=foo"},
-		VarFile:     []string{"vars1.tf", "vars2.tf"},
+		Vars:        []string{"foo=bar", "bar=foo"},
+		VarFiles:    []string{"vars1.tf", "vars2.tf"},
 	}
 
 	want := exec.Command(
 		_terraform,
 		destroyAction,
-		fmt.Sprintf("-backup=%s", d.Backup),
 		"-auto-approve",
+		fmt.Sprintf("-backup=%s", d.Backup),
 		"-lock=true",
 		fmt.Sprintf("-lock-timeout=%s", d.LockTimeout),
 		"-no-color",
@@ -43,8 +43,8 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 		fmt.Sprintf("-state=%s", d.State),
 		fmt.Sprintf("-state-out=%s", d.StateOut),
 		fmt.Sprintf("-target=%s", d.Target),
-		fmt.Sprintf("-var=\"%s %s\"", d.Var[0], d.Var[1]),
-		fmt.Sprintf("-var-file=%s -var-file=%s ", d.VarFile[0], d.VarFile[1]),
+		fmt.Sprintf("-var=\"%s %s\"", d.Vars[0], d.Vars[1]),
+		fmt.Sprintf("-var-file=%s -var-file=%s", d.VarFiles[0], d.VarFiles[1]),
 		d.Directory,
 	)
 

@@ -16,20 +16,20 @@ const validationAction = "validate"
 
 // Validation represents the plugin configuration for validate information.
 type Validation struct {
-	// terraform file or directory to apply
-	Directory string
 	//  If set to true (default), the command will check whether all required variables have been specified. i.e. "-check-variables=true"
 	CheckVariables bool
+	// terraform file or directory to apply
+	Directory string
 	// if specified, output won't contain any color. i.e. "-no-color"
 	NoColor bool
 	// set a variable in the Terraform configuration. i.e. "-var 'foo=bar'"
-	Var []string
+	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
-	VarFile string
+	VarFiles []string
 }
 
-// Command formats and outputs the Apply command from
-// the provided configuration to apply to resources.
+// Command formats and outputs the Validate command from
+// the provided configuration to validate to resources.
 func (v *Validation) Command(dir string) *exec.Cmd {
 	logrus.Trace("creating terraform validate command from plugin configuration")
 
@@ -38,30 +38,35 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 
 	// check if CheckVariables is provided
 	if !v.CheckVariables {
-		// add flag for CheckVariables from provided apply command
+		// add flag for CheckVariables from provided validate command
 		flags = append(flags, fmt.Sprintf("-check-variables=%t", v.CheckVariables))
 	}
 
 	// check if NoColor is provided
 	if v.NoColor {
-		// add flag for NoColor from provided apply command
+		// add flag for NoColor from provided validate command
 		flags = append(flags, "-no-color")
 	}
 
-	// check if Var is provided
-	if len(v.Var) > 0 {
+	// check if Vars is provided
+	if len(v.Vars) > 0 {
 		var vars string
-		for _, v := range v.Var {
+		for _, v := range v.Vars {
 			vars += fmt.Sprintf(" %s", v)
 		}
-		// add flag for Var from provided apply command
+		// add flag for Vars from provided validate command
 		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
 	}
 
-	// check if VarFile is provided
-	if len(v.VarFile) > 0 {
-		// add flag for VarFile from provided apply command
-		flags = append(flags, fmt.Sprintf("-var-file=%s", v.VarFile))
+	// check if VarFiles is provided
+	if len(v.VarFiles) > 0 {
+		var files string
+		for _, v := range v.VarFiles {
+			files += fmt.Sprintf("-var-file=%s ", v)
+		}
+
+		// add flag for VarFiles from provided validate command
+		flags = append(flags, strings.TrimSuffix(files, " "))
 	}
 
 	// add the required dir param

@@ -28,8 +28,8 @@ func TestTerraform_Plan_Command(t *testing.T) {
 		Refresh:          true,
 		State:            "state.tf",
 		Target:           "target.tf",
-		Var:              []string{"foo=bar", "bar=foo"},
-		VarFile:          []string{"vars1.tf", "vars2.tf"},
+		Vars:             []string{"foo=bar", "bar=foo"},
+		VarFiles:         []string{"vars1.tf", "vars2.tf"},
 	}
 
 	want := exec.Command(
@@ -47,8 +47,8 @@ func TestTerraform_Plan_Command(t *testing.T) {
 		"-refresh=true",
 		fmt.Sprintf("-state=%s", p.State),
 		fmt.Sprintf("-target=%s", p.Target),
-		fmt.Sprintf("-var=\"%s %s\"", p.Var[0], p.Var[1]),
-		fmt.Sprintf("-var-file=%s -var-file=%s ", p.VarFile[0], p.VarFile[1]),
+		fmt.Sprintf("-var=\"%s %s\"", p.Vars[0], p.Vars[1]),
+		fmt.Sprintf("-var-file=%s -var-file=%s", p.VarFiles[0], p.VarFiles[1]),
 		p.Directory,
 	)
 
