@@ -15,9 +15,9 @@ import (
 func TestTerraform_Plan_Command(t *testing.T) {
 	// setup types
 	p := &Plan{
-		Directory:        "foobar/",
 		Destroy:          true,
 		DetailedExitCode: true,
+		Directory:        "foobar/",
 		Input:            true,
 		Lock:             true,
 		LockTimeout:      1 * time.Second,

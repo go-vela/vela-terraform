@@ -55,16 +55,16 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 	// variable to store flags for command
 	var flags []string
 
-	// check if Backup is provided
-	if len(a.Backup) > 0 {
-		// add flag for Backup from provided apply command
-		flags = append(flags, fmt.Sprintf("-backup=%s", a.Backup))
-	}
-
 	// check if AutoApprove is provided
 	if a.AutoApprove {
 		// add flag for AutoApprove from provided apply command
 		flags = append(flags, "-auto-approve")
+	}
+
+	// check if Backup is provided
+	if len(a.Backup) > 0 {
+		// add flag for Backup from provided apply command
+		flags = append(flags, fmt.Sprintf("-backup=%s", a.Backup))
 	}
 
 	// check if Lock is provided

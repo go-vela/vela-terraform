@@ -14,8 +14,8 @@ import (
 func TestTerraform_Validation_Command(t *testing.T) {
 	// setup types
 	v := &Validation{
-		Directory:      "foobar/",
 		CheckVariables: false,
+		Directory:      "foobar/",
 		NoColor:        true,
 		Vars:           []string{"foo=bar", "bar=foo"},
 		VarFiles:       []string{"vars1.tf", "vars2.tf"},

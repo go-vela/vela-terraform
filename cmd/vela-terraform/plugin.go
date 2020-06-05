@@ -17,9 +17,11 @@ type (
 		// Apply arguments loaded for the plugin
 		Apply *Apply
 		// config arguments loaded for the plugin
-		Config Config
+		Config *Config
 		// Destroy arguments loaded for the plugin
 		Destroy *Destroy
+		// InitOptions arguments loaded for the plugin
+		InitOptions *InitOptions
 		// FMT arguments loaded for the plugin
 		FMT *FMT
 		// Plan arguments loaded for the plugin
@@ -47,6 +49,24 @@ func (p *Plugin) Exec() error {
 
 	// output terraform version for troubleshooting
 	err = execCmd(versionCmd())
+	if err != nil {
+		return err
+	}
+
+	// unmarshal any config passed to init process
+	err = p.InitOptions.Unmarshal()
+	if err != nil {
+		return err
+	}
+
+	// initialize a new or existing Terraform working directory
+	err = p.InitOptions.Init.Exec()
+	if err != nil {
+		return err
+	}
+
+	// retrieve terraform modules for actions
+	err = execCmd(getCmd())
 	if err != nil {
 		return err
 	}
