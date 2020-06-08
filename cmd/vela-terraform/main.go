@@ -107,12 +107,12 @@ func main() {
 		},
 		&cli.StringSliceFlag{
 			Name:    "apply.vars",
-			Usage:   "a map of variables to pass to the Terraform `plan` and `apply` commands. Each value is passed as a `<key>=<value>` option",
+			Usage:   "a map of variables to pass to the Terraform (`<key>=<value>`)",
 			EnvVars: []string{"PARAMETER_VARS"},
 		},
 		&cli.StringSliceFlag{
 			Name:    "apply.var_files",
-			Usage:   "a list of var files to use. Each value is passed as -var-file=<value>",
+			Usage:   "a list of var files to use",
 			EnvVars: []string{"PARAMETER_VAR_FILES"},
 		},
 
@@ -196,12 +196,12 @@ func main() {
 		},
 		&cli.StringSliceFlag{
 			Name:    "destroy.vars",
-			Usage:   "a map of variables to pass to the Terraform each value is passed as a `<key>=<value>` option",
+			Usage:   "a map of variables to pass to the Terraform (`<key>=<value>`)",
 			EnvVars: []string{"PARAMETER_VARS"},
 		},
 		&cli.StringSliceFlag{
 			Name:    "destroy.var_files",
-			Usage:   "a list of var files to use. Each value is passed as -var-file=<value>",
+			Usage:   "a list of var files to use",
 			EnvVars: []string{"PARAMETER_VAR_FILES"},
 		},
 
@@ -307,12 +307,12 @@ func main() {
 		},
 		&cli.StringSliceFlag{
 			Name:    "plan.vars",
-			Usage:   "a map of variables to pass to the Terraform each value is passed as a `<key>=<value>` option",
+			Usage:   "a map of variables to pass to the Terraform (`<key>=<value>`)",
 			EnvVars: []string{"PARAMETER_VARS"},
 		},
 		&cli.StringSliceFlag{
 			Name:    "plan.var_files",
-			Usage:   "a list of var files to use. Each value is passed as -var-file=<value>",
+			Usage:   "a list of var files to use",
 			EnvVars: []string{"PARAMETER_VAR_FILES"},
 		},
 
@@ -334,12 +334,12 @@ func main() {
 		},
 		&cli.StringSliceFlag{
 			Name:    "validation.vars",
-			Usage:   "a map of variables to pass to the Terraform `plan` and `apply` commands. Each value is passed as a `<key>=<value>` option",
+			Usage:   "a map of variables to pass to the Terraform (`<key>=<value>`)",
 			EnvVars: []string{"PARAMETER_VARS"},
 		},
 		&cli.StringSliceFlag{
 			Name:    "validation.var_files",
-			Usage:   "a list of var files to use. Each value is passed as -var-file=<value>",
+			Usage:   "a list of var files to use",
 			EnvVars: []string{"PARAMETER_VAR_FILES"},
 		},
 	}
