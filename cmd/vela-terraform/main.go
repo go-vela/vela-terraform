@@ -234,6 +234,11 @@ func main() {
 
 		// InitOptions flags
 		&cli.StringFlag{
+			Name:    "init.directory",
+			Usage:   "the directory for action to be performed on",
+			EnvVars: []string{"PARAMETER_DIRECTORY"},
+		},
+		&cli.StringFlag{
 			EnvVars: []string{"PARAMETER_INIT_OPTIONS"},
 			Name:    "init.options",
 			Usage:   "properties to set on terraform init action",
@@ -437,8 +442,9 @@ func run(c *cli.Context) error {
 			Write:     c.Bool("fmt.write"),
 		},
 		// Config configuration
-		InitOptions: &InitOptions{
-			RawInit: c.String("init.options"),
+		Init: &Init{
+			Directory: c.String("init.directory"),
+			RawInit:   c.String("init.options"),
 		},
 		// Plan configuration
 		Plan: &Plan{

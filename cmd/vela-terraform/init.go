@@ -19,12 +19,20 @@ const initAction = "init"
 type (
 	// Init represents the plugin configuration for init information.
 	Init struct {
+		// terraform file or directory to init
+		Directory string
+		// init for initialize a new or existing Terraform working directory
+		InitOptions *InitOptions
+		// raw input of init options provided for plugin
+		RawInit string
+	}
+
+	// InitOptions represents the plugin configuration for options for init.
+	InitOptions struct {
 		// Configure the backend for this configuration i.e. "-backend=true"
 		Backend bool
 		// This is merged with what is in the configuration file i.e. "-backend-config=path"
 		BackendConfigs []string
-		// terraform file or directory to init
-		Directory string
 		// Suppress prompts about copying state data i.e. "-force-copy"
 		ForceCopy bool
 		// Copy the contents of the given module into the target directory before initialization. "-from-module=SOURCE"
@@ -50,13 +58,6 @@ type (
 		// Verify the authenticity and integrity of automatically downloaded plugins i.e. "-verify-plugins=true"
 		VerifyPlugins bool
 	}
-
-	InitOptions struct {
-		// init for initialize a new or existing Terraform working directory
-		Init *Init
-		// raw input of init options provided for plugin
-		RawInit string
-	}
 )
 
 // Command formats and outputs the Init command from
@@ -68,15 +69,15 @@ func (i *Init) Command(dir string) *exec.Cmd {
 	var flags []string
 
 	// check if Backend is provided
-	if i.Backend {
+	if i.InitOptions.Backend {
 		// add flag for Backend from provided init command
 		flags = append(flags, "-backend=true")
 	}
 
 	// check if BackendConfigs is provided
-	if len(i.BackendConfigs) > 0 {
+	if len(i.InitOptions.BackendConfigs) > 0 {
 		var configs string
-		for _, v := range i.BackendConfigs {
+		for _, v := range i.InitOptions.BackendConfigs {
 			configs += fmt.Sprintf("-backend-config=%s ", v)
 		}
 
@@ -85,57 +86,57 @@ func (i *Init) Command(dir string) *exec.Cmd {
 	}
 
 	// check if ForceCopy is provided
-	if i.ForceCopy {
+	if i.InitOptions.ForceCopy {
 		// add flag for ForceCopy from provided init command
 		flags = append(flags, "-force-copy")
 	}
 
 	// check if FromModule is provided
-	if len(i.FromModule) > 0 {
+	if len(i.InitOptions.FromModule) > 0 {
 		// add flag for FromModule from provided init command
-		flags = append(flags, fmt.Sprintf("-from-module=%s", i.FromModule))
+		flags = append(flags, fmt.Sprintf("-from-module=%s", i.InitOptions.FromModule))
 	}
 
 	// check if Get is provided
-	if i.Get {
+	if i.InitOptions.Get {
 		// add flag for Get from provided init command
 		flags = append(flags, "-get=true")
 	}
 
 	// check if GetPlugins is provided
-	if i.GetPlugins {
+	if i.InitOptions.GetPlugins {
 		// add flag for GetPlugins from provided init command
 		flags = append(flags, "-get-plugins=true")
 	}
 
 	// check if Input is provided
-	if i.Input {
+	if i.InitOptions.Input {
 		// add flag for Input from provided init command
 		flags = append(flags, "-input=true")
 	}
 
 	// check if Lock is provided
-	if i.Lock {
+	if i.InitOptions.Lock {
 		// add flag for Lock from provided init command
 		flags = append(flags, "-lock=true")
 	}
 
 	// check if LockTimeout is provided
-	if i.LockTimeout > 0 {
+	if i.InitOptions.LockTimeout > 0 {
 		// add flag for LockTimeout from provided init command
-		flags = append(flags, fmt.Sprintf("-lock-timeout=%s", i.LockTimeout))
+		flags = append(flags, fmt.Sprintf("-lock-timeout=%s", i.InitOptions.LockTimeout))
 	}
 
 	// check if NoColor is provided
-	if i.NoColor {
+	if i.InitOptions.NoColor {
 		// add flag for NoColor from provided init command
 		flags = append(flags, "-no-color")
 	}
 
 	// check if PluginDirs is provided
-	if len(i.PluginDirs) > 0 {
+	if len(i.InitOptions.PluginDirs) > 0 {
 		var configs string
-		for _, v := range i.PluginDirs {
+		for _, v := range i.InitOptions.PluginDirs {
 			configs += fmt.Sprintf("-plugin-dir=%s ", v)
 		}
 
@@ -144,19 +145,19 @@ func (i *Init) Command(dir string) *exec.Cmd {
 	}
 
 	// check if Reconfigure is provided
-	if i.Reconfigure {
+	if i.InitOptions.Reconfigure {
 		// add flag for Reconfigure from provided init command
 		flags = append(flags, "-reconfigure")
 	}
 
 	// check if Upgrade is provided
-	if i.Upgrade {
+	if i.InitOptions.Upgrade {
 		// add flag for Upgrade from provided init command
 		flags = append(flags, "-upgrade=false")
 	}
 
 	// check if VerifyPlugins is provided
-	if i.VerifyPlugins {
+	if i.InitOptions.VerifyPlugins {
 		// add flag for VerifyPlugins from provided init command
 		flags = append(flags, "-verify-plugins=true")
 	}
@@ -199,16 +200,21 @@ func (i *Init) Validate() error {
 
 // Unmarshal captures the provided properties and
 // serializes them into their expected form.
-func (opts *InitOptions) Unmarshal() error {
+func (i *Init) Unmarshal() error {
 	logrus.Trace("unmarshaling init options")
 
-	// cast raw properties into bytes
-	bytes := []byte(opts.RawInit)
+	i.InitOptions = &InitOptions{}
 
-	// serialize raw properties into expected Props type
-	err := json.Unmarshal(bytes, &opts.Init)
-	if err != nil {
-		return err
+	// check if any options were passed
+	if len(i.RawInit) > 0 {
+		// cast raw properties into bytes
+		bytes := []byte(i.RawInit)
+
+		// serialize raw properties into expected Props type
+		err := json.Unmarshal(bytes, &i.InitOptions)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
