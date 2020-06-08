@@ -37,7 +37,7 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 	var flags []string
 
 	// check if CheckVariables is provided
-	if !v.CheckVariables {
+	if v.CheckVariables {
 		// add flag for CheckVariables from provided validate command
 		flags = append(flags, fmt.Sprintf("-check-variables=%t", v.CheckVariables))
 	}
