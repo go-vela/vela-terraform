@@ -117,7 +117,7 @@ The following parameters can be used within the `init_options` to configure the 
 | `lock_timeout`    | duration to retry a state lock                                                        | `false`  | `N/A`   |
 | `no_color`        | disables colors in output                                                             | `false`  | `N/A`   |
 | `plugin_dirs`     | directory containing plugin binaries; overrides all default search paths for plugins  | `false`  | `N/A`   |
-| `reconfigure`     | Reconfigure the backend, ignoring any saved configuration                             | `false`  | `N/A`   |
+| `reconfigure`     | reconfigure the backend, ignoring any saved configuration                             | `false`  | `N/A`   |
 | `upgrade`         | install the latest version allowed within configured constraints                      | `false`  | `N/A`   |
 | `verify_plugins`  | verify the authenticity and integrity of automatically downloaded plugins             | `false`  | `N/A`   |
 
