@@ -64,6 +64,7 @@ func main() {
 			Name:    "apply.directory",
 			Usage:   "the directory for action to be performed on",
 			EnvVars: []string{"PARAMETER_DIRECTORY"},
+			Value:   ".",
 		},
 		&cli.BoolFlag{
 			Name:    "apply.lock",
@@ -153,6 +154,7 @@ func main() {
 			Name:    "destroy.directory",
 			Usage:   "the directory for action to be performed on",
 			EnvVars: []string{"PARAMETER_DIRECTORY"},
+			Value:   ".",
 		},
 		&cli.BoolFlag{
 			Name:    "destroy.lock",
@@ -220,6 +222,7 @@ func main() {
 			Name:    "fmt.directory",
 			Usage:   "the directory for action to be performed on",
 			EnvVars: []string{"PARAMETER_DIRECTORY"},
+			Value:   ".",
 		},
 		&cli.BoolFlag{
 			Name:    "fmt.list",
@@ -237,6 +240,7 @@ func main() {
 			Name:    "init.directory",
 			Usage:   "the directory for action to be performed on",
 			EnvVars: []string{"PARAMETER_DIRECTORY"},
+			Value:   ".",
 		},
 		&cli.StringFlag{
 			EnvVars: []string{"PARAMETER_INIT_OPTIONS"},
@@ -259,6 +263,7 @@ func main() {
 			Name:    "plan.directory",
 			Usage:   "the directory for action to be performed on",
 			EnvVars: []string{"PARAMETER_DIRECTORY"},
+			Value:   ".",
 		},
 		&cli.BoolFlag{
 			Name:    "plan.lock",
@@ -326,6 +331,7 @@ func main() {
 			Name:    "validation.directory",
 			Usage:   "the directory for action to be performed on",
 			EnvVars: []string{"PARAMETER_DIRECTORY"},
+			Value:   ".",
 		},
 		&cli.BoolFlag{
 			Name:    "validation.no-color",

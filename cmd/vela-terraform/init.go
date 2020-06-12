@@ -186,13 +186,10 @@ func (i *Init) Exec() error {
 
 // Validate verifies the Init is properly configured.
 func (i *Init) Validate() error {
-	logrus.Trace("validating init plugin configuration")
+	logrus.Trace("validating plan plugin configuration")
 
-	if len(i.Directory) == 0 {
+	if strings.EqualFold(i.Directory, ".") {
 		logrus.Warn("terrafrom init will run in current dir")
-
-		// set the directory to run in current dir
-		i.Directory = "."
 	}
 
 	return nil

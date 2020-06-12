@@ -7,6 +7,7 @@ package main
 import (
 	"fmt"
 	"os/exec"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -83,13 +84,10 @@ func (f *FMT) Exec() error {
 
 // Validate verifies the Delete is properly configured.
 func (f *FMT) Validate() error {
-	logrus.Trace("validating fmt plugin configuration")
+	logrus.Trace("validating plan plugin configuration")
 
-	if len(f.Directory) == 0 {
+	if strings.EqualFold(f.Directory, ".") {
 		logrus.Warn("terrafrom fmt will run in current dir")
-
-		// set the directory to run in current dir
-		f.Directory = "."
 	}
 
 	return nil

@@ -93,13 +93,10 @@ func (v *Validation) Exec() error {
 
 // Validate verifies the Delete is properly configured.
 func (v *Validation) Validate() error {
-	logrus.Trace("validating validate plugin configuration")
+	logrus.Trace("validating plan plugin configuration")
 
-	if len(v.Directory) == 0 {
+	if strings.EqualFold(v.Directory, ".") {
 		logrus.Warn("terrafrom validate will run in current dir")
-
-		// set the directory to run in current dir
-		v.Directory = "."
 	}
 
 	return nil
