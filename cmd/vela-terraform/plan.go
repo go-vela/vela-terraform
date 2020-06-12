@@ -177,11 +177,8 @@ func (p *Plan) Exec() error {
 func (p *Plan) Validate() error {
 	logrus.Trace("validating plan plugin configuration")
 
-	if len(p.Directory) == 0 {
+	if strings.EqualFold(p.Directory, ".") {
 		logrus.Warn("terrafrom plan will run in current dir")
-
-		// set the directory to run in current dir
-		p.Directory = "."
 	}
 
 	return nil

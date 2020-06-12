@@ -15,9 +15,9 @@ import (
 func TestTerraform_Destroy_Command(t *testing.T) {
 	// setup types
 	d := &Destroy{
-		Directory:   "foobar/",
-		Backup:      "backup/",
 		AutoApprove: true,
+		Backup:      "backup/",
+		Directory:   "foobar/",
 		Lock:        true,
 		LockTimeout: 1 * time.Second,
 		NoColor:     true,

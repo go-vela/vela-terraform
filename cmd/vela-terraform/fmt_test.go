@@ -14,11 +14,11 @@ import (
 func TestTerraform_FMT_Command(t *testing.T) {
 	// setup types
 	f := &FMT{
+		Check:     true,
+		Diff:      true,
 		Directory: "foobar/",
 		List:      false,
 		Write:     false,
-		Diff:      true,
-		Check:     true,
 	}
 
 	want := exec.Command(

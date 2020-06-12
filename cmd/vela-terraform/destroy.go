@@ -158,13 +158,10 @@ func (d *Destroy) Exec() error {
 
 // Validate verifies the Delete is properly configured.
 func (d *Destroy) Validate() error {
-	logrus.Trace("validating destroy plugin configuration")
+	logrus.Trace("validating plan plugin configuration")
 
-	if len(d.Directory) == 0 {
+	if strings.EqualFold(d.Directory, ".") {
 		logrus.Warn("terrafrom destroy will run in current dir")
-
-		// set the directory to run in current dir
-		d.Directory = "."
 	}
 
 	return nil

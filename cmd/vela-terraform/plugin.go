@@ -17,9 +17,11 @@ type (
 		// Apply arguments loaded for the plugin
 		Apply *Apply
 		// config arguments loaded for the plugin
-		Config Config
+		Config *Config
 		// Destroy arguments loaded for the plugin
 		Destroy *Destroy
+		// InitOptions arguments loaded for the plugin
+		Init *Init
 		// FMT arguments loaded for the plugin
 		FMT *FMT
 		// Plan arguments loaded for the plugin
@@ -47,6 +49,18 @@ func (p *Plugin) Exec() error {
 
 	// output terraform version for troubleshooting
 	err = execCmd(versionCmd())
+	if err != nil {
+		return err
+	}
+
+	// initialize a new or existing Terraform working directory
+	err = p.Init.Exec()
+	if err != nil {
+		return err
+	}
+
+	// retrieve terraform modules for actions
+	err = execCmd(getCmd())
 	if err != nil {
 		return err
 	}
@@ -92,6 +106,19 @@ func (p *Plugin) Validate() error {
 		return err
 	}
 
+	// when user adds additional init config
+	// unmarshal it into the init command
+	err = p.Init.Unmarshal()
+	if err != nil {
+		return err
+	}
+
+	// validate init action
+	err = p.Init.Validate()
+	if err != nil {
+		return err
+	}
+
 	// validate action specific configuration
 	switch p.Config.Action {
 	case applyAction:
@@ -100,6 +127,9 @@ func (p *Plugin) Validate() error {
 	case destroyAction:
 		// validate destroy action
 		return p.Destroy.Validate()
+	case initAction:
+		// validate fmt action
+		return p.Init.Validate()
 	case fmtAction:
 		// validate fmt action
 		return p.FMT.Validate()
@@ -111,11 +141,12 @@ func (p *Plugin) Validate() error {
 		return p.Validation.Validate()
 	default:
 		return fmt.Errorf(
-			"%s: %s (Valid actions: %s, %s, %s, %s, %s)",
+			"%s: %s (Valid actions: %s, %s, %s, %s, %s, %s)",
 			ErrInvalidAction,
 			p.Config.Action,
 			applyAction,
 			destroyAction,
+			initAction,
 			fmtAction,
 			planAction,
 			validationAction,
