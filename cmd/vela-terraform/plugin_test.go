@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func TestKubernetes_Plugin_Validate(t *testing.T) {
+func TestTerraform_Plugin_Validate(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		plugin *Plugin
@@ -36,7 +36,7 @@ func TestKubernetes_Plugin_Validate(t *testing.T) {
 				Config: &Config{
 					Action: "apply",
 					Netrc: &Netrc{
-						Machine:  "machine.company.com",
+						Machine:  "machine.example.com",
 						Login:    "octocat",
 						Password: "foobar",
 					},
@@ -73,7 +73,7 @@ func TestKubernetes_Plugin_Validate(t *testing.T) {
 				Config: &Config{
 					Action: "apply",
 					Netrc: &Netrc{
-						Machine:  "machine.company.com",
+						Machine:  "machine.example.com",
 						Login:    "octocat",
 						Password: "foobar",
 					},
@@ -124,7 +124,7 @@ func TestKubernetes_Plugin_Validate(t *testing.T) {
 				Config: &Config{
 					Action: "apply",
 					Netrc: &Netrc{
-						Machine:  "machine.company.com",
+						Machine:  "machine.example.com",
 						Login:    "octocat",
 						Password: "foobar",
 					},
@@ -167,7 +167,7 @@ func TestKubernetes_Plugin_Validate(t *testing.T) {
 				Config: &Config{
 					Action: "apply",
 					Netrc: &Netrc{
-						Machine:  "machine.company.com",
+						Machine:  "machine.example.com",
 						Login:    "octocat",
 						Password: "foobar",
 					},
@@ -220,7 +220,7 @@ func TestKubernetes_Plugin_Validate(t *testing.T) {
 				Config: &Config{
 					Action: "apply",
 					Netrc: &Netrc{
-						Machine:  "machine.company.com",
+						Machine:  "machine.example.com",
 						Login:    "octocat",
 						Password: "foobar",
 					},
