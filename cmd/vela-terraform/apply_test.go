@@ -27,8 +27,8 @@ func TestTerraform_Apply_Command(t *testing.T) {
 		State:       "state.tf",
 		StateOut:    "stateout.tf",
 		Target:      "target.tf",
-		Var:         []string{"foo=bar", "bar=foo"},
-		VarFile:     []string{"vars1.tf", "vars2.tf"},
+		Vars:        []string{"foo=bar", "bar=foo"},
+		VarFiles:    []string{"vars1.tf", "vars2.tf"},
 	}
 
 	want := exec.Command(
@@ -45,8 +45,8 @@ func TestTerraform_Apply_Command(t *testing.T) {
 		fmt.Sprintf("-state=%s", a.State),
 		fmt.Sprintf("-state-out=%s", a.StateOut),
 		fmt.Sprintf("-target=%s", a.Target),
-		fmt.Sprintf("-var=\"%s %s\"", a.Var[0], a.Var[1]),
-		fmt.Sprintf("-var-file=%s -var-file=%s ", a.VarFile[0], a.VarFile[1]),
+		fmt.Sprintf("-var=\"%s %s\"", a.Vars[0], a.Vars[1]),
+		fmt.Sprintf("-var-file=%s -var-file=%s", a.VarFiles[0], a.VarFiles[1]),
 		a.Directory,
 	)
 

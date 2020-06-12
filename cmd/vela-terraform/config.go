@@ -23,20 +23,6 @@ password %s
 type (
 	// Config holds input parameters for the plugin
 	Config struct {
-		// TODO: delete this code
-		Actions     []string
-		Vars        map[string]string
-		Secrets     map[string]string
-		InitOptions InitOptions
-		FmtOptions  FmtOptions
-		Cacert      string
-		Sensitive   bool
-		RoleARN     string
-		RootDir     string
-		Parallelism int
-		Targets     []string
-		VarFiles    []string
-
 		// action to perform with Terraform
 		Action string
 		// Netrc is credentials for cloning

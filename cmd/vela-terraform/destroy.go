@@ -17,12 +17,12 @@ const destroyAction = "destroy"
 
 // Destroy represents the plugin configuration for destroy information.
 type Destroy struct {
-	// terraform file or directory to destroy
-	Directory string
-	// path to backup the existing state file before modifying. i.e. "-backup=path "
-	Backup string
 	// skip interactive approval of plan before applying. i.e. "-auto-approve"
 	AutoApprove bool
+	// path to backup the existing state file before modifying. i.e. "-backup=path "
+	Backup string
+	// terraform file or directory to destroy
+	Directory string
 	// the state file when locking is supported. i.e. -lock=true
 	Lock bool
 	// duration to retry a state lock. i.e. "-lock-timeout=0s"
@@ -40,9 +40,9 @@ type Destroy struct {
 	// resource to target. i.e. "-target=resource"
 	Target string
 	// set a variable in the Terraform configuration. i.e. "-var 'foo=bar'"
-	Var []string
+	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
-	VarFile []string
+	VarFiles []string
 }
 
 // Command formats and outputs the Destroy command from
@@ -53,16 +53,16 @@ func (a *Destroy) Command(dir string) *exec.Cmd {
 	// variable to store flags for command
 	var flags []string
 
-	// check if Backup is provided
-	if len(a.Backup) > 0 {
-		// add flag for Backup from provided destroy command
-		flags = append(flags, fmt.Sprintf("-backup=%s", a.Backup))
-	}
-
 	// check if AutoApprove is provided
 	if a.AutoApprove {
 		// add flag for AutoApprove from provided destroy command
 		flags = append(flags, "-auto-approve")
+	}
+
+	// check if Backup is provided
+	if len(a.Backup) > 0 {
+		// add flag for Backup from provided destroy command
+		flags = append(flags, fmt.Sprintf("-backup=%s", a.Backup))
 	}
 
 	// check if Lock is provided
@@ -113,25 +113,25 @@ func (a *Destroy) Command(dir string) *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("-target=%s", a.Target))
 	}
 
-	// check if Var is provided
-	if len(a.Var) > 0 {
+	// check if Vars is provided
+	if len(a.Vars) > 0 {
 		var vars string
-		for _, v := range a.Var {
+		for _, v := range a.Vars {
 			vars += fmt.Sprintf(" %s", v)
 		}
-		// add flag for Var from provided destroy command
+		// add flag for Vars from provided destroy command
 		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
 	}
 
-	// check if VarFile is provided
-	if len(a.VarFile) > 0 {
+	// check if VarFiles is provided
+	if len(a.VarFiles) > 0 {
 		var files string
-		for _, v := range a.VarFile {
+		for _, v := range a.VarFiles {
 			files += fmt.Sprintf("-var-file=%s ", v)
 		}
 
-		// add flag for Var from provided plan command
-		flags = append(flags, strings.TrimPrefix(files, " "))
+		// add flag for VarFiles from provided destroy command
+		flags = append(flags, strings.TrimSuffix(files, " "))
 	}
 
 	// add the required dir param
