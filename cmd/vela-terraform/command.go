@@ -29,6 +29,15 @@ func execCmd(e *exec.Cmd) error {
 	return e.Run()
 }
 
+// getCmd is a helper function to retrieve
+// the terraform modules required for the files.
+func getCmd() *exec.Cmd {
+	return exec.Command(
+		"terraform",
+		"get",
+	)
+}
+
 // versionCmd is a helper function to output
 // the client and server version information.
 func versionCmd() *exec.Cmd {

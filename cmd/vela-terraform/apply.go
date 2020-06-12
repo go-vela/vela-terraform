@@ -55,16 +55,16 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 	// variable to store flags for command
 	var flags []string
 
-	// check if Backup is provided
-	if len(a.Backup) > 0 {
-		// add flag for Backup from provided apply command
-		flags = append(flags, fmt.Sprintf("-backup=%s", a.Backup))
-	}
-
 	// check if AutoApprove is provided
 	if a.AutoApprove {
 		// add flag for AutoApprove from provided apply command
 		flags = append(flags, "-auto-approve")
+	}
+
+	// check if Backup is provided
+	if len(a.Backup) > 0 {
+		// add flag for Backup from provided apply command
+		flags = append(flags, fmt.Sprintf("-backup=%s", a.Backup))
 	}
 
 	// check if Lock is provided
@@ -166,13 +166,10 @@ func (a *Apply) Exec() error {
 
 // Validate verifies the Delete is properly configured.
 func (a *Apply) Validate() error {
-	logrus.Trace("validating apply plugin configuration")
+	logrus.Trace("validating plan plugin configuration")
 
-	if len(a.Directory) == 0 {
+	if strings.EqualFold(a.Directory, ".") {
 		logrus.Warn("terrafrom apply will run in current dir")
-
-		// set the directory to run in current dir
-		a.Directory = "."
 	}
 
 	return nil
