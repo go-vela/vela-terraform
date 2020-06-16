@@ -240,7 +240,7 @@ _How do I add verbose logging to the Terraform CLI?_
 
 ```diff
 - name: apply
- image: docker.target.com/rapid/neal/vela-terraform
+ image: target/vela-terraform:v0.1.0
  pull: true
 #  Verbose Terraform logging can be added directly to environment
 + environment:
