@@ -8,7 +8,22 @@ Registry: https://hub.docker.com/r/target/vela-terraform
 
 ## Usage
 
-**NOTE: by default Terraform runs in the current directory. Use `directory: path/to/tf/files` to point Terraform at a file or files.**
+**NOTE:**
+
+1. By default Terraform runs in the current directory. Use `directory: path/to/tf/files` to point Terraform at a file or files.
+2. Terraform ships with a default version but you can download the specific version you need with `version: x.x.x`
+
+Sample of adding installing terraform version:
+
+```yaml
+- name: apply
+  image: target/vela-terraform:latest
+  pull: true
+  parameters:
+    action: apply
+    auto_approve: true # Required for versions of Terraform 0.12.x
+    version: 0.11.7
+```
 
 Sample of adding init options to Terraform configuration:
 
@@ -100,6 +115,7 @@ The following parameters are used to configure the image:
 | `directory`    | the directory for action to be performed on | `false`  | `N/A`   |
 | `init_options` | options to use for Terraform init operation | `false`  | `N/A`   |
 | `log_level`    | set the log level for the plugin            | `true`   | `info`  |
+| `version`      | set the Terraform CLI version               | `true`   | `info`  |
 
 
 The following parameters can be used within the `init_options` to configure the image:
