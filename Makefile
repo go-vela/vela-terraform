@@ -38,6 +38,6 @@ docker-build:
 current_dir = $(shell pwd)
 env = -e PARAMETER_ACTIONS=plan -e GITHUB_TOKEN=some_token
 dir = -v ${current_dir}/example:/home/ -w /home/
-docker-run:	
+docker-run:
 
 	docker run --rm ${env} ${dir} terraform-plugin:local
