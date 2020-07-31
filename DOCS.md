@@ -8,6 +8,8 @@ Registry: https://hub.docker.com/r/target/vela-terraform
 
 ## Usage
 
+_The plugin supports reading all parameters via environment variables or files. Values set as a file take precedence over default values set from the environment._
+
 **NOTE:**
 
 1. By default Terraform runs in the current directory. Use `directory: path/to/tf/files` to point Terraform at a file or files.
