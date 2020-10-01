@@ -8,106 +8,115 @@ Registry: https://hub.docker.com/r/target/vela-terraform
 
 ## Usage
 
-_The plugin supports reading all parameters via environment variables or files. Values set as a file take precedence over default values set from the environment._
-
-**NOTE:**
-
-1. By default Terraform runs in the current directory. Use `directory: path/to/tf/files` to point Terraform at a file or files.
-2. Terraform ships with a default version but you can download the specific version you need with `version: x.x.x`
+**NOTE: It is not recommended to use `latest` as the tag for the Docker image. Users should use a semantically versioned tag instead.**
 
 Sample of adding installing terraform version:
 
 ```yaml
-- name: apply
-  image: target/vela-terraform:latest
-  pull: true
-  parameters:
-    action: apply
-    auto_approve: true # Required for versions of Terraform 0.12.x
-    version: 0.11.7
+steps:
+  - name: apply
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: apply
+      auto_approve: true # Required for versions of Terraform 0.12.x
+      version: 0.11.7
 ```
 
 Sample of adding init options to Terraform configuration:
 
 ```yaml
-- name: apply
-  image: target/vela-terraform:latest
-  pull: true
-  parameters:
-    action: apply
-    auto_approve: true # Required for versions of Terraform 0.12.x
-    init_options:
-      get_plugins: true
+steps:
+  - name: apply
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: apply
+      auto_approve: true # Required for versions of Terraform 0.12.x
+      init_options:
+        get_plugins: true
 ```
 
 Sample of applying Terraform configuration:
 
 ```yaml
-- name: apply
-  image: target/vela-terraform:latest
-  pull: true
-  parameters:
-    action: apply
-    auto_approve: true # Required for versions of Terraform 0.12.x
+steps:
+  - name: apply
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: apply
+      auto_approve: true # Required for versions of Terraform 0.12.x
 ```
 
 Sample of destroying Terraform configuration:
 
 ```yaml
-- name: destroy
-  image: target/vela-terraform:latest
-  pull: true
-  parameters:
-    action: destroy
-    auto_approve: true # Required for versions of Terraform 0.12.x
+steps:
+  - name: destroy
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: destroy
+      auto_approve: true # Required for versions of Terraform 0.12.x
 ```
 
 Sample of formatting Terraform configuration files:
 
 ```yaml
-- name: fmt
-  image: target/vela-terraform:latest
-  pull: true
-  parameters:
-    action: fmt
+steps:
+  - name: fmt
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: fmt
 ```
 
 Sample of planning Terraform configuration:
 
 ```yaml
-- name: plan
-  image: target/vela-terraform:latest
-  pull: true
-  parameters:
-    action: plan
+steps:
+  - name: plan
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: plan
 ```
 
 Sample of validating Terraform configuration:
 
 ```yaml
-- name: validate
-  image: target/vela-terraform:latest
-  pull: true
-  parameters:
-    action: validate
+steps:
+  - name: validate
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: validate
 ```
-
 
 ## Secrets
 
 **NOTE: Users should refrain from configuring sensitive information in their pipeline in plain text.**
 
 ```diff
-- name: apply
-  image: target/vela-terraform:latest
-  pull: true
-+  secrets: [ github_token ]
-  parameters:
-    action: apply
-    auto_approve: true # Required for versions of Terraform 0.12.x
+steps:
+  - name: apply
+    image: target/vela-terraform:latest
+    pull: always
++   secrets: [ github_token ]
+    parameters:
+      action: apply
+      auto_approve: true # Required for versions of Terraform 0.12.x
 ```
 
 ## Parameters
+
+**NOTE:**
+
+* the plugin supports reading all parameters via environment variables or files
+* values set from a file take precedence over values set from the environment
+* by default, Terraform runs in the current directory - use `directory: path/to/tf/files` to point Terraform at a directory or files
+* Terraform ships with a default version but you can download the specific version you need with `version: x.x.x`
 
 The following parameters are used to configure the image:
 
@@ -118,7 +127,6 @@ The following parameters are used to configure the image:
 | `init_options` | options to use for Terraform init operation | `false`  | `N/A`   |
 | `log_level`    | set the log level for the plugin            | `true`   | `info`  |
 | `version`      | set the Terraform CLI version               | `true`   | `info`  |
-
 
 The following parameters can be used within the `init_options` to configure the image:
 
@@ -241,13 +249,13 @@ Below are a list of common problems and how to solve them:
 _How do I add verbose logging to the Terraform CLI?_
 
 ```diff
-- name: apply
- image: target/vela-terraform:v0.1.0
- pull: true
-#  Verbose Terraform logging can be added directly to environment
-+ environment:
-+   TF_LOG: TRACE
- parameters:
-   action: apply   
-   auto_approve: true
+steps:
+  - name: apply
+    image: target/vela-terraform:latest
+    pull: always
++   environment:
++     TF_LOG: TRACE
+    parameters:
+      action: apply
+      auto_approve: true
 ```
