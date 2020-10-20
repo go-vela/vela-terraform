@@ -2,6 +2,30 @@
 #
 # Use of this source code is governed by the LICENSE file in this repository.
 
+# capture the current date we build the application from
+BUILD_DATE = $(shell date +%Y-%m-%dT%H:%M:%SZ)
+
+# check if a git commit sha is already set
+ifndef GITHUB_SHA
+	# capture the current git commit sha we build the application from
+	GITHUB_SHA = $(shell git rev-parse HEAD)
+endif
+
+# check if a git tag is already set
+ifndef GITHUB_TAG
+	# capture the current git tag we build the application from
+	GITHUB_TAG = $(shell git describe --tag --abbrev=0)
+endif
+
+# check if a go version is already set
+ifndef GOLANG_VERSION
+	# capture the current go version we build the application from
+	GOLANG_VERSION = $(shell go version | awk '{ print $$3 }')
+endif
+
+# create a list of linker flags for building the golang application
+LD_FLAGS = -X github.com/go-vela/vela-terraform/version.Commit=${GITHUB_SHA} -X github.com/go-vela/vela-terraform/version.Date=${BUILD_DATE} -X github.com/go-vela/vela-terraform/version.Go=${GOLANG_VERSION} -X github.com/go-vela/vela-terraform/version.Tag=${GITHUB_TAG}
+
 # The `clean` target is intended to clean the workspace
 # and prepare the local changes for submission.
 #
