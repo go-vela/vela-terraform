@@ -52,7 +52,7 @@ func main() {
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_VERSION", "VELA_TERRAFORM_VERSION", "TERRAFORM_VERSION"},
 			FilePath: string("/vela/parameters/terraform/version,/vela/secrets/terraform/version"),
-			Name:     "version",
+			Name:     "terraform.version",
 			Usage:    "set terraform version for plugin",
 		},
 
@@ -457,7 +457,7 @@ func run(c *cli.Context) error {
 	}).Info("Vela Terraform Plugin")
 
 	// capture custom terraform version requested
-	version := c.String("version")
+	version := c.String("terraform.version")
 
 	// check if a custom terraform version was requested
 	if len(version) > 0 {

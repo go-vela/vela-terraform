@@ -114,6 +114,7 @@ build:
 	@echo "### Building release/vela-terraform binary"
 	GOOS=linux CGO_ENABLED=0 \
 		go build -a \
+		-ldflags '${LD_FLAGS}' \
 		-o release/vela-terraform \
 		github.com/go-vela/vela-terraform/cmd/vela-terraform
 
@@ -127,7 +128,21 @@ build-static:
 	@echo "### Building static release/vela-terraform binary"
 	GOOS=linux CGO_ENABLED=0 \
 		go build -a \
-		-ldflags '-s -w -extldflags "-static"' \
+		-ldflags '-s -w -extldflags "-static" ${LD_FLAGS}' \
+		-o release/vela-terraform \
+		github.com/go-vela/vela-terraform/cmd/vela-terraform
+
+# The `build-static` target is intended to compile
+# the Go source code into a statically linked binary.
+#
+# Usage: `make build-static`
+.PHONY: build-static
+build-static:
+	@echo
+	@echo "### Building static release/vela-terraform binary"
+	GOOS=linux CGO_ENABLED=0 \
+		go build -a \
+		-ldflags '-s -w -extldflags "-static" ${LD_FLAGS}' \
 		-o release/vela-terraform \
 		github.com/go-vela/vela-terraform/cmd/vela-terraform
 
