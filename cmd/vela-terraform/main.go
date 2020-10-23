@@ -5,8 +5,12 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
 	"time"
+
+	"github.com/go-vela/vela-terraform/version"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
@@ -32,8 +36,9 @@ func main() {
 
 	// Plugin Metadata
 
-	app.Compiled = time.Now()
 	app.Action = run
+	app.Compiled = time.Now()
+	app.Version = version.New().Semantic()
 
 	// Plugin Flags
 	app.Flags = []cli.Flag{
@@ -47,7 +52,7 @@ func main() {
 		&cli.StringFlag{
 			EnvVars:  []string{"PARAMETER_VERSION", "VELA_TERRAFORM_VERSION", "TERRAFORM_VERSION"},
 			FilePath: string("/vela/parameters/terraform/version,/vela/secrets/terraform/version"),
-			Name:     "version",
+			Name:     "terraform.version",
 			Usage:    "set terraform version for plugin",
 		},
 
@@ -416,6 +421,15 @@ func main() {
 
 // run executes the plugin based off the configuration provided.
 func run(c *cli.Context) error {
+	// capture the version information as pretty JSON
+	v, err := json.MarshalIndent(version.New(), "", "  ")
+	if err != nil {
+		return err
+	}
+
+	// output the version information to stdout
+	fmt.Fprintf(os.Stdout, "%s\n", string(v))
+
 	// set the log level for the plugin
 	switch c.String("log.level") {
 	case "t", "trace", "Trace", "TRACE":
@@ -443,7 +457,7 @@ func run(c *cli.Context) error {
 	}).Info("Vela Terraform Plugin")
 
 	// capture custom terraform version requested
-	version := c.String("version")
+	version := c.String("terraform.version")
 
 	// check if a custom terraform version was requested
 	if len(version) > 0 {
@@ -538,7 +552,7 @@ func run(c *cli.Context) error {
 	}
 
 	// validate the plugin
-	err := p.Validate()
+	err = p.Validate()
 	if err != nil {
 		return err
 	}
