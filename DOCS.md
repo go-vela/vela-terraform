@@ -8,7 +8,11 @@ Registry: https://hub.docker.com/r/target/vela-terraform
 
 ## Usage
 
-**NOTE: It is not recommended to use `latest` as the tag for the Docker image. Users should use a semantically versioned tag instead.**
+> **NOTE:**
+>
+> Users should refrain from using latest as the tag for the Docker image.
+>
+> It is recommended to use a semantically versioned tag instead.
 
 Sample of adding installing terraform version:
 
@@ -96,37 +100,76 @@ steps:
 
 ## Secrets
 
-**NOTE: Users should refrain from configuring sensitive information in their pipeline in plain text.**
+> **NOTE:** Users should refrain from configuring sensitive information in your pipeline in plain text.
+
+### Internal
+
+Users can use [Vela internal secrets](https://go-vela.github.io/docs/concepts/pipeline/secrets/) to substitute these sensitive values at runtime:
 
 ```diff
 steps:
   - name: apply
     image: target/vela-terraform:latest
     pull: always
-+   secrets: [ github_token ]
++   secrets: [ terraform_username, terraform_password ]
     parameters:
       action: apply
       auto_approve: true # Required for versions of Terraform 0.12.x
+-     username: octocat
+-     password: superSecretPassword
 ```
+
+> This example will add the secrets to the `apply` step as environment variables:
+>
+> * `TERRAFORM_USERNAME=<value>`
+> * `TERRAFORM_PASSWORD=<value>`
+
+### External
+
+The plugin accepts the following files for authentication:
+
+| Parameter  | Volume Configuration                                                      |
+| ---------- | ------------------------------------------------------------------------- |
+| `password` | `/vela/parameters/terraform/password`, `/vela/secrets/terraform/password` |
+| `username` | `/vela/parameters/terraform/username`, `/vela/secrets/terraform/username` |
+
+Users can use [Vela external secrets](https://go-vela.github.io/docs/concepts/pipeline/secrets/origin/) to substitute these sensitive values at runtime:
+
+```diff
+steps:
+  - name: apply
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: apply
+      auto_approve: true # Required for versions of Terraform 0.12.x
+-     username: octocat
+-     password: superSecretPassword
+```
+
+> This example will read the secret values in the volume stored at `/vela/secrets/`
 
 ## Parameters
 
-**NOTE:**
-
-* the plugin supports reading all parameters via environment variables or files
-* values set from a file take precedence over values set from the environment
-* by default, Terraform runs in the current directory - use `directory: path/to/tf/files` to point Terraform at a directory or files
-* Terraform ships with a default version but you can download the specific version you need with `version: x.x.x`
+> **NOTE:**
+>
+> The plugin supports reading all parameters via environment variables or files.
+>
+> Any values set from a file take precedence over values set from the environment.
+>
+> Terraform commands will be invoked in the current directory by default.
 
 The following parameters are used to configure the image:
 
-| Name           | Description                                 | Required | Default |
-| -------------- | ------------------------------------------- | -------- | ------- |
-| `action`       | action to perform with Terraform            | `true`   | `N/A`   |
-| `directory`    | the directory for action to be performed on | `false`  | `N/A`   |
-| `init_options` | options to use for Terraform init operation | `false`  | `N/A`   |
-| `log_level`    | set the log level for the plugin            | `true`   | `info`  |
-| `version`      | set the Terraform CLI version               | `true`   | `info`  |
+| Name           | Description                                 | Required | Default         | Environment Variables                                                 |
+| -------------- | ------------------------------------------- | -------- | --------------- | --------------------------------------------------------------------- |
+| `action`       | action to perform with Terraform            | `true`   | `N/A`           | `PARAMETER_ACTION`<br>`TERRAFORM_ACTION`                              |
+| `init_options` | options to use for Terraform init operation | `false`  | `N/A`           | `PARAMETER_INIT_OPTIONS`<br>`TERRAFORM_INIT_OPTIONS`                  |
+| `log_level`    | set the log level for the plugin            | `true`   | `info`          | `PARAMETER_LOG_LEVEL`<br>`TERRAFORM_LOG_LEVEL`                        |
+| `machine`      | netrc machine name to communicate with      | `true`   | `github.com`    | `PARAMETER_MACHINE`<br>`TERRAFORM_MACHINE`<br>`VELA_NETRC_MACHINE`    |
+| `password`     | netrc password for authentication           | `true`   | **set by Vela** | `PARAMETER_PASSWORD`<br>`TERRAFORM_PASSWORD`<br>`VELA_NETRC_PASSWORD` |
+| `username`     | netrc user name for authentication          | `true`   | **set by Vela** | `PARAMETER_USERNAME`<br>`TERRAFORM_USERNAME`<br>`VELA_NETRC_USERNAME` |
+| `version`      | set the Terraform CLI version               | `true`   | `0.12.26`       | `PARAMETER_VERSION`<br>`TERRAFORM_VERSION`                            |
 
 The following parameters can be used within the `init_options` to configure the image:
 
@@ -153,21 +196,21 @@ The following parameters are used to configure the `apply` action:
 
 _Command uses Terraform CLI command defaults if not overridden in config._
 
-| Name           | Description                                                   | Required | Default |
-| -------------- | ------------------------------------------------------------- | -------- | ------- |
-| `auto_approve` | skip interactive approval of running command                  | `false`  | `N/A`   |
-| `back_up`      | path to backup the existing state file                        | `false`  | `N/A`   |
-| `directory`    | the directory for action to be performed on                   | `false`  | `N/A`   |
-| `lock`         | lock the state file when locking is supported                 | `false`  | `N/A`   |
-| `lock_timeout` | duration to retry a state lock                                | `false`  | `N/A`   |
-| `no_color`     | disables colors in output                                     | `false`  | `N/A`   |
-| `parallelism`  | number of concurrent operations as Terraform walks its graph  | `false`  | `N/A`   |
-| `refresh`      | update state prior to checking for differences                | `false`  | `N/A`   |
-| `state`        | path to read and save state                                   | `false`  | `N/A`   |
-| `state_out`    | path to write updated state file                              | `false`  | `N/A`   |
-| `target`       | resource to target                                            | `false`  | `N/A`   |
-| `vars`         | a map of variables to pass to the Terraform (`<key>=<value>`) | `false`  | `N/A`   |
-| `var_files`    | a list of var files to use                                    | `false`  | `N/A`   |
+| Name           | Description                                                   | Required | Default | Environment Variables                                |
+| -------------- | ------------------------------------------------------------- | -------- | ------- | ---------------------------------------------------- |
+| `auto_approve` | skip interactive approval of applying resources               | `false`  | `false` | `PARAMETER_AUTO_APPROVE`<br>`TERRAFORM_AUTO_APPROVE` |
+| `backup`       | path to backup the existing state file                        | `false`  | `N/A`   | `PARAMETER_BACKUP`<br>`TERRAFORM_BACKUP`             |
+| `directory`    | the directory containing Terraform files to apply             | `false`  | `.`     | `PARAMETER_DIRECTORY`<br>`TERRAFORM_DIRECTORY`       |
+| `lock`         | lock the state file when locking is supported                 | `false`  | `false` | `PARAMETER_LOCK`<br>`TERRAFORM_LOCK`                 |
+| `lock_timeout` | duration to retry a state lock                                | `false`  | `N/A`   | `PARAMETER_LOCK_TIMEOUT`<br>`TERRAFORM_LOCK_TIMEOUT` |
+| `no_color`     | disables colors in output                                     | `false`  | `false` | `PARAMETER_NO_COLOR`<br>`TERRAFORM_NO_COLOR`         |
+| `parallelism`  | number of concurrent operations as Terraform walks its graph  | `false`  | `N/A`   | `PARAMETER_PARALLELISM`<br>`TERRAFORM_PARALLELISM`   |
+| `refresh`      | update state prior to checking for differences                | `false`  | `false` | `PARAMETER_REFRESH`<br>`TERRAFORM_REFRESH`           |
+| `state`        | path to read and save state                                   | `false`  | `N/A`   | `PARAMETER_STATE`<br>`TERRAFORM_STATE`               |
+| `state_out`    | path to write updated state file                              | `false`  | `N/A`   | `PARAMETER_STATE_OUT`<br>`TERRAFORM_STATE_OUT`       |
+| `target`       | resource to target                                            | `false`  | `N/A`   | `PARAMETER_TARGET`<br>`TERRAFORM_TARGET`             |
+| `vars`         | a map of variables to pass to the Terraform (`<key>=<value>`) | `false`  | `N/A`   | `PARAMETER_VARS`<br>`TERRAFORM_VARS`                 |
+| `var_files`    | a list of var files to use                                    | `false`  | `N/A`   | `PARAMETER_VAR_FILES`<br>`TERRAFORM_VAR_FILES`       |
 
 #### Destroy
 
@@ -175,20 +218,21 @@ The following parameters are used to configure the `destroy` action:
 
 _Command uses Terraform CLI command defaults if not overridden in config._
 
-| Name           | Description                                                   | Required | Default |
-| -------------- | ------------------------------------------------------------- | -------- | ------- |
-| `auto_approve` | skip interactive approval of running command                  | `false`  | `N/A`   |
-| `back_up`      | path to backup the existing state file                        | `false`  | `N/A`   |
-| `lock`         | lock the state file when locking is supported                 | `false`  | `N/A`   |
-| `lock_timeout` | duration to retry a state lock                                | `false`  | `N/A`   |
-| `no_color`     | disables colors in output                                     | `false`  | `N/A`   |
-| `parallelism`  | number of concurrent operations as Terraform walks its graph  | `false`  | `N/A`   |
-| `refresh`      | update state prior to checking for differences                | `false`  | `N/A`   |
-| `state`        | path to read and save state                                   | `false`  | `N/A`   |
-| `state_out`    | path to write updated state file                              | `false`  | `N/A`   |
-| `target`       | resource to target                                            | `false`  | `N/A`   |
-| `vars`         | a map of variables to pass to the Terraform (`<key>=<value>`) | `false`  | `N/A`   |
-| `var_files`    | a list of var files to use                                    | `false`  | `N/A`   |
+| Name           | Description                                                   | Required | Default | Environment Variables                                |
+| -------------- | ------------------------------------------------------------- | -------- | ------- | ---------------------------------------------------- |
+| `auto_approve` | skip interactive approval of destroying resources             | `false`  | `false` | `PARAMETER_AUTO_APPROVE`<br>`TERRAFORM_AUTO_APPROVE` |
+| `backup`       | path to backup the existing state file                        | `false`  | `N/A`   | `PARAMETER_BACKUP`<br>`TERRAFORM_BACKUP`             |
+| `directory`    | the directory containing Terraform files to destroy           | `false`  | `.`     | `PARAMETER_DIRECTORY`<br>`TERRAFORM_DIRECTORY`       |
+| `lock`         | lock the state file when locking is supported                 | `false`  | `false` | `PARAMETER_LOCK`<br>`TERRAFORM_LOCK`                 |
+| `lock_timeout` | duration to retry a state lock                                | `false`  | `N/A`   | `PARAMETER_LOCK_TIMEOUT`<br>`TERRAFORM_LOCK_TIMEOUT` |
+| `no_color`     | disables colors in output                                     | `false`  | `false` | `PARAMETER_NO_COLOR`<br>`TERRAFORM_NO_COLOR`         |
+| `parallelism`  | number of concurrent operations as Terraform walks its graph  | `false`  | `N/A`   | `PARAMETER_PARALLELISM`<br>`TERRAFORM_PARALLELISM`   |
+| `refresh`      | update state prior to checking for differences                | `false`  | `false` | `PARAMETER_REFRESH`<br>`TERRAFORM_REFRESH`           |
+| `state`        | path to read and save state                                   | `false`  | `N/A`   | `PARAMETER_STATE`<br>`TERRAFORM_STATE`               |
+| `state_out`    | path to write updated state file                              | `false`  | `N/A`   | `PARAMETER_STATE_OUT`<br>`TERRAFORM_STATE_OUT`       |
+| `target`       | resource to target                                            | `false`  | `N/A`   | `PARAMETER_TARGET`<br>`TERRAFORM_TARGET`             |
+| `vars`         | a map of variables to pass to the Terraform (`<key>=<value>`) | `false`  | `N/A`   | `PARAMETER_VARS`<br>`TERRAFORM_VARS`                 |
+| `var_files`    | a list of var files to use                                    | `false`  | `N/A`   | `PARAMETER_VAR_FILES`<br>`TERRAFORM_VAR_FILES`       |
 
 #### Format
 
@@ -196,12 +240,13 @@ The following parameters are used to configure the `fmt` action:
 
 _Command uses Terraform CLI command defaults if not overridden in config._
 
-| Name    | Description                                   | Required | Default |
-| ------- | --------------------------------------------- | -------- | ------- |
-| `check` | validate if the input is formatted            | `false`  | `N/A`   |
-| `diff`  | diffs of formatting changes                   | `false`  | `N/A`   |
-| `list`  | list files whose formatting differs           | `false`  | `N/A`   |
-| `write` | write result to source file instead of STDOUT | `false`  | `N/A`   |
+| Name        | Description                                        | Required | Default | Environment Variables                          |
+| ----------- | -------------------------------------------------- | -------- | ------- | ---------------------------------------------- |
+| `check`     | validate if the input is formatted                 | `false`  | `false` | `PARAMETER_CHECK`<br>`TERRAFORM_CHECK`         |
+| `diff`      | diffs of formatting changes                        | `false`  | `false` | `PARAMETER_DIFF`<br>`TERRAFORM_DIFF`           |
+| `directory` | the directory containing Terraform files to format | `false`  | `.`     | `PARAMETER_DIRECTORY`<br>`TERRAFORM_DIRECTORY` |
+| `list`      | list files whose formatting differs                | `false`  | `false` | `PARAMETER_LIST`<br>`TERRAFORM_LIST`           |
+| `write`     | write result to source file instead of STDOUT      | `false`  | `false` | `PARAMETER_WRITE`<br>`TERRAFORM_WRITE`         |
 
 #### Plan
 
@@ -209,21 +254,22 @@ The following parameters are used to configure the `plan` action:
 
 _Command uses Terraform CLI command defaults if not overridden in config._
 
-| Name                 | Description                                                        | Required | Default |
-| -------------------- | ------------------------------------------------------------------ | -------- | ------- |
-| `destroy`            | destroy all resources managed by the given configuration and state | `false`  | `N/A`   |
-| `detailed_exit_code` | return detailed exit codes when the command exits                  | `false`  | `N/A`   |
-| `lock`               | lock the state file when locking is supported                      | `false`  | `N/A`   |
-| `lock_timeout`       | duration to retry a state lock                                     | `false`  | `N/A`   |
-| `module_depth`       | specifies the depth of modules to show in the output               | `false`  | `N/A`   |
-| `no_color`           | disables colors in output                                          | `false`  | `N/A`   |
-| `parallelism`        | number of concurrent operations as Terraform walks its graph       | `false`  | `N/A`   |
-| `refresh`            | update state prior to checking for differences                     | `false`  | `N/A`   |
-| `state`              | path to read and save state                                        | `false`  | `N/A`   |
-| `state_out`          | path to write updated state file                                   | `false`  | `N/A`   |
-| `target`             | resource to target                                                 | `false`  | `N/A`   |
-| `vars`               | a map of variables to pass to the Terraform (`<key>=<value>`)      | `false`  | `N/A`   |
-| `var_files`          | a list of var files to use                                         | `false`  | `N/A`   |
+| Name                 | Description                                                        | Required | Default | Environment Variables                                            |
+| -------------------- | ------------------------------------------------------------------ | -------- | ------- | ---------------------------------------------------------------- |
+| `destroy`            | destroy all resources managed by the given configuration and state | `false`  | `false` | `PARAMETER_DESTROY`<br>`TERRAFORM_DESTROY`                       |
+| `detailed_exit_code` | return detailed exit codes when the command exits                  | `false`  | `false` | `PARAMETER_DETAILED_EXIT_CODE`<br>`TERRAFORM_DETAILED_EXIT_CODE` |
+| `directory`          | the directory containing Terraform files to plan                   | `false`  | `.`     | `PARAMETER_DIRECTORY`<br>`TERRAFORM_DIRECTORY`                   |
+| `input`              | ask for input for variables if not directly set                    | `false`  | `false` | `PARAMETER_INPUT`<br>`TERRAFORM_INPUT`                           |
+| `lock`               | lock the state file when locking is supported                      | `false`  | `false` | `PARAMETER_LOCK`<br>`TERRAFORM_LOCK`                             |
+| `lock_timeout`       | duration to retry a state lock                                     | `false`  | `N/A`   | `PARAMETER_LOCK_TIMEOUT`<br>`TERRAFORM_LOCK_TIMEOUT`             |
+| `module_depth`       | specifies the depth of modules to show in the output               | `false`  | `N/A`   | `PARAMETER_MODULE_DEPTH`<br>`TERRAFORM_MODULE_DEPTH`             |
+| `no_color`           | disables colors in output                                          | `false`  | `false` | `PARAMETER_NO_COLOR`<br>`TERRAFORM_NO_COLOR`                     |
+| `parallelism`        | number of concurrent operations as Terraform walks its graph       | `false`  | `N/A`   | `PARAMETER_PARALLELISM`<br>`TERRAFORM_PARALLELISM`               |
+| `refresh`            | update state prior to checking for differences                     | `false`  | `false` | `PARAMETER_REFRESH`<br>`TERRAFORM_REFRESH`                       |
+| `state`              | path to read and save state                                        | `false`  | `N/A`   | `PARAMETER_STATE`<br>`TERRAFORM_STATE`                           |
+| `target`             | resource to target                                                 | `false`  | `N/A`   | `PARAMETER_TARGET`<br>`TERRAFORM_TARGET`                         |
+| `vars`               | a map of variables to pass to the Terraform (`<key>=<value>`)      | `false`  | `N/A`   | `PARAMETER_VARS`<br>`TERRAFORM_VARS`                             |
+| `var_files`          | a list of var files to use                                         | `false`  | `N/A`   | `PARAMETER_VAR_FILES`<br>`TERRAFORM_VAR_FILES`                   |
 
 #### Validate
 
@@ -231,12 +277,13 @@ The following parameters are used to configure the `validate` action:
 
 _Command uses Terraform CLI command defaults if not overridden in config._
 
-| Name              | Description                                                           | Required | Default |
-| ----------------- | --------------------------------------------------------------------- | -------- | ------- |
-| `check_variables` | command will check whether all required variables have been specified | `false`  | `N/A`   |
-| `no_color`        | disables colors in output                                             | `false`  | `N/A`   |
-| `vars`            | a map of variables to pass to the Terraform (`<key>=<value>`)         | `false`  | `N/A`   |
-| `var_files`       | a list of var files to use                                            | `false`  | `N/A`   |
+| Name              | Description                                                           | Required | Default | Environment Variables                                      |
+| ----------------- | --------------------------------------------------------------------- | -------- | ------- | ---------------------------------------------------------- |
+| `check_variables` | command will check whether all required variables have been specified | `false`  | `false` | `PARAMETER_CHECK_VARIABLES`<br>`TERRAFORM_CHECK_VARIABLES` |
+| `directory`       | the directory containing Terraform files to validate                  | `false`  | `.`     | `PARAMETER_DIRECTORY`<br>`TERRAFORM_DIRECTORY`             |
+| `no_color`        | disables colors in output                                             | `false`  | `false` | `PARAMETER_NO_COLOR`<br>`TERRAFORM_NO_COLOR`               |
+| `vars`            | a map of variables to pass to the Terraform (`<key>=<value>`)         | `false`  | `N/A`   | `PARAMETER_VARS`<br>`TERRAFORM_VARS`                       |
+| `var_files`       | a list of var files to use                                            | `false`  | `N/A`   | `PARAMETER_VAR_FILES`<br>`TERRAFORM_VAR_FILES`             |
 
 ## Template
 
@@ -244,9 +291,20 @@ COMING SOON!
 
 ## Troubleshooting
 
-Below are a list of common problems and how to solve them:
+You can start troubleshooting this plugin by tuning the level of logs being displayed:
 
-_How do I add verbose logging to the Terraform CLI?_
+```diff
+steps:
+  - name: apply
+    image: target/vela-terraform:latest
+    pull: always
+    parameters:
+      action: apply
+      auto_approve: true
++     log_level: trace
+```
+
+You can also instruct the Terraform CLI to output verbose logging:
 
 ```diff
 steps:
@@ -259,3 +317,5 @@ steps:
       action: apply
       auto_approve: true
 ```
+
+Below are a list of common problems and how to solve them:
