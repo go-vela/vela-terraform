@@ -10,14 +10,13 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/go-vela/types v0.6.1-0.20201019123446-226d0cc72538
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
-	github.com/hashicorp/go-getter v1.4.1
+	github.com/hashicorp/go-getter v1.5.2
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/afero v1.3.1
-	github.com/ulikunitz/xz v0.5.7 // indirect
 	github.com/urfave/cli/v2 v2.2.0
 	go.opencensus.io v0.22.4 // indirect
 	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
