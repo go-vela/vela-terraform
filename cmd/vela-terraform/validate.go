@@ -52,10 +52,10 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 	if len(v.Vars) > 0 {
 		var vars string
 		for _, v := range v.Vars {
-			vars += fmt.Sprintf(" %s", v)
+			vars += fmt.Sprintf("-var=%s ", v)
 		}
 		// add flag for Vars from provided validate command
-		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
+		flags = append(flags, strings.TrimSuffix(vars, " "))
 	}
 
 	// check if VarFiles is provided

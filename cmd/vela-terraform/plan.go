@@ -133,11 +133,10 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 	if len(p.Vars) > 0 {
 		var vars string
 		for _, v := range p.Vars {
-			vars += fmt.Sprintf(" %s", v)
+			vars += fmt.Sprintf("-var=%s ", v)
 		}
-
-		// add flag for Vars from provided plan command
-		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
+		// add flag for Vars from provided validate command
+		flags = append(flags, strings.TrimSuffix(vars, " "))
 	}
 
 	// check if VarFiles is provided

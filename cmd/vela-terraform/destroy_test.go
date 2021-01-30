@@ -43,7 +43,7 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 		fmt.Sprintf("-state=%s", d.State),
 		fmt.Sprintf("-state-out=%s", d.StateOut),
 		fmt.Sprintf("-target=%s", d.Target),
-		fmt.Sprintf("-var=\"%s %s\"", d.Vars[0], d.Vars[1]),
+		fmt.Sprintf("-var=%s -var=%s", d.Vars[0], d.Vars[1]),
 		fmt.Sprintf("-var-file=%s -var-file=%s", d.VarFiles[0], d.VarFiles[1]),
 		d.Directory,
 	)
