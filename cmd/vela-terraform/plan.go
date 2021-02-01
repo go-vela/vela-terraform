@@ -135,7 +135,7 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 		for _, v := range p.Vars {
 			vars += fmt.Sprintf("-var=%s ", v)
 		}
-		// add flag for Vars from provided validate command
+		// add flag for Vars from provided plan command
 		flags = append(flags, strings.TrimSuffix(vars, " "))
 	}
 
