@@ -125,10 +125,10 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 	if len(a.Vars) > 0 {
 		var vars string
 		for _, v := range a.Vars {
-			vars += fmt.Sprintf(" %s", v)
+			vars += fmt.Sprintf("-var=%s ", v)
 		}
 		// add flag for Vars from provided apply command
-		flags = append(flags, fmt.Sprintf("-var=\"%s\"", strings.TrimPrefix(vars, " ")))
+		flags = append(flags, strings.TrimSuffix(vars, " "))
 	}
 
 	// check if VarFiles is provided
