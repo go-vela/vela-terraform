@@ -8,7 +8,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/aws/aws-sdk-go v1.33.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/go-vela/types v0.6.1-0.20210108224628-20005834775b
+	github.com/go-vela/types v0.7.0
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
 	github.com/hashicorp/go-getter v1.5.2
 	github.com/hashicorp/go-version v1.2.1 // indirect
@@ -24,5 +24,4 @@ require (
 	golang.org/x/tools v0.0.0-20200702044944-0cc1aa72b347 // indirect
 	google.golang.org/genproto v0.0.0-20200706141556-5779274c8e96 // indirect
 	google.golang.org/grpc v1.30.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
