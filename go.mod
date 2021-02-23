@@ -8,14 +8,14 @@ require (
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/aws/aws-sdk-go v1.33.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/go-vela/types v0.7.2
+	github.com/go-vela/types v0.7.3
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
 	github.com/hashicorp/go-getter v1.5.2
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
-	github.com/sirupsen/logrus v1.7.0
+	github.com/sirupsen/logrus v1.8.0
 	github.com/spf13/afero v1.5.1
 	github.com/urfave/cli/v2 v2.3.0
 	go.opencensus.io v0.22.4 // indirect
