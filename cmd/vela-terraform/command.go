@@ -33,17 +33,15 @@ func execCmd(e *exec.Cmd) error {
 // the terraform modules required for the files.
 func getCmd(dir string) *exec.Cmd {
 
-	// name of cmd
+	// default cmd and arg
 	name := "terraform"
-
-	// default arg
 	args := []string{
 		"get",
 	}
 
 	// set working directory if provided
 	if len(dir) > 0 {
-		args = append(args, fmt.Sprintf("-chdir=%s", dir))
+		args = append(args, dir)
 	}
 
 	return exec.Command(
