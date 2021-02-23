@@ -60,7 +60,7 @@ func (p *Plugin) Exec() error {
 	}
 
 	// retrieve terraform modules for actions
-	err = execCmd(getCmd())
+	err = execCmd(getCmd(p.Init.Directory))
 	if err != nil {
 		return err
 	}
