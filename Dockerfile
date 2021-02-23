@@ -11,11 +11,12 @@ ARG TERRAFORM_VERSION=0.14.5
 ##     docker build --no-cache --target binary -t vela-terraform:binary .     ##
 ################################################################################
 
-FROM alpine:latest as binary
+FROM alpine:3.12 as binary
+ADD http://browserconfig.target.com/tgt-certs/tgt-ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
 
 ARG TERRAFORM_VERSION
 
-RUN wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip && \
+RUN wget -q https://releases.hashicorp.com/terraform/0.14.5/terraform_0.14.5_linux_amd64.zip -O terraform.zip && \
   unzip terraform.zip -d /bin && \
   rm -f terraform.zip
 
@@ -23,7 +24,7 @@ RUN wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraf
 ##     docker build --no-cache --target certs -t vela-terraform:certs .     ##
 ##############################################################################
 
-FROM alpine:latest as certs
+FROM alpine:3.12 as certs
 
 RUN apk add --update --no-cache ca-certificates
 
@@ -31,11 +32,11 @@ RUN apk add --update --no-cache ca-certificates
 ##     docker build --no-cache -t vela-terraform:local .     ##
 ###############################################################
 
-FROM alpine:3.13.0
+FROM alpine:3.12.0
 
 ARG TERRAFORM_VERSION
 
-ENV PLUGIN_TERRAFORM_VERSION=${TERRAFORM_VERSION}
+ENV PLUGIN_TERRAFORM_VERSION=0.14.5
 
 COPY --from=binary /bin/terraform /bin/terraform
 

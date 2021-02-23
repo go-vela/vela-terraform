@@ -32,7 +32,6 @@ func execCmd(e *exec.Cmd) error {
 // getCmd is a helper function to retrieve
 // the terraform modules required for the files.
 func getCmd(dir string) *exec.Cmd {
-
 	// default cmd and arg
 	name := "terraform"
 	args := []string{
