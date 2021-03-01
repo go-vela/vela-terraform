@@ -263,6 +263,8 @@ func main() {
 }
 
 // run executes the plugin based off the configuration provided.
+//
+// nolint: funlen // ignore function length due to comments and flags
 func run(c *cli.Context) error {
 	// set the log level for the plugin
 	switch c.String("log.level") {
