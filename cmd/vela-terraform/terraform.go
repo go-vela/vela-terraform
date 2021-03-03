@@ -80,7 +80,7 @@ func env() error {
 			name := strings.Split(pair[0], "TF_VAR_")
 
 			// lower case the terraform variable
-			//   to accomodate cicd injection capitalization
+			//   to accommodate cicd injection capitalization
 			err := os.Setenv(fmt.Sprintf("TF_VAR_%s",
 				strings.ToLower(name[1])), pair[1])
 			if err != nil {
