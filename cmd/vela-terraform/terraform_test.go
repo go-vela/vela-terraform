@@ -80,3 +80,11 @@ func TestTerraform_env(t *testing.T) {
 		t.Errorf("os.Getenv is %v, want %v", got, want)
 	}
 }
+
+func TestTerraform_env_err(t *testing.T) {
+	// run env
+	err := env()
+	if err != nil {
+		t.Errorf("env returned err: %v", err)
+	}
+}
