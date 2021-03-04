@@ -6,6 +6,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"regexp"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -59,5 +61,32 @@ func install(customVer, defaultVer string) error {
 		return err
 	}
 
+	return nil
+}
+
+// sets up environment for terraform
+func env() error {
+	// regexp for TF_VAR_ terraform vars
+	tfVar := regexp.MustCompile(`^TF_VAR_.*$`)
+
+	// match terraform vars in environment
+	for _, e := range os.Environ() {
+		// split on value
+		pair := strings.SplitN(e, "=", 2)
+
+		// match on TF_VAR_*
+		if tfVar.MatchString(pair[0]) {
+			// pull out the name
+			name := strings.Split(pair[0], "TF_VAR_")
+
+			// lower case the terraform variable
+			//   to accommodate cicd injection capitalization
+			err := os.Setenv(fmt.Sprintf("TF_VAR_%s",
+				strings.ToLower(name[1])), pair[1])
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }

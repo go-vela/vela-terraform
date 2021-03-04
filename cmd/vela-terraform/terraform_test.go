@@ -5,6 +5,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -50,5 +51,40 @@ func TestTerraform_install_NotWritable(t *testing.T) {
 	err = install("0.11.0", "0.12.0")
 	if err == nil {
 		t.Errorf("install should have returned err")
+	}
+}
+
+func TestTerraform_env(t *testing.T) {
+	want := "abc123"
+	up := "TF_VAR_CHEF_PRIVATE_KEY"
+	low := "TF_VAR_chef_private_key"
+
+	// setup env
+	os.Setenv(up, want)
+
+	// check env
+	got := os.Getenv(low)
+	if got == want {
+		t.Errorf("os.Getenv should not be %v", got)
+	}
+
+	// run env
+	err := env()
+	if err != nil {
+		t.Errorf("env returned err: %v", err)
+	}
+
+	// check new env for same value
+	got = os.Getenv(low)
+	if got != want {
+		t.Errorf("os.Getenv is %v, want %v", got, want)
+	}
+}
+
+func TestTerraform_env_err(t *testing.T) {
+	// run env
+	err := env()
+	if err != nil {
+		t.Errorf("env returned err: %v", err)
 	}
 }

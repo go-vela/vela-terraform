@@ -65,6 +65,12 @@ func (p *Plugin) Exec() error {
 		return err
 	}
 
+	// configure the terraform environment
+	err = env()
+	if err != nil {
+		return err
+	}
+
 	// execute action specific configuration
 	switch p.Config.Action {
 	case applyAction:
