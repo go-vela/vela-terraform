@@ -15,7 +15,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
-	github.com/sirupsen/logrus v1.8.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/afero v1.5.1
 	github.com/urfave/cli/v2 v2.3.0
 	go.opencensus.io v0.22.4 // indirect
