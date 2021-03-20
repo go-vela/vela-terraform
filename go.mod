@@ -16,7 +16,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/afero v1.5.1
+	github.com/spf13/afero v1.6.0
 	github.com/urfave/cli/v2 v2.3.0
 	go.opencensus.io v0.22.4 // indirect
 	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
