@@ -373,6 +373,7 @@ func run(c *cli.Context) error {
 			Parallelism:      c.Int("parallelism"),
 			Refresh:          c.Bool("refresh"),
 			State:            c.String("state"),
+			Out:              c.String("state_out"),
 			Target:           c.String("target"),
 			Vars:             c.StringSlice("vars"),
 			VarFiles:         c.StringSlice("var_files"),
