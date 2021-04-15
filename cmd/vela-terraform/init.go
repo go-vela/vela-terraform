@@ -30,33 +30,33 @@ type (
 	// InitOptions represents the plugin configuration for options for init.
 	InitOptions struct {
 		// Configure the backend for this configuration i.e. "-backend=true"
-		Backend bool
+		Backend bool `json:"backend,omitempty"`
 		// This is merged with what is in the configuration file i.e. "-backend-config=path"
-		BackendConfigs []string
+		BackendConfigs []string `json:"backend-configs,omitempty"`
 		// Suppress prompts about copying state data i.e. "-force-copy"
-		ForceCopy bool
+		ForceCopy bool `json:"force-copy,omitempty"`
 		// Copy the contents of the given module into the target directory before initialization. "-from-module=SOURCE"
-		FromModule string
+		FromModule string `json:"from-module,omitempty"`
 		// Download any modules for this configuration i.e. "-get=true"
-		Get bool
+		Get bool `json:"get,omitempty"`
 		// Download any missing plugins for this configuration i.e. "-get-plugins=true"
-		GetPlugins bool
+		GetPlugins bool `json:"get-plugins,omitempty"`
 		// ask for input for variables if not directly set. i.e. "-input=true"
-		Input bool
+		Input bool `json:"input,omitempty"`
 		// the state file when locking is supported. i.e. -lock=true
-		Lock bool
+		Lock bool `json:"lock,omitempty"`
 		// duration to retry a state lock. i.e. "-lock-timeout=0s"
-		LockTimeout time.Duration
+		LockTimeout time.Duration `json:"lock-timeout,omitempty"`
 		// if specified, output won't contain any color. i.e. "-no-color"
-		NoColor bool
+		NoColor bool `json:"no-color,omitempty"`
 		// Directory containing plugin binaries. This overrides all default search paths for plugins i.e. "-plugin-dir"
-		PluginDirs []string
+		PluginDirs []string `json:"plugin-dirs,omitempty"`
 		// Reconfigure the backend, ignoring any saved configuration i.e. "-reconfigure"
-		Reconfigure bool
+		Reconfigure bool `json:"reconfigure,omitempty"`
 		// install the latest version allowed within configured constraints i.e. "-upgrade=false"
-		Upgrade bool
+		Upgrade bool `json:"upgrade,omitempty"`
 		// Verify the authenticity and integrity of automatically downloaded plugins i.e. "-verify-plugins=true"
-		VerifyPlugins bool
+		VerifyPlugins bool `json:"verify-plugins,omitempty"`
 	}
 )
 
