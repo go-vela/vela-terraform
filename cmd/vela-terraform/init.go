@@ -28,6 +28,8 @@ type (
 	}
 
 	// InitOptions represents the plugin configuration for options for init.
+	//
+	// nolint:maligned // suppressing struct optimization, prefer to keep current order
 	InitOptions struct {
 		// Configure the backend for this configuration i.e. "-backend=true"
 		Backend bool `json:"backend,omitempty"`
@@ -35,7 +37,8 @@ type (
 		BackendConfigs []string `json:"backend-configs,omitempty"`
 		// Suppress prompts about copying state data i.e. "-force-copy"
 		ForceCopy bool `json:"force-copy,omitempty"`
-		// Copy the contents of the given module into the target directory before initialization. "-from-module=SOURCE"
+		// Copy the contents of the given module into the target
+		// directory before initialization. "-from-module=SOURCE"
 		FromModule string `json:"from-module,omitempty"`
 		// Download any modules for this configuration i.e. "-get=true"
 		Get bool `json:"get,omitempty"`
@@ -49,13 +52,15 @@ type (
 		LockTimeout time.Duration `json:"lock-timeout,omitempty"`
 		// if specified, output won't contain any color. i.e. "-no-color"
 		NoColor bool `json:"no-color,omitempty"`
-		// Directory containing plugin binaries. This overrides all default search paths for plugins i.e. "-plugin-dir"
+		// Directory containing plugin binaries.
+		// This overrides all default search paths for plugins i.e. "-plugin-dir"
 		PluginDirs []string `json:"plugin-dirs,omitempty"`
 		// Reconfigure the backend, ignoring any saved configuration i.e. "-reconfigure"
 		Reconfigure bool `json:"reconfigure,omitempty"`
 		// install the latest version allowed within configured constraints i.e. "-upgrade=false"
 		Upgrade bool `json:"upgrade,omitempty"`
-		// Verify the authenticity and integrity of automatically downloaded plugins i.e. "-verify-plugins=true"
+		// Verify the authenticity and integrity of automatically
+		// downloaded plugins i.e. "-verify-plugins=true"
 		VerifyPlugins bool `json:"verify-plugins,omitempty"`
 	}
 )
