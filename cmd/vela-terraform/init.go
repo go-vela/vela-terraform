@@ -34,34 +34,34 @@ type (
 		// Configure the backend for this configuration i.e. "-backend=true"
 		Backend bool `json:"backend,omitempty"`
 		// This is merged with what is in the configuration file i.e. "-backend-config=path"
-		BackendConfigs []string `json:"backend-configs,omitempty"`
+		BackendConfigs []string `json:"backend_configs,omitempty"`
 		// Suppress prompts about copying state data i.e. "-force-copy"
-		ForceCopy bool `json:"force-copy,omitempty"`
+		ForceCopy bool `json:"force_copy,omitempty"`
 		// Copy the contents of the given module into the target
 		// directory before initialization. "-from-module=SOURCE"
-		FromModule string `json:"from-module,omitempty"`
+		FromModule string `json:"from_module,omitempty"`
 		// Download any modules for this configuration i.e. "-get=true"
 		Get bool `json:"get,omitempty"`
 		// Download any missing plugins for this configuration i.e. "-get-plugins=true"
-		GetPlugins bool `json:"get-plugins,omitempty"`
+		GetPlugins bool `json:"get_plugins,omitempty"`
 		// ask for input for variables if not directly set. i.e. "-input=true"
 		Input bool `json:"input,omitempty"`
 		// the state file when locking is supported. i.e. -lock=true
 		Lock bool `json:"lock,omitempty"`
 		// duration to retry a state lock. i.e. "-lock-timeout=0s"
-		LockTimeout time.Duration `json:"lock-timeout,omitempty"`
+		LockTimeout time.Duration `json:"lock_timeout,omitempty"`
 		// if specified, output won't contain any color. i.e. "-no-color"
-		NoColor bool `json:"no-color,omitempty"`
+		NoColor bool `json:"no_color,omitempty"`
 		// Directory containing plugin binaries.
 		// This overrides all default search paths for plugins i.e. "-plugin-dir"
-		PluginDirs []string `json:"plugin-dirs,omitempty"`
+		PluginDirs []string `json:"plugin_dirs,omitempty"`
 		// Reconfigure the backend, ignoring any saved configuration i.e. "-reconfigure"
 		Reconfigure bool `json:"reconfigure,omitempty"`
 		// install the latest version allowed within configured constraints i.e. "-upgrade=false"
 		Upgrade bool `json:"upgrade,omitempty"`
 		// Verify the authenticity and integrity of automatically
 		// downloaded plugins i.e. "-verify-plugins=true"
-		VerifyPlugins bool `json:"verify-plugins,omitempty"`
+		VerifyPlugins bool `json:"verify_plugins,omitempty"`
 	}
 )
 
