@@ -5,7 +5,7 @@
 # set a global Docker argument for the default CLI version
 #
 # https://github.com/moby/moby/issues/37345
-ARG TERRAFORM_VERSION=0.14.5
+ARG TERRAFORM_VERSION=0.15.1
 
 ################################################################################
 ##     docker build --no-cache --target binary -t vela-terraform:binary .     ##
