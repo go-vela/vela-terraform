@@ -104,7 +104,7 @@ steps:
 
 ### Internal
 
-Users can use [Vela internal secrets](https://go-vela.github.io/docs/concepts/pipeline/secrets/) to substitute these sensitive values at runtime:
+Users can use [Vela internal secrets](https://go-vela.github.io/docs/tour/secrets/) to substitute these sensitive values at runtime:
 
 ```diff
 steps:
@@ -133,7 +133,7 @@ The plugin accepts the following files for authentication:
 | `password` | `/vela/parameters/terraform/password`, `/vela/secrets/terraform/password` |
 | `username` | `/vela/parameters/terraform/username`, `/vela/secrets/terraform/username` |
 
-Users can use [Vela external secrets](https://go-vela.github.io/docs/concepts/pipeline/secrets/origin/) to substitute these sensitive values at runtime:
+Users can use [Vela external secrets](https://go-vela.github.io/docs/tour/secrets/) to substitute these sensitive values at runtime:
 
 ```diff
 steps:
