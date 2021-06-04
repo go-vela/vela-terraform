@@ -8,7 +8,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/aws/aws-sdk-go v1.33.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/go-vela/types v0.7.4
+	github.com/go-vela/types v0.8.0
 	github.com/hashicorp/go-getter v1.5.3
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/joho/godotenv v1.3.0
@@ -18,8 +18,6 @@ require (
 	github.com/spf13/afero v1.6.0
 	github.com/urfave/cli/v2 v2.3.0
 	go.opencensus.io v0.22.4 // indirect
-	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
-	golang.org/x/sys v0.0.0-20210108172913-0df2131ae363 // indirect
 	golang.org/x/tools v0.0.0-20200702044944-0cc1aa72b347 // indirect
 	google.golang.org/genproto v0.0.0-20200706141556-5779274c8e96 // indirect
 	google.golang.org/grpc v1.30.0 // indirect
