@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go v1.33.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/go-vela/types v0.8.2
-	github.com/hashicorp/go-getter v1.5.3
+	github.com/hashicorp/go-getter v1.5.4
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
