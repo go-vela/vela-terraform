@@ -81,9 +81,10 @@ func (i *Init) Command(dir string) *exec.Cmd {
 
 	// check if BackendConfigs is provided
 	if len(i.InitOptions.BackendConfigs) > 0 {
-		// add flag for each config provided in BackendConfigs
+		var config string
 		for _, v := range i.InitOptions.BackendConfigs {
-			config := fmt.Sprintf(`-backend-config=%s`, v)
+			config = fmt.Sprintf(`-backend-config=%s`, v)
+			// add flag for BackendConfigs from provided init command
 			flags = append(flags, config)
 		}
 	}
