@@ -38,7 +38,7 @@ func TestTerraform_Init_Command(t *testing.T) {
 		_terraform,
 		initAction,
 		"-backend=true",
-		fmt.Sprintf("-backend-config='%s' -backend-config='%s'", i.InitOptions.BackendConfigs[0], i.InitOptions.BackendConfigs[1]),
+		fmt.Sprintf("-backend-config=%s -backend-config=%s", i.InitOptions.BackendConfigs[0], i.InitOptions.BackendConfigs[1]),
 		"-force-copy",
 		fmt.Sprintf("-from-module=%s", i.InitOptions.FromModule),
 		"-get=true",
