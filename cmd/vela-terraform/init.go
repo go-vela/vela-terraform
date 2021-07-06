@@ -83,11 +83,10 @@ func (i *Init) Command(dir string) *exec.Cmd {
 	if len(i.InitOptions.BackendConfigs) > 0 {
 		var configs string
 		for _, v := range i.InitOptions.BackendConfigs {
-			configs += fmt.Sprintf("-backend-config='%s' ", v)
+			configs = fmt.Sprintf(`-backend-config=%s`, v)
+			// add flag for BackendConfigs from provided init command
+			flags = append(flags, configs)
 		}
-
-		// add flag for BackendConfigs from provided init command
-		flags = append(flags, strings.TrimSuffix(configs, " "))
 	}
 
 	// check if ForceCopy is provided
