@@ -131,23 +131,20 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 
 	// check if Vars is provided
 	if len(p.Vars) > 0 {
-		var vars string
 		for _, v := range p.Vars {
-			vars += fmt.Sprintf("-var=%s ", v)
+			flag := fmt.Sprintf(`-var=%s`, v)
+			// add flag for Vars from provided command
+			flags = append(flags, flag)
 		}
-		// add flag for Vars from provided plan command
-		flags = append(flags, strings.TrimSuffix(vars, " "))
 	}
 
 	// check if VarFiles is provided
 	if len(p.VarFiles) > 0 {
-		var files string
 		for _, v := range p.VarFiles {
-			files += fmt.Sprintf("-var-file=%s ", v)
+			flag := fmt.Sprintf(`-var-file=%s`, v)
+			// add flag for VarFiles from provided command
+			flags = append(flags, flag)
 		}
-
-		// add flag for VarFiles from provided plan command
-		flags = append(flags, strings.TrimSuffix(files, " "))
 	}
 
 	// add the required dir param
