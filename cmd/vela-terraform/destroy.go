@@ -126,7 +126,7 @@ func (a *Destroy) Command(dir string) *exec.Cmd {
 	if len(a.VarFiles) > 0 {
 		for _, v := range a.VarFiles {
 			flag := fmt.Sprintf(`-var-file=%s`, v)
-			// add flag for Vars from provided command
+			// add flag for VarFiles from provided command
 			flags = append(flags, flag)
 		}
 	}
