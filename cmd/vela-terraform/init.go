@@ -139,9 +139,8 @@ func (i *Init) Command(dir string) *exec.Cmd {
 	// check if PluginDirs is provided
 	if len(i.InitOptions.PluginDirs) > 0 {
 		for _, v := range i.InitOptions.PluginDirs {
-			flag := fmt.Sprintf(`-plugin-dir=%s`, v)
 			// add flag for PluginDirs from provided init command
-			flags = append(flags, flag)
+			flags = append(flags, fmt.Sprintf(`-plugin-dir=%s`, v))
 		}
 	}
 
