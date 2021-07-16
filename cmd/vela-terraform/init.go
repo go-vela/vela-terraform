@@ -81,11 +81,9 @@ func (i *Init) Command(dir string) *exec.Cmd {
 
 	// check if BackendConfigs is provided
 	if len(i.InitOptions.BackendConfigs) > 0 {
-		var configs string
 		for _, v := range i.InitOptions.BackendConfigs {
-			configs = fmt.Sprintf(`-backend-config=%s`, v)
 			// add flag for BackendConfigs from provided init command
-			flags = append(flags, configs)
+			flags = append(flags, fmt.Sprintf(`-backend-config=%s`, v))
 		}
 	}
 
@@ -139,13 +137,10 @@ func (i *Init) Command(dir string) *exec.Cmd {
 
 	// check if PluginDirs is provided
 	if len(i.InitOptions.PluginDirs) > 0 {
-		var configs string
 		for _, v := range i.InitOptions.PluginDirs {
-			configs += fmt.Sprintf("-plugin-dir=%s ", v)
+			// add flag for PluginDirs from provided init command
+			flags = append(flags, fmt.Sprintf(`-plugin-dir=%s`, v))
 		}
-
-		// add flag for PluginDirs from provided init command
-		flags = append(flags, strings.TrimSuffix(configs, " "))
 	}
 
 	// check if Reconfigure is provided
