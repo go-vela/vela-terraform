@@ -116,9 +116,8 @@ func (a *Destroy) Command(dir string) *exec.Cmd {
 	// check if Vars is provided
 	if len(a.Vars) > 0 {
 		for _, v := range a.Vars {
-			flag := fmt.Sprintf(`-var=%s`, v)
 			// add flag for Vars from provided command
-			flags = append(flags, flag)
+			flags = append(flags, fmt.Sprintf(`-var=%s`, v))
 		}
 	}
 
