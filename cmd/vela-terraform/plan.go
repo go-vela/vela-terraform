@@ -132,9 +132,8 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 	// check if Vars is provided
 	if len(p.Vars) > 0 {
 		for _, v := range p.Vars {
-			flag := fmt.Sprintf(`-var=%s`, v)
 			// add flag for Vars from provided command
-			flags = append(flags, flag)
+			flags = append(flags, fmt.Sprintf(`-var=%s`, v))
 		}
 	}
 
