@@ -59,9 +59,8 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 	// check if VarFiles is provided
 	if len(v.VarFiles) > 0 {
 		for _, v := range v.VarFiles {
-			flag := fmt.Sprintf(`-var-file=%s`, v)
 			// add flag for VarFiles from provided command
-			flags = append(flags, flag)
+			flags = append(flags, fmt.Sprintf(`-var-file=%s`, v))
 		}
 	}
 
