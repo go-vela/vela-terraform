@@ -25,13 +25,13 @@ func TestTerraform_FMT_Command(t *testing.T) {
 		_terraform,
 		fmtAction,
 		fmt.Sprintf("-list=%t", f.List),
+		fmt.Sprintf("-chdir=%s", f.Directory),
 		fmt.Sprintf("-write=%t", f.Write),
 		fmt.Sprintf("-diff=%t", f.Diff),
 		fmt.Sprintf("-check=%t", f.Check),
-		f.Directory,
 	)
 
-	got := f.Command("foobar/")
+	got := f.Command()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}

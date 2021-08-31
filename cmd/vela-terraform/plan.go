@@ -51,11 +51,16 @@ type Plan struct {
 
 // Command formats and outputs the Plan command from
 // the provided configuration to plan to resources.
-func (p *Plan) Command(dir string) *exec.Cmd {
+func (p *Plan) Command() *exec.Cmd {
 	logrus.Trace("creating terraform plan command from plugin configuration")
 
 	// variable to store flags for command
 	var flags []string
+
+	// check if Directory is provided
+	if p.Directory != "." {
+		flags = append(flags, fmt.Sprintf("-chdir=%s", p.Directory))
+	}
 
 	// check if Destroy is provided
 	if p.Destroy {
@@ -146,7 +151,7 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 	}
 
 	// add the required dir param
-	flags = append(flags, dir)
+	flags = append(flags)
 
 	return exec.Command(_terraform, append([]string{planAction}, flags...)...)
 }
@@ -156,7 +161,7 @@ func (p *Plan) Exec() error {
 	logrus.Trace("running plan with provided configuration")
 
 	// create the plan command for the file
-	cmd := p.Command(p.Directory)
+	cmd := p.Command()
 
 	// run the plan command for the file
 	err := execCmd(cmd)

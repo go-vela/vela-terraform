@@ -30,7 +30,7 @@ type FMT struct {
 
 // Command formats and outputs the FMT command from
 // the provided configuration to fmt to resources.
-func (f *FMT) Command(dir string) *exec.Cmd {
+func (f *FMT) Command() *exec.Cmd {
 	logrus.Trace("creating terraform fmt command from plugin configuration")
 
 	// variable to store flags for command
@@ -40,6 +40,11 @@ func (f *FMT) Command(dir string) *exec.Cmd {
 	if !f.List {
 		// add flag for List from provided fmt command
 		flags = append(flags, fmt.Sprintf("-list=%t", f.List))
+	}
+
+	// check if Directory is provided
+	if f.Directory != "." {
+		flags = append(flags, fmt.Sprintf("-chdir=%s", f.Directory))
 	}
 
 	// check if Write is provided
@@ -61,7 +66,7 @@ func (f *FMT) Command(dir string) *exec.Cmd {
 	}
 
 	// add the required dir param
-	flags = append(flags, dir)
+	flags = append(flags)
 
 	return exec.Command(_terraform, append([]string{fmtAction}, flags...)...)
 }
@@ -71,7 +76,7 @@ func (f *FMT) Exec() error {
 	logrus.Trace("running fmt with provided configuration")
 
 	// create the fmt command for the file
-	cmd := f.Command(f.Directory)
+	cmd := f.Command()
 
 	// run the fmt command for the file
 	err := execCmd(cmd)

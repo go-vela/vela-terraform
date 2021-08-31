@@ -35,6 +35,7 @@ func TestTerraform_Apply_Command(t *testing.T) {
 		_terraform,
 		applyAction,
 		"-auto-approve",
+		fmt.Sprintf("-chdir=%s", a.Directory),
 		fmt.Sprintf("-backup=%s", a.Backup),
 		"-lock=true",
 		fmt.Sprintf("-lock-timeout=%s", a.LockTimeout),
@@ -49,10 +50,9 @@ func TestTerraform_Apply_Command(t *testing.T) {
 		fmt.Sprintf("-var=%s", a.Vars[1]),
 		fmt.Sprintf("-var-file=%s", a.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", a.VarFiles[1]),
-		a.Directory,
 	)
 
-	got := a.Command("foobar/")
+	got := a.Command()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}

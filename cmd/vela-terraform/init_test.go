@@ -40,6 +40,7 @@ func TestTerraform_Init_Command(t *testing.T) {
 		"-backend=true",
 		fmt.Sprintf("-backend-config=%s", i.InitOptions.BackendConfigs[0]),
 		fmt.Sprintf("-backend-config=%s", i.InitOptions.BackendConfigs[1]),
+		fmt.Sprintf("-chdir=%s", i.Directory),
 		"-force-copy",
 		fmt.Sprintf("-from-module=%s", i.InitOptions.FromModule),
 		"-get=true",
@@ -53,10 +54,9 @@ func TestTerraform_Init_Command(t *testing.T) {
 		"-reconfigure",
 		"-upgrade=false",
 		"-verify-plugins=true",
-		i.Directory,
 	)
 
-	got := i.Command("foobar/")
+	got := i.Command()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}

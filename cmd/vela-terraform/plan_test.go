@@ -35,6 +35,7 @@ func TestTerraform_Plan_Command(t *testing.T) {
 	want := exec.Command(
 		_terraform,
 		planAction,
+		fmt.Sprintf("-chdir=%s", p.Directory),
 		"-destroy",
 		"-detailed-exitcode",
 		"-input=true",
@@ -51,10 +52,9 @@ func TestTerraform_Plan_Command(t *testing.T) {
 		fmt.Sprintf("-var=%s", p.Vars[1]),
 		fmt.Sprintf("-var-file=%s", p.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", p.VarFiles[1]),
-		p.Directory,
 	)
 
-	got := p.Command("foobar/")
+	got := p.Command()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}

@@ -33,6 +33,7 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 	want := exec.Command(
 		_terraform,
 		destroyAction,
+		fmt.Sprintf("-chdir=%s", d.Directory),
 		"-auto-approve",
 		fmt.Sprintf("-backup=%s", d.Backup),
 		"-lock=true",
@@ -47,10 +48,9 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 		fmt.Sprintf("-var=%s", d.Vars[1]),
 		fmt.Sprintf("-var-file=%s", d.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", d.VarFiles[1]),
-		d.Directory,
 	)
 
-	got := d.Command("foobar/")
+	got := d.Command()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}

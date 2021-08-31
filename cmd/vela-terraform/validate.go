@@ -30,11 +30,16 @@ type Validation struct {
 
 // Command formats and outputs the Validate command from
 // the provided configuration to validate to resources.
-func (v *Validation) Command(dir string) *exec.Cmd {
+func (v *Validation) Command() *exec.Cmd {
 	logrus.Trace("creating terraform validate command from plugin configuration")
 
 	// variable to store flags for command
 	var flags []string
+
+	// check if Directory is provided
+	if v.Directory != "." {
+		flags = append(flags, fmt.Sprintf("-chdir=%s", v.Directory))
+	}
 
 	// check if CheckVariables is provided
 	if v.CheckVariables {
@@ -65,7 +70,7 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 	}
 
 	// add the required dir param
-	flags = append(flags, dir)
+	flags = append(flags)
 
 	return exec.Command(_terraform, append([]string{validationAction}, flags...)...)
 }
@@ -75,7 +80,7 @@ func (v *Validation) Exec() error {
 	logrus.Trace("running validate with provided configuration")
 
 	// create the validate command for the file
-	cmd := v.Command(v.Directory)
+	cmd := v.Command()
 
 	// run the validate command for the file
 	err := execCmd(cmd)

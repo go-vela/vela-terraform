@@ -49,7 +49,7 @@ type Apply struct {
 
 // Command formats and outputs the Apply command from
 // the provided configuration to apply to resources.
-func (a *Apply) Command(dir string) *exec.Cmd {
+func (a *Apply) Command() *exec.Cmd {
 	logrus.Trace("creating terraform apply command from plugin configuration")
 
 	// variable to store flags for command
@@ -59,6 +59,11 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 	if a.AutoApprove {
 		// add flag for AutoApprove from provided apply command
 		flags = append(flags, "-auto-approve")
+	}
+
+	// check if Directory is provided
+	if a.Directory != "." {
+		flags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
 	}
 
 	// check if Backup is provided
@@ -138,7 +143,7 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 	}
 
 	// add the required dir param
-	flags = append(flags, dir)
+	flags = append(flags)
 
 	return exec.Command(_terraform, append([]string{applyAction}, flags...)...)
 }
@@ -148,7 +153,7 @@ func (a *Apply) Exec() error {
 	logrus.Trace("running apply with provided configuration")
 
 	// create the apply command for the file
-	cmd := a.Command(a.Directory)
+	cmd := a.Command()
 
 	// run the apply command for the file
 	err := execCmd(cmd)

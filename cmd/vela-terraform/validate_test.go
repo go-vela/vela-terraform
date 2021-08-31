@@ -24,16 +24,16 @@ func TestTerraform_Validation_Command(t *testing.T) {
 	want := exec.Command(
 		_terraform,
 		validationAction,
+		fmt.Sprintf("-chdir=%s", v.Directory),
 		fmt.Sprintf("-check-variables=%t", v.CheckVariables),
 		"-no-color",
 		fmt.Sprintf("-var=%s", v.Vars[0]),
 		fmt.Sprintf("-var=%s", v.Vars[1]),
 		fmt.Sprintf("-var-file=%s", v.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", v.VarFiles[1]),
-		v.Directory,
 	)
 
-	got := v.Command("foobar/")
+	got := v.Command()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
