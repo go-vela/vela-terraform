@@ -36,15 +36,15 @@ func (f *FMT) Command() *exec.Cmd {
 	// variable to store flags for command
 	var flags []string
 
+	// check if Directory is provided
+	if f.Directory != "." {
+		flags = append(flags, fmt.Sprintf("-chdir=%s", f.Directory))
+	}
+
 	// check if List is provided
 	if !f.List {
 		// add flag for List from provided fmt command
 		flags = append(flags, fmt.Sprintf("-list=%t", f.List))
-	}
-
-	// check if Directory is provided
-	if f.Directory != "." {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", f.Directory))
 	}
 
 	// check if Write is provided
@@ -64,9 +64,6 @@ func (f *FMT) Command() *exec.Cmd {
 		// add flag for Check from provided fmt command
 		flags = append(flags, fmt.Sprintf("-check=%t", f.Check))
 	}
-
-	// add the required dir param
-	flags = append(flags)
 
 	return exec.Command(_terraform, append([]string{fmtAction}, flags...)...)
 }

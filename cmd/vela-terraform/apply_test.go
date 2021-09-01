@@ -34,8 +34,8 @@ func TestTerraform_Apply_Command(t *testing.T) {
 	want := exec.Command(
 		_terraform,
 		applyAction,
-		"-auto-approve",
 		fmt.Sprintf("-chdir=%s", a.Directory),
+		"-auto-approve",
 		fmt.Sprintf("-backup=%s", a.Backup),
 		"-lock=true",
 		fmt.Sprintf("-lock-timeout=%s", a.LockTimeout),

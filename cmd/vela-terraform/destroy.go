@@ -134,9 +134,6 @@ func (a *Destroy) Command() *exec.Cmd {
 		}
 	}
 
-	// add the required dir param
-	flags = append(flags)
-
 	return exec.Command(_terraform, append([]string{destroyAction}, flags...)...)
 }
 

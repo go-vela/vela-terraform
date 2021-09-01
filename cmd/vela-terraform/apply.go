@@ -55,15 +55,15 @@ func (a *Apply) Command() *exec.Cmd {
 	// variable to store flags for command
 	var flags []string
 
+	// check if Directory is provided
+	if a.Directory != "." {
+		flags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
+	}
+
 	// check if AutoApprove is provided
 	if a.AutoApprove {
 		// add flag for AutoApprove from provided apply command
 		flags = append(flags, "-auto-approve")
-	}
-
-	// check if Directory is provided
-	if a.Directory != "." {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
 	}
 
 	// check if Backup is provided
@@ -141,9 +141,6 @@ func (a *Apply) Command() *exec.Cmd {
 			flags = append(flags, fmt.Sprintf(`-var-file=%s`, v))
 		}
 	}
-
-	// add the required dir param
-	flags = append(flags)
 
 	return exec.Command(_terraform, append([]string{applyAction}, flags...)...)
 }

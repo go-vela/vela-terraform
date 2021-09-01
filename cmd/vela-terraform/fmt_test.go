@@ -24,8 +24,8 @@ func TestTerraform_FMT_Command(t *testing.T) {
 	want := exec.Command(
 		_terraform,
 		fmtAction,
-		fmt.Sprintf("-list=%t", f.List),
 		fmt.Sprintf("-chdir=%s", f.Directory),
+		fmt.Sprintf("-list=%t", f.List),
 		fmt.Sprintf("-write=%t", f.Write),
 		fmt.Sprintf("-diff=%t", f.Diff),
 		fmt.Sprintf("-check=%t", f.Check),

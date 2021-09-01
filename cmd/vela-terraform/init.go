@@ -73,6 +73,11 @@ func (i *Init) Command() *exec.Cmd {
 	// variable to store flags for command
 	var flags []string
 
+	// check if Directory is provided
+	if i.Directory != "." {
+		flags = append(flags, fmt.Sprintf("-chdir=%s", i.Directory))
+	}
+
 	// check if Backend is provided
 	if i.InitOptions.Backend {
 		// add flag for Backend from provided init command
@@ -85,11 +90,6 @@ func (i *Init) Command() *exec.Cmd {
 			// add flag for BackendConfigs from provided init command
 			flags = append(flags, fmt.Sprintf(`-backend-config=%s`, v))
 		}
-	}
-
-	// check if Directory is provided
-	if i.Directory != "." {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", i.Directory))
 	}
 
 	// check if ForceCopy is provided
@@ -165,9 +165,6 @@ func (i *Init) Command() *exec.Cmd {
 		// add flag for VerifyPlugins from provided init command
 		flags = append(flags, "-verify-plugins=true")
 	}
-
-	// add the required dir param
-	flags = append(flags)
 
 	return exec.Command(_terraform, append([]string{initAction}, flags...)...)
 }
