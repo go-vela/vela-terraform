@@ -5,6 +5,7 @@ go 1.15
 require (
 	cloud.google.com/go v0.60.0 // indirect
 	cloud.google.com/go/storage v1.10.0 // indirect
+	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/aws/aws-sdk-go v1.33.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect

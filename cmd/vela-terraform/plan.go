@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -47,6 +49,7 @@ type Plan struct {
 	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
 	VarFiles []string
+	Version  *semver.Version
 }
 
 // Command formats and outputs the Plan command from
@@ -58,7 +61,7 @@ func (p *Plan) Command() *exec.Cmd {
 	var flags []string
 
 	// check if Directory is provided
-	if p.Directory != "." {
+	if p.Directory != "." && SupportsChdir(p.Version) {
 		flags = append(flags, fmt.Sprintf("-chdir=%s", p.Directory))
 	}
 
@@ -148,6 +151,11 @@ func (p *Plan) Command() *exec.Cmd {
 			// add flag for VarFiles from provided command
 			flags = append(flags, fmt.Sprintf(`-var-file=%s`, v))
 		}
+	}
+
+	// check if Directory is provided and terraform version doesn't support chdir
+	if p.Directory != "." && !SupportsChdir(p.Version) {
+		flags = append(flags, p.Directory)
 	}
 
 	return exec.Command(_terraform, append([]string{planAction}, flags...)...)

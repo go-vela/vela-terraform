@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -43,6 +45,7 @@ type Destroy struct {
 	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
 	VarFiles []string
+	Version  *semver.Version
 }
 
 // Command formats and outputs the Destroy command from
@@ -54,7 +57,7 @@ func (a *Destroy) Command() *exec.Cmd {
 	var flags []string
 
 	// check if Directory is provided
-	if a.Directory != "." {
+	if a.Directory != "." && SupportsChdir(a.Version) {
 		flags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
 	}
 
@@ -132,6 +135,11 @@ func (a *Destroy) Command() *exec.Cmd {
 			// add flag for VarFiles from provided command
 			flags = append(flags, fmt.Sprintf(`-var-file=%s`, v))
 		}
+	}
+
+	// check if Directory is provided and terraform version doesn't support chdir
+	if a.Directory != "." && !SupportsChdir(a.Version) {
+		flags = append(flags, a.Directory)
 	}
 
 	return exec.Command(_terraform, append([]string{destroyAction}, flags...)...)

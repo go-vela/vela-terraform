@@ -10,6 +10,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/go-vela/vela-terraform/version"
 
 	"github.com/sirupsen/logrus"
@@ -292,13 +294,19 @@ func run(c *cli.Context) error {
 		"registry": "https://hub.docker.com/r/target/vela-terraform",
 	}).Info("Vela Terraform Plugin")
 
-	// capture custom terraform version requested
-	version := c.String("terraform.version")
+	// capture custom terraform tfVersion requested
+	tfVersion := c.String("terraform.tfVersion")
 
-	// check if a custom terraform version was requested
-	if len(version) > 0 {
-		// attempt to install the custom terraform version
-		err := install(version, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
+	tfSemVersion, err := semver.NewVersion(tfVersion)
+	if err != nil {
+		logrus.Errorf("Unable to parse terraform version")
+		return err
+	}
+
+	// check if a custom terraform tfVersion was requested
+	if len(tfVersion) > 0 {
+		// attempt to install the custom terraform tfVersion
+		err := install(tfVersion, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
 		if err != nil {
 			return err
 		}
@@ -321,6 +329,7 @@ func run(c *cli.Context) error {
 			Target:      c.String("target"),
 			Vars:        c.StringSlice("vars"),
 			VarFiles:    c.StringSlice("var_files"),
+			Version:     tfSemVersion,
 		},
 		// Config configuration
 		Config: &Config{
@@ -346,6 +355,7 @@ func run(c *cli.Context) error {
 			Target:      c.String("target"),
 			Vars:        c.StringSlice("vars"),
 			VarFiles:    c.StringSlice("var_files"),
+			Version:     tfSemVersion,
 		},
 		// FMT configuration
 		FMT: &FMT{
@@ -354,6 +364,7 @@ func run(c *cli.Context) error {
 			Directory: c.String("directory"),
 			List:      c.Bool("fmt.list"),
 			Write:     c.Bool("fmt.write"),
+			Version:   tfSemVersion,
 		},
 		// InitOptions configuration
 		Init: &Init{
@@ -377,6 +388,7 @@ func run(c *cli.Context) error {
 			Target:           c.String("target"),
 			Vars:             c.StringSlice("vars"),
 			VarFiles:         c.StringSlice("var_files"),
+			Version:          tfSemVersion,
 		},
 		// Validation configuration
 		Validation: &Validation{
@@ -385,14 +397,26 @@ func run(c *cli.Context) error {
 			NoColor:        c.Bool("no_color"),
 			Vars:           c.StringSlice("vars"),
 			VarFiles:       c.StringSlice("var_files"),
+			Version:        tfSemVersion,
 		},
 	}
 
 	// validate the plugin
-	err := p.Validate()
+	err = p.Validate()
 	if err != nil {
 		return err
 	}
 
 	return p.Exec()
+}
+
+func SupportsChdir(v *semver.Version) bool {
+	if v.Major() >= 1 {
+		return true
+	}
+	if v.Minor() >= 14 {
+		return true
+	} else {
+		return false
+	}
 }

@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -25,7 +27,8 @@ type FMT struct {
 	// List files whose formatting differs
 	List bool
 	// Write result to source file instead of STDOUT
-	Write bool
+	Write   bool
+	Version *semver.Version
 }
 
 // Command formats and outputs the FMT command from
@@ -37,7 +40,7 @@ func (f *FMT) Command() *exec.Cmd {
 	var flags []string
 
 	// check if Directory is provided
-	if f.Directory != "." {
+	if f.Directory != "." && SupportsChdir(f.Version) {
 		flags = append(flags, fmt.Sprintf("-chdir=%s", f.Directory))
 	}
 
@@ -63,6 +66,11 @@ func (f *FMT) Command() *exec.Cmd {
 	if f.Check {
 		// add flag for Check from provided fmt command
 		flags = append(flags, fmt.Sprintf("-check=%t", f.Check))
+	}
+
+	// check if Directory is provided and terraform version doesn't support chdir
+	if f.Directory != "." && !SupportsChdir(f.Version) {
+		flags = append(flags, f.Directory)
 	}
 
 	return exec.Command(_terraform, append([]string{fmtAction}, flags...)...)
