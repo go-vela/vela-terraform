@@ -295,7 +295,7 @@ func run(c *cli.Context) error {
 	}).Info("Vela Terraform Plugin")
 
 	// capture custom terraform tfVersion requested
-	tfVersion := c.String("terraform.tfVersion")
+	tfVersion := c.String("terraform.version")
 
 	tfSemVersion, err := semver.NewVersion(tfVersion)
 	if err != nil {
