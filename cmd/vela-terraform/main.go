@@ -151,7 +151,6 @@ func main() {
 			FilePath: "/vela/parameters/terraform/version,/vela/secrets/terraform/version",
 			Name:     "terraform.version",
 			Usage:    "set terraform version for plugin",
-			Value:    "1.0.0",
 		},
 
 		// Config Flags
