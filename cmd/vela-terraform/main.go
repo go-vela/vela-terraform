@@ -297,12 +297,6 @@ func run(c *cli.Context) error {
 	// capture custom terraform tfVersion requested
 	tfVersion := c.String("terraform.version")
 
-	tfSemVersion, err := semver.NewVersion(tfVersion)
-	if err != nil {
-		logrus.Errorf("Unable to parse terraform version")
-		return err
-	}
-
 	// check if a custom terraform tfVersion was requested
 	if len(tfVersion) > 0 {
 		// attempt to install the custom terraform tfVersion
@@ -310,6 +304,14 @@ func run(c *cli.Context) error {
 		if err != nil {
 			return err
 		}
+	} else {
+		// Default Version will be used if not defined
+		tfVersion = "1.0.0"
+	}
+	tfSemVersion, err := semver.NewVersion(tfVersion)
+	if err != nil {
+		logrus.Errorf("Unable to parse terraform version")
+		return err
 	}
 
 	// create the plugin
