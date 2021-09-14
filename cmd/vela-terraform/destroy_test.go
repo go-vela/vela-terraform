@@ -36,8 +36,8 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 
 	want := exec.Command(
 		_terraform,
-		destroyAction,
 		fmt.Sprintf("-chdir=%s", d.Directory),
+		destroyAction,
 		"-auto-approve",
 		fmt.Sprintf("-backup=%s", d.Backup),
 		"-lock=true",

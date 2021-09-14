@@ -27,8 +27,8 @@ func TestTerraform_Validation_Command(t *testing.T) {
 
 	want := exec.Command(
 		_terraform,
-		validationAction,
 		fmt.Sprintf("-chdir=%s", v.Directory),
+		validationAction,
 		fmt.Sprintf("-check-variables=%t", v.CheckVariables),
 		"-no-color",
 		fmt.Sprintf("-var=%s", v.Vars[0]),

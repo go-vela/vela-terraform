@@ -38,8 +38,8 @@ func TestTerraform_Plan_Command(t *testing.T) {
 
 	want := exec.Command(
 		_terraform,
-		planAction,
 		fmt.Sprintf("-chdir=%s", p.Directory),
+		planAction,
 		"-destroy",
 		"-detailed-exitcode",
 		"-input=true",

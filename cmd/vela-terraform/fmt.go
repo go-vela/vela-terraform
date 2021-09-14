@@ -36,12 +36,15 @@ type FMT struct {
 func (f *FMT) Command() *exec.Cmd {
 	logrus.Trace("creating terraform fmt command from plugin configuration")
 
+	// global Variables
+	var globalFlags []string
+
 	// variable to store flags for command
 	var flags []string
 
 	// check if Directory is provided
 	if f.Directory != "." && SupportsChdir(f.Version) {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", f.Directory))
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", f.Directory))
 	}
 
 	// check if List is provided
@@ -73,7 +76,8 @@ func (f *FMT) Command() *exec.Cmd {
 		flags = append(flags, f.Directory)
 	}
 
-	return exec.Command(_terraform, append([]string{fmtAction}, flags...)...)
+	globalFlags = append(globalFlags, fmtAction)
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for formatting Terraform files.

@@ -55,12 +55,15 @@ type Apply struct {
 func (a *Apply) Command() *exec.Cmd {
 	logrus.Trace("creating terraform apply command from plugin configuration")
 
+	// global Variables
+	var globalFlags []string
+
 	// variable to store flags for command
 	var flags []string
 
 	// check if Directory is provided and terraform version supports chdir
 	if a.Directory != "." && SupportsChdir(a.Version) {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
 	}
 
 	// check if AutoApprove is provided
@@ -150,7 +153,9 @@ func (a *Apply) Command() *exec.Cmd {
 		flags = append(flags, a.Directory)
 	}
 
-	return exec.Command(_terraform, append([]string{applyAction}, flags...)...)
+	globalFlags = append(globalFlags, applyAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for applying Terraform.

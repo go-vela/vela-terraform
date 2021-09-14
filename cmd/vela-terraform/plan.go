@@ -57,12 +57,15 @@ type Plan struct {
 func (p *Plan) Command() *exec.Cmd {
 	logrus.Trace("creating terraform plan command from plugin configuration")
 
+	// global Variables
+	var globalFlags []string
+
 	// variable to store flags for command
 	var flags []string
 
 	// check if Directory is provided
 	if p.Directory != "." && SupportsChdir(p.Version) {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", p.Directory))
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", p.Directory))
 	}
 
 	// check if Destroy is provided
@@ -158,7 +161,9 @@ func (p *Plan) Command() *exec.Cmd {
 		flags = append(flags, p.Directory)
 	}
 
-	return exec.Command(_terraform, append([]string{planAction}, flags...)...)
+	globalFlags = append(globalFlags, planAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for planning Terraform.

@@ -36,8 +36,8 @@ func TestTerraform_Init_Command(t *testing.T) {
 
 	want := exec.Command(
 		_terraform,
-		initAction,
 		fmt.Sprintf("-chdir=%s", i.Directory),
+		initAction,
 		"-backend=true",
 		fmt.Sprintf("-backend-config=%s", i.InitOptions.BackendConfigs[0]),
 		fmt.Sprintf("-backend-config=%s", i.InitOptions.BackendConfigs[1]),

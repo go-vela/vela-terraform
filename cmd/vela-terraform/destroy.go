@@ -53,12 +53,15 @@ type Destroy struct {
 func (a *Destroy) Command() *exec.Cmd {
 	logrus.Trace("creating terraform destroy command from plugin configuration")
 
+	// global Variables
+	var globalFlags []string
+
 	// variable to store flags for command
 	var flags []string
 
 	// check if Directory is provided
 	if a.Directory != "." && SupportsChdir(a.Version) {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
 	}
 
 	// check if AutoApprove is provided
@@ -142,7 +145,9 @@ func (a *Destroy) Command() *exec.Cmd {
 		flags = append(flags, a.Directory)
 	}
 
-	return exec.Command(_terraform, append([]string{destroyAction}, flags...)...)
+	globalFlags = append(globalFlags, destroyAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for destroying resources with Terraform.

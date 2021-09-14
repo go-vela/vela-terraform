@@ -36,12 +36,15 @@ type Validation struct {
 func (v *Validation) Command() *exec.Cmd {
 	logrus.Trace("creating terraform validate command from plugin configuration")
 
+	// global Variables
+	var globalFlags []string
+
 	// variable to store flags for command
 	var flags []string
 
 	// check if Directory is provided
 	if v.Directory != "." && SupportsChdir(v.Version) {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", v.Directory))
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", v.Directory))
 	}
 
 	// check if CheckVariables is provided
@@ -77,7 +80,9 @@ func (v *Validation) Command() *exec.Cmd {
 		flags = append(flags, v.Directory)
 	}
 
-	return exec.Command(_terraform, append([]string{validationAction}, flags...)...)
+	globalFlags = append(globalFlags, validationAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for validating Terraform.

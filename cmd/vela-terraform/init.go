@@ -70,12 +70,15 @@ type (
 func (i *Init) Command() *exec.Cmd {
 	logrus.Trace("creating terraform init command from plugin configuration")
 
+	// global Variables
+	var globalFlags []string
+
 	// variable to store flags for command
 	var flags []string
 
 	// check if Directory is provided
 	if i.Directory != "." {
-		flags = append(flags, fmt.Sprintf("-chdir=%s", i.Directory))
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", i.Directory))
 	}
 
 	// check if Backend is provided
@@ -166,7 +169,9 @@ func (i *Init) Command() *exec.Cmd {
 		flags = append(flags, "-verify-plugins=true")
 	}
 
-	return exec.Command(_terraform, append([]string{initAction}, flags...)...)
+	globalFlags = append(globalFlags, initAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for initing Terraform.
