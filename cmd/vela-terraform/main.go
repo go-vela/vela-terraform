@@ -147,7 +147,7 @@ func main() {
 			Usage:    "a list of var files to use",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_VERSION", "TERRAFORM_VERSION"},
+			EnvVars:  []string{"PLUGIN_TERRAFORM_VERSION", "PARAMETER_VERSION", "TERRAFORM_VERSION"},
 			FilePath: "/vela/parameters/terraform/version,/vela/secrets/terraform/version",
 			Name:     "terraform.version",
 			Usage:    "set terraform version for plugin",
@@ -297,17 +297,12 @@ func run(c *cli.Context) error {
 	// capture custom terraform tfVersion requested
 	tfVersion := c.String("terraform.version")
 
-	// check if a custom terraform tfVersion was requested
-	if len(tfVersion) > 0 {
-		// attempt to install the custom terraform tfVersion
-		err := install(tfVersion, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
-		if err != nil {
-			return err
-		}
-	} else {
-		// Default Version will be used if not defined
-		tfVersion = os.Getenv("PLUGIN_TERRAFORM_VERSION")
+	// attempt to install the custom terraform tfVersion if different from default
+	err := install(tfVersion, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
+	if err != nil {
+		return err
 	}
+
 	tfSemVersion, err := semver.NewVersion(tfVersion)
 	if err != nil {
 		logrus.Errorf("Unable to parse terraform version")
