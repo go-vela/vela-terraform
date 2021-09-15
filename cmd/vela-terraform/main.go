@@ -147,7 +147,7 @@ func main() {
 			Usage:    "a list of var files to use",
 		},
 		&cli.StringFlag{
-			EnvVars:  []string{"PLUGIN_TERRAFORM_VERSION", "PARAMETER_VERSION", "TERRAFORM_VERSION"},
+			EnvVars:  []string{"PARAMETER_VERSION", "TERRAFORM_VERSION", "PLUGIN_TERRAFORM_VERSION"},
 			FilePath: "/vela/parameters/terraform/version,/vela/secrets/terraform/version",
 			Name:     "terraform.version",
 			Usage:    "set terraform version for plugin",
