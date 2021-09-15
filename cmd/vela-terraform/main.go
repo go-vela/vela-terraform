@@ -306,7 +306,7 @@ func run(c *cli.Context) error {
 		}
 	} else {
 		// Default Version will be used if not defined
-		tfVersion = "1.0.0"
+		tfVersion = os.Getenv("PLUGIN_TERRAFORM_VERSION")
 	}
 	tfSemVersion, err := semver.NewVersion(tfVersion)
 	if err != nil {
