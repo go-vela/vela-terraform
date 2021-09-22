@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -47,15 +49,24 @@ type Plan struct {
 	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
 	VarFiles []string
+	Version  *semver.Version
 }
 
 // Command formats and outputs the Plan command from
 // the provided configuration to plan to resources.
-func (p *Plan) Command(dir string) *exec.Cmd {
+func (p *Plan) Command() *exec.Cmd {
 	logrus.Trace("creating terraform plan command from plugin configuration")
+
+	// global Variables
+	var globalFlags []string
 
 	// variable to store flags for command
 	var flags []string
+
+	// check if Directory is provided
+	if p.Directory != "." && SupportsChdir(p.Version) {
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", p.Directory))
+	}
 
 	// check if Destroy is provided
 	if p.Destroy {
@@ -145,10 +156,14 @@ func (p *Plan) Command(dir string) *exec.Cmd {
 		}
 	}
 
-	// add the required dir param
-	flags = append(flags, dir)
+	// check if Directory is provided and terraform version doesn't support chdir
+	if p.Directory != "." && !SupportsChdir(p.Version) {
+		flags = append(flags, p.Directory)
+	}
 
-	return exec.Command(_terraform, append([]string{planAction}, flags...)...)
+	globalFlags = append(globalFlags, planAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for planning Terraform.
@@ -156,7 +171,7 @@ func (p *Plan) Exec() error {
 	logrus.Trace("running plan with provided configuration")
 
 	// create the plan command for the file
-	cmd := p.Command(p.Directory)
+	cmd := p.Command()
 
 	// run the plan command for the file
 	err := execCmd(cmd)

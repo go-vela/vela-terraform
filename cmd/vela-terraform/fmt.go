@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -25,16 +27,25 @@ type FMT struct {
 	// List files whose formatting differs
 	List bool
 	// Write result to source file instead of STDOUT
-	Write bool
+	Write   bool
+	Version *semver.Version
 }
 
 // Command formats and outputs the FMT command from
 // the provided configuration to fmt to resources.
-func (f *FMT) Command(dir string) *exec.Cmd {
+func (f *FMT) Command() *exec.Cmd {
 	logrus.Trace("creating terraform fmt command from plugin configuration")
+
+	// global Variables
+	var globalFlags []string
 
 	// variable to store flags for command
 	var flags []string
+
+	// check if Directory is provided
+	if f.Directory != "." && SupportsChdir(f.Version) {
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", f.Directory))
+	}
 
 	// check if List is provided
 	if !f.List {
@@ -60,10 +71,13 @@ func (f *FMT) Command(dir string) *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("-check=%t", f.Check))
 	}
 
-	// add the required dir param
-	flags = append(flags, dir)
+	// check if Directory is provided and terraform version doesn't support chdir
+	if f.Directory != "." && !SupportsChdir(f.Version) {
+		flags = append(flags, f.Directory)
+	}
 
-	return exec.Command(_terraform, append([]string{fmtAction}, flags...)...)
+	globalFlags = append(globalFlags, fmtAction)
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for formatting Terraform files.
@@ -71,7 +85,7 @@ func (f *FMT) Exec() error {
 	logrus.Trace("running fmt with provided configuration")
 
 	// create the fmt command for the file
-	cmd := f.Command(f.Directory)
+	cmd := f.Command()
 
 	// run the fmt command for the file
 	err := execCmd(cmd)

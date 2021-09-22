@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -26,15 +28,24 @@ type Validation struct {
 	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
 	VarFiles []string
+	Version  *semver.Version
 }
 
 // Command formats and outputs the Validate command from
 // the provided configuration to validate to resources.
-func (v *Validation) Command(dir string) *exec.Cmd {
+func (v *Validation) Command() *exec.Cmd {
 	logrus.Trace("creating terraform validate command from plugin configuration")
+
+	// global Variables
+	var globalFlags []string
 
 	// variable to store flags for command
 	var flags []string
+
+	// check if Directory is provided
+	if v.Directory != "." && SupportsChdir(v.Version) {
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", v.Directory))
+	}
 
 	// check if CheckVariables is provided
 	if v.CheckVariables {
@@ -64,10 +75,14 @@ func (v *Validation) Command(dir string) *exec.Cmd {
 		}
 	}
 
-	// add the required dir param
-	flags = append(flags, dir)
+	// check if Directory is provided and terraform version doesn't support chdir
+	if v.Directory != "." && !SupportsChdir(v.Version) {
+		flags = append(flags, v.Directory)
+	}
 
-	return exec.Command(_terraform, append([]string{validationAction}, flags...)...)
+	globalFlags = append(globalFlags, validationAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for validating Terraform.
@@ -75,7 +90,7 @@ func (v *Validation) Exec() error {
 	logrus.Trace("running validate with provided configuration")
 
 	// create the validate command for the file
-	cmd := v.Command(v.Directory)
+	cmd := v.Command()
 
 	// run the validate command for the file
 	err := execCmd(cmd)

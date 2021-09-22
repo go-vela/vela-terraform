@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -45,15 +47,24 @@ type Apply struct {
 	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
 	VarFiles []string
+	Version  *semver.Version
 }
 
 // Command formats and outputs the Apply command from
 // the provided configuration to apply to resources.
-func (a *Apply) Command(dir string) *exec.Cmd {
+func (a *Apply) Command() *exec.Cmd {
 	logrus.Trace("creating terraform apply command from plugin configuration")
+
+	// global Variables
+	var globalFlags []string
 
 	// variable to store flags for command
 	var flags []string
+
+	// check if Directory is provided and terraform version supports chdir
+	if a.Directory != "." && SupportsChdir(a.Version) {
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
+	}
 
 	// check if AutoApprove is provided
 	if a.AutoApprove {
@@ -137,10 +148,14 @@ func (a *Apply) Command(dir string) *exec.Cmd {
 		}
 	}
 
-	// add the required dir param
-	flags = append(flags, dir)
+	// check if Directory is provided and terraform version doesn't support chdir
+	if a.Directory != "." && !SupportsChdir(a.Version) {
+		flags = append(flags, a.Directory)
+	}
 
-	return exec.Command(_terraform, append([]string{applyAction}, flags...)...)
+	globalFlags = append(globalFlags, applyAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for applying Terraform.
@@ -148,7 +163,7 @@ func (a *Apply) Exec() error {
 	logrus.Trace("running apply with provided configuration")
 
 	// create the apply command for the file
-	cmd := a.Command(a.Directory)
+	cmd := a.Command()
 
 	// run the apply command for the file
 	err := execCmd(cmd)

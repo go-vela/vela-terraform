@@ -9,9 +9,12 @@ import (
 	"os/exec"
 	"reflect"
 	"testing"
+
+	"github.com/Masterminds/semver"
 )
 
 func TestTerraform_Validation_Command(t *testing.T) {
+	ver, _ := semver.NewVersion("1.0.0")
 	// setup types
 	v := &Validation{
 		CheckVariables: true,
@@ -19,6 +22,37 @@ func TestTerraform_Validation_Command(t *testing.T) {
 		NoColor:        true,
 		Vars:           []string{"foo=bar", "bar=foo"},
 		VarFiles:       []string{"vars1.tf", "vars2.tf"},
+		Version:        ver,
+	}
+
+	want := exec.Command(
+		_terraform,
+		fmt.Sprintf("-chdir=%s", v.Directory),
+		validationAction,
+		fmt.Sprintf("-check-variables=%t", v.CheckVariables),
+		"-no-color",
+		fmt.Sprintf("-var=%s", v.Vars[0]),
+		fmt.Sprintf("-var=%s", v.Vars[1]),
+		fmt.Sprintf("-var-file=%s", v.VarFiles[0]),
+		fmt.Sprintf("-var-file=%s", v.VarFiles[1]),
+	)
+
+	got := v.Command()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Command is %v, want %v", got, want)
+	}
+}
+
+func TestTerraform_Validation_Command_tf13(t *testing.T) {
+	ver, _ := semver.NewVersion("0.13.0")
+	// setup types
+	v := &Validation{
+		CheckVariables: true,
+		Directory:      "foobar/",
+		NoColor:        true,
+		Vars:           []string{"foo=bar", "bar=foo"},
+		VarFiles:       []string{"vars1.tf", "vars2.tf"},
+		Version:        ver,
 	}
 
 	want := exec.Command(
@@ -30,19 +64,21 @@ func TestTerraform_Validation_Command(t *testing.T) {
 		fmt.Sprintf("-var=%s", v.Vars[1]),
 		fmt.Sprintf("-var-file=%s", v.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", v.VarFiles[1]),
-		v.Directory,
+		fmt.Sprintf(v.Directory),
 	)
 
-	got := v.Command("foobar/")
+	got := v.Command()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}
 }
 
 func TestTerraform_Validation_Exec(t *testing.T) {
+	ver, _ := semver.NewVersion("1.0.0")
 	// setup types
 	v := &Validation{
 		Directory: "foobar/",
+		Version:   ver,
 	}
 
 	err := v.Exec()
@@ -52,18 +88,19 @@ func TestTerraform_Validation_Exec(t *testing.T) {
 }
 
 func TestTerraform_Validation_Validate(t *testing.T) {
+	ver, _ := semver.NewVersion("1.0.0")
 	// setup types
 	tests := []struct {
 		validation *Validation
 	}{
 		{
-			validation: &Validation{Directory: "foobar/"},
+			validation: &Validation{Directory: "foobar/", Version: ver},
 		},
 		{
-			validation: &Validation{Directory: "foobar.tf"},
+			validation: &Validation{Directory: "foobar.tf", Version: ver},
 		},
 		{
-			validation: &Validation{Directory: ""},
+			validation: &Validation{Directory: "", Version: ver},
 		},
 	}
 

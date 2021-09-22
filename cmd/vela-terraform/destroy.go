@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Masterminds/semver"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -43,15 +45,24 @@ type Destroy struct {
 	Vars []string
 	// set variables in the Terraform configuration from a file. i.e. "-var-file=foo"
 	VarFiles []string
+	Version  *semver.Version
 }
 
 // Command formats and outputs the Destroy command from
 // the provided configuration to destroy to resources.
-func (a *Destroy) Command(dir string) *exec.Cmd {
+func (a *Destroy) Command() *exec.Cmd {
 	logrus.Trace("creating terraform destroy command from plugin configuration")
+
+	// global Variables
+	var globalFlags []string
 
 	// variable to store flags for command
 	var flags []string
+
+	// check if Directory is provided
+	if a.Directory != "." && SupportsChdir(a.Version) {
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
+	}
 
 	// check if AutoApprove is provided
 	if a.AutoApprove {
@@ -129,10 +140,14 @@ func (a *Destroy) Command(dir string) *exec.Cmd {
 		}
 	}
 
-	// add the required dir param
-	flags = append(flags, dir)
+	// check if Directory is provided and terraform version doesn't support chdir
+	if a.Directory != "." && !SupportsChdir(a.Version) {
+		flags = append(flags, a.Directory)
+	}
 
-	return exec.Command(_terraform, append([]string{destroyAction}, flags...)...)
+	globalFlags = append(globalFlags, destroyAction)
+
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for destroying resources with Terraform.
@@ -140,7 +155,7 @@ func (d *Destroy) Exec() error {
 	logrus.Trace("running destroy with provided configuration")
 
 	// create the destroy command for the file
-	cmd := d.Command(d.Directory)
+	cmd := d.Command()
 
 	// run the destroy command for the file
 	err := execCmd(cmd)

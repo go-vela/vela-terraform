@@ -36,6 +36,7 @@ func TestTerraform_Init_Command(t *testing.T) {
 
 	want := exec.Command(
 		_terraform,
+		fmt.Sprintf("-chdir=%s", i.Directory),
 		initAction,
 		"-backend=true",
 		fmt.Sprintf("-backend-config=%s", i.InitOptions.BackendConfigs[0]),
@@ -53,10 +54,9 @@ func TestTerraform_Init_Command(t *testing.T) {
 		"-reconfigure",
 		"-upgrade=false",
 		"-verify-plugins=true",
-		i.Directory,
 	)
 
-	got := i.Command("foobar/")
+	got := i.Command()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Command is %v, want %v", got, want)
 	}

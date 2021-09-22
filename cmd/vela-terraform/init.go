@@ -67,11 +67,19 @@ type (
 
 // Command formats and outputs the Init command from
 // the provided configuration to init to resources.
-func (i *Init) Command(dir string) *exec.Cmd {
+func (i *Init) Command() *exec.Cmd {
 	logrus.Trace("creating terraform init command from plugin configuration")
+
+	// global Variables
+	var globalFlags []string
 
 	// variable to store flags for command
 	var flags []string
+
+	// check if Directory is provided
+	if i.Directory != "." {
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", i.Directory))
+	}
 
 	// check if Backend is provided
 	if i.InitOptions.Backend {
@@ -161,10 +169,9 @@ func (i *Init) Command(dir string) *exec.Cmd {
 		flags = append(flags, "-verify-plugins=true")
 	}
 
-	// add the required dir param
-	flags = append(flags, dir)
+	globalFlags = append(globalFlags, initAction)
 
-	return exec.Command(_terraform, append([]string{initAction}, flags...)...)
+	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for initing Terraform.
@@ -172,7 +179,7 @@ func (i *Init) Exec() error {
 	logrus.Trace("running init with provided configuration")
 
 	// create the init command for the file
-	cmd := i.Command(i.Directory)
+	cmd := i.Command()
 
 	// run the init command for the file
 	err := execCmd(cmd)
