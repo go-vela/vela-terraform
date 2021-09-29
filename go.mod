@@ -12,7 +12,7 @@ require (
 	github.com/go-vela/types v0.9.0
 	github.com/hashicorp/go-getter v1.5.6
 	github.com/hashicorp/go-version v1.2.1 // indirect
-	github.com/joho/godotenv v1.3.0
+	github.com/joho/godotenv v1.4.0
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/sirupsen/logrus v1.8.1
