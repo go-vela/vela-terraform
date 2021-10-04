@@ -216,7 +216,7 @@ func (i *Init) Unmarshal() error {
 		// serialize raw properties into expected Props type
 		err := json.Unmarshal(bytes, &i.InitOptions)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to unmarshal init options: %w", err)
 		}
 	}
 
