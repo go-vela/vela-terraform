@@ -179,7 +179,7 @@ func (a *Apply) Validate() error {
 	logrus.Trace("validating plan plugin configuration")
 
 	if strings.EqualFold(a.Directory, ".") {
-		logrus.Warn("terrafrom apply will run in current dir")
+		logrus.Warn("terraform apply will run in current dir")
 	}
 
 	return nil

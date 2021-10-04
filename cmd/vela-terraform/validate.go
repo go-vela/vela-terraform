@@ -106,7 +106,7 @@ func (v *Validation) Validate() error {
 	logrus.Trace("validating plan plugin configuration")
 
 	if strings.EqualFold(v.Directory, ".") {
-		logrus.Warn("terrafrom validate will run in current dir")
+		logrus.Warn("terraform validate will run in current dir")
 	}
 
 	return nil

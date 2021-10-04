@@ -195,7 +195,7 @@ func (i *Init) Validate() error {
 	logrus.Trace("validating plan plugin configuration")
 
 	if strings.EqualFold(i.Directory, ".") {
-		logrus.Warn("terrafrom init will run in current dir")
+		logrus.Warn("terraform init will run in current dir")
 	}
 
 	return nil
@@ -204,7 +204,7 @@ func (i *Init) Validate() error {
 // Unmarshal captures the provided properties and
 // serializes them into their expected form.
 func (i *Init) Unmarshal() error {
-	logrus.Trace("unmarshaling init options")
+	logrus.Trace("unmarshalling init options")
 
 	i.InitOptions = &InitOptions{}
 
