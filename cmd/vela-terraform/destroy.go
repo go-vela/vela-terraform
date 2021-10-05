@@ -171,7 +171,7 @@ func (d *Destroy) Validate() error {
 	logrus.Trace("validating plan plugin configuration")
 
 	if strings.EqualFold(d.Directory, ".") {
-		logrus.Warn("terrafrom destroy will run in current dir")
+		logrus.Warn("terraform destroy will run in current dir")
 	}
 
 	return nil

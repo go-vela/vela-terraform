@@ -101,7 +101,7 @@ func (f *FMT) Validate() error {
 	logrus.Trace("validating plan plugin configuration")
 
 	if strings.EqualFold(f.Directory, ".") {
-		logrus.Warn("terrafrom fmt will run in current dir")
+		logrus.Warn("terraform fmt will run in current dir")
 	}
 
 	return nil

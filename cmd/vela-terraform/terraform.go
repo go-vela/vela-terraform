@@ -22,8 +22,6 @@ const (
 )
 
 func install(customVer, defaultVer string) error {
-	logrus.Infof("custom terraform version requested: %s", customVer)
-
 	// use custom filesystem which enables us to test
 	a := &afero.Afero{
 		Fs: appFS,
@@ -34,6 +32,8 @@ func install(customVer, defaultVer string) error {
 		// the terraform versions match so no action is required
 		return nil
 	}
+
+	logrus.Infof("custom terraform version requested: %s", customVer)
 
 	logrus.Debugf("custom version does not match default: %s", defaultVer)
 	// rename the old terraform binary since we can't overwrite it for now
