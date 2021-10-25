@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Masterminds/semver"
+	"github.com/Masterminds/semver/v3"
 )
 
 func TestTerraform_FMT_Command(t *testing.T) {

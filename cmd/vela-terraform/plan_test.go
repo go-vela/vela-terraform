@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Masterminds/semver"
+	"github.com/Masterminds/semver/v3"
 )
 
 func TestTerraform_Plan_Command(t *testing.T) {
