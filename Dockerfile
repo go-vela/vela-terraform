@@ -31,7 +31,7 @@ RUN apk add --update --no-cache ca-certificates
 ##     docker build --no-cache -t vela-terraform:local .     ##
 ###############################################################
 
-FROM alpine:3.14.0
+FROM alpine:3.14.2
 
 ARG TERRAFORM_VERSION
 
