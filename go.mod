@@ -8,7 +8,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/aws/aws-sdk-go v1.33.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/go-vela/types v0.10.0
+	github.com/go-vela/types v0.11.0
 	github.com/hashicorp/go-getter v1.5.9
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/joho/godotenv v1.4.0
