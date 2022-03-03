@@ -28,8 +28,6 @@ type (
 	}
 
 	// InitOptions represents the plugin configuration for options for init.
-	//
-	// nolint:maligned // suppressing struct optimization, prefer to keep current order
 	InitOptions struct {
 		// Configure the backend for this configuration i.e. "-backend=true"
 		Backend bool `json:"backend,omitempty"`
