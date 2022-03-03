@@ -228,7 +228,6 @@ func main() {
 			Name:     "plan.destroy",
 			Usage:    "destroy all resources managed by the given configuration and state",
 		},
-		// nolint: lll // skip line length due to long parameter name
 		&cli.BoolFlag{
 			EnvVars:  []string{"PARAMETER_DETAILED_EXIT_CODE", "TERRAFORM_DETAILED_EXIT_CODE"},
 			FilePath: "/vela/parameters/terraform/detailed_exit_code,/vela/secrets/terraform/detailed_exit_code",
