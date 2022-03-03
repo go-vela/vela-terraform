@@ -50,7 +50,7 @@ type Destroy struct {
 
 // Command formats and outputs the Destroy command from
 // the provided configuration to destroy to resources.
-func (a *Destroy) Command() *exec.Cmd {
+func (d *Destroy) Command() *exec.Cmd {
 	logrus.Trace("creating terraform destroy command from plugin configuration")
 
 	// global Variables
@@ -60,93 +60,94 @@ func (a *Destroy) Command() *exec.Cmd {
 	var flags []string
 
 	// check if Directory is provided
-	if a.Directory != "." && SupportsChdir(a.Version) {
-		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", a.Directory))
+	if d.Directory != "." && SupportsChdir(d.Version) {
+		globalFlags = append(flags, fmt.Sprintf("-chdir=%s", d.Directory))
 	}
 
 	// check if AutoApprove is provided
-	if a.AutoApprove {
+	if d.AutoApprove {
 		// add flag for AutoApprove from provided destroy command
 		flags = append(flags, "-auto-approve")
 	}
 
 	// check if Backup is provided
-	if len(a.Backup) > 0 {
+	if len(d.Backup) > 0 {
 		// add flag for Backup from provided destroy command
-		flags = append(flags, fmt.Sprintf("-backup=%s", a.Backup))
+		flags = append(flags, fmt.Sprintf("-backup=%s", d.Backup))
 	}
 
 	// check if Lock is provided
-	if a.Lock {
+	if d.Lock {
 		// add flag for Lock from provided destroy command
 		flags = append(flags, "-lock=true")
 	}
 
 	// check if LockTimeout is provided
-	if a.LockTimeout > 0 {
+	if d.LockTimeout > 0 {
 		// add flag for LockTimeout from provided destroy command
-		flags = append(flags, fmt.Sprintf("-lock-timeout=%s", a.LockTimeout))
+		flags = append(flags, fmt.Sprintf("-lock-timeout=%s", d.LockTimeout))
 	}
 
 	// check if NoColor is provided
-	if a.NoColor {
+	if d.NoColor {
 		// add flag for NoColor from provided destroy command
 		flags = append(flags, "-no-color")
 	}
 
 	// check if Parallelism is provided
-	if a.Parallelism > 0 {
+	if d.Parallelism > 0 {
 		// add flag for Parallelism from provided destroy command
-		flags = append(flags, fmt.Sprintf("-parallelism=%d", a.Parallelism))
+		flags = append(flags, fmt.Sprintf("-parallelism=%d", d.Parallelism))
 	}
 
 	// check if Refresh is provided
-	if a.Refresh {
+	if d.Refresh {
 		// add flag for Refresh from provided destroy command
 		flags = append(flags, "-refresh=true")
 	}
 
 	// check if State is provided
-	if len(a.State) > 0 {
+	if len(d.State) > 0 {
 		// add flag for State from provided destroy command
-		flags = append(flags, fmt.Sprintf("-state=%s", a.State))
+		flags = append(flags, fmt.Sprintf("-state=%s", d.State))
 	}
 
 	// check if StateOut is provided
-	if len(a.StateOut) > 0 {
+	if len(d.StateOut) > 0 {
 		// add flag for StateOut from provided destroy command
-		flags = append(flags, fmt.Sprintf("-state-out=%s", a.StateOut))
+		flags = append(flags, fmt.Sprintf("-state-out=%s", d.StateOut))
 	}
 
 	// check if Target is provided
-	if len(a.Target) > 0 {
+	if len(d.Target) > 0 {
 		// add flag for Target from provided destroy command
-		flags = append(flags, fmt.Sprintf("-target=%s", a.Target))
+		flags = append(flags, fmt.Sprintf("-target=%s", d.Target))
 	}
 
 	// check if Vars is provided
-	if len(a.Vars) > 0 {
-		for _, v := range a.Vars {
+	if len(d.Vars) > 0 {
+		for _, v := range d.Vars {
 			// add flag for Vars from provided command
 			flags = append(flags, fmt.Sprintf(`-var=%s`, v))
 		}
 	}
 
 	// check if VarFiles is provided
-	if len(a.VarFiles) > 0 {
-		for _, v := range a.VarFiles {
+	if len(d.VarFiles) > 0 {
+		for _, v := range d.VarFiles {
 			// add flag for VarFiles from provided command
 			flags = append(flags, fmt.Sprintf(`-var-file=%s`, v))
 		}
 	}
 
 	// check if Directory is provided and terraform version doesn't support chdir
-	if a.Directory != "." && !SupportsChdir(a.Version) {
-		flags = append(flags, a.Directory)
+	if d.Directory != "." && !SupportsChdir(d.Version) {
+		flags = append(flags, d.Directory)
 	}
 
 	globalFlags = append(globalFlags, destroyAction)
 
+	// nolint: gosec // ignore G204
 	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 

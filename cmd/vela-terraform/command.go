@@ -34,12 +34,14 @@ func execCmd(e *exec.Cmd) error {
 func getCmd(dir string) *exec.Cmd {
 	// default cmd and arg
 	name := "terraform"
+
 	var args []string
 
 	// check if Directory is provided
 	if dir != "." {
 		args = append(args, fmt.Sprintf("-chdir=%s", dir))
 	}
+
 	args = append(args, "get")
 
 	return exec.Command(

@@ -25,6 +25,7 @@ func TestTerraform_FMT_Command(t *testing.T) {
 		Version:   v,
 	}
 
+	// nolint: gosec // ignore G204
 	want := exec.Command(
 		_terraform,
 		fmt.Sprintf("-chdir=%s", f.Directory),
@@ -53,6 +54,7 @@ func TestTerraform_FMT_Command_tf13(t *testing.T) {
 		Version:   v,
 	}
 
+	// nolint: gosec // ignore G204
 	want := exec.Command(
 		_terraform,
 		fmtAction,

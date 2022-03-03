@@ -155,6 +155,7 @@ func (a *Apply) Command() *exec.Cmd {
 
 	globalFlags = append(globalFlags, applyAction)
 
+	// nolint: gosec // ignore G204
 	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 

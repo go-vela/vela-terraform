@@ -265,8 +265,6 @@ func main() {
 }
 
 // run executes the plugin based off the configuration provided.
-//
-// nolint: funlen // ignore function length due to comments and flags
 func run(c *cli.Context) error {
 	// set the log level for the plugin
 	switch c.String("log.level") {
@@ -411,9 +409,10 @@ func SupportsChdir(v *semver.Version) bool {
 	if v.Major() >= 1 {
 		return true
 	}
+
 	if v.Minor() >= 14 {
 		return true
-	} else {
-		return false
 	}
+
+	return false
 }
