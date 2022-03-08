@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/afero"
 )
 
-// netrcFile represents an empty .netrc config file
+// netrcFile represents an empty .netrc config file.
 const netrcFile = `
 machine %s
 login %s
@@ -21,7 +21,7 @@ password %s
 `
 
 type (
-	// Config holds input parameters for the plugin
+	// Config holds input parameters for the plugin.
 	Config struct {
 		// action to perform with Terraform
 		Action string
@@ -29,7 +29,7 @@ type (
 		Netrc *Netrc
 	}
 
-	// Netrc is credentials for cloning
+	// Netrc is credentials for cloning.
 	Netrc struct {
 		Machine  string
 		Login    string

@@ -20,6 +20,7 @@ func TestTerraform_Apply_Command(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
 	a := &Apply{
 		AutoApprove: true,
 		Backup:      "backup/",
@@ -38,6 +39,7 @@ func TestTerraform_Apply_Command(t *testing.T) {
 		Version:     v,
 	}
 
+	// nolint: gosec // ignore G204
 	want := exec.Command(
 		_terraform,
 		fmt.Sprintf("-chdir=%s", a.Directory),
@@ -71,6 +73,7 @@ func TestTerraform_Apply_Command_tf13(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
 	a := &Apply{
 		AutoApprove: true,
 		Backup:      "backup/",
@@ -89,6 +92,7 @@ func TestTerraform_Apply_Command_tf13(t *testing.T) {
 		Version:     v,
 	}
 
+	// nolint: gosec // ignore G204
 	want := exec.Command(
 		_terraform,
 		applyAction,

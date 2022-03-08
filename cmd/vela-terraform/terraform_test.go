@@ -60,7 +60,7 @@ func TestTerraform_env(t *testing.T) {
 	low := "TF_VAR_chef_private_key"
 
 	// setup env
-	os.Setenv(up, want)
+	t.Setenv(up, want)
 
 	// check env
 	got := os.Getenv(low)

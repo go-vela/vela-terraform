@@ -64,7 +64,7 @@ func install(customVer, defaultVer string) error {
 	return nil
 }
 
-// sets up environment for terraform
+// sets up environment for terraform.
 func env() error {
 	// regexp for TF_VAR_ terraform vars
 	tfVar := regexp.MustCompile(`^TF_VAR_.*$`)
@@ -88,5 +88,6 @@ func env() error {
 			}
 		}
 	}
+
 	return nil
 }
