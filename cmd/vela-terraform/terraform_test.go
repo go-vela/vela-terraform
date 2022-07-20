@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -60,7 +60,7 @@ func TestTerraform_env(t *testing.T) {
 	low := "TF_VAR_chef_private_key"
 
 	// setup env
-	os.Setenv(up, want)
+	t.Setenv(up, want)
 
 	// check env
 	got := os.Getenv(low)

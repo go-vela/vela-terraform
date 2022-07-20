@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/afero"
 )
 
-// netrcFile represents an empty .netrc config file
+// netrcFile represents an empty .netrc config file.
 const netrcFile = `
 machine %s
 login %s
@@ -21,7 +21,7 @@ password %s
 `
 
 type (
-	// Config holds input parameters for the plugin
+	// Config holds input parameters for the plugin.
 	Config struct {
 		// action to perform with Terraform
 		Action string
@@ -29,7 +29,7 @@ type (
 		Netrc *Netrc
 	}
 
-	// Netrc is credentials for cloning
+	// Netrc is credentials for cloning.
 	Netrc struct {
 		Machine  string
 		Login    string

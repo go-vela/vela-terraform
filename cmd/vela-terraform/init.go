@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -28,8 +28,6 @@ type (
 	}
 
 	// InitOptions represents the plugin configuration for options for init.
-	//
-	// nolint:maligned // suppressing struct optimization, prefer to keep current order
 	InitOptions struct {
 		// Configure the backend for this configuration i.e. "-backend=true"
 		Backend bool `json:"backend,omitempty"`
@@ -171,6 +169,7 @@ func (i *Init) Command() *exec.Cmd {
 
 	globalFlags = append(globalFlags, initAction)
 
+	// nolint: gosec // ignore G204
 	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 

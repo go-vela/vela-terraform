@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Masterminds/semver"
+	"github.com/Masterminds/semver/v3"
 
 	"github.com/sirupsen/logrus"
 )
@@ -163,6 +163,7 @@ func (p *Plan) Command() *exec.Cmd {
 
 	globalFlags = append(globalFlags, planAction)
 
+	// nolint: gosec // ignore G204
 	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 

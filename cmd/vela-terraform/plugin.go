@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -12,7 +12,7 @@ import (
 )
 
 type (
-	// Plugin represents the plugin instance to be executed
+	// Plugin represents the plugin instance to be executed.
 	Plugin struct {
 		// Apply arguments loaded for the plugin
 		Apply *Apply
@@ -90,7 +90,7 @@ func (p *Plugin) Exec() error {
 		return p.Validation.Exec()
 	default:
 		return fmt.Errorf(
-			"%s: %s (Valid actions: %s, %s, %s, %s, %s)",
+			"%w: %s (Valid actions: %s, %s, %s, %s, %s)",
 			ErrInvalidAction,
 			p.Config.Action,
 			applyAction,
@@ -147,7 +147,7 @@ func (p *Plugin) Validate() error {
 		return p.Validation.Validate()
 	default:
 		return fmt.Errorf(
-			"%s: %s (Valid actions: %s, %s, %s, %s, %s, %s)",
+			"%w: %s (Valid actions: %s, %s, %s, %s, %s, %s)",
 			ErrInvalidAction,
 			p.Config.Action,
 			applyAction,

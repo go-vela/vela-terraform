@@ -1,11 +1,11 @@
-# Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+# Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 #
 # Use of this source code is governed by the LICENSE file in this repository.
 
 # set a global Docker argument for the default CLI version
 #
 # https://github.com/moby/moby/issues/37345
-ARG TERRAFORM_VERSION=1.0.0
+ARG TERRAFORM_VERSION=1.1.6
 
 ################################################################################
 ##     docker build --no-cache --target binary -t vela-terraform:binary .     ##
@@ -31,7 +31,7 @@ RUN apk add --update --no-cache ca-certificates
 ##     docker build --no-cache -t vela-terraform:local .     ##
 ###############################################################
 
-FROM alpine:3.14.0
+FROM alpine:3.16.0
 
 ARG TERRAFORM_VERSION
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Masterminds/semver"
+	"github.com/Masterminds/semver/v3"
 
 	"github.com/go-vela/vela-terraform/version"
 
@@ -42,7 +42,7 @@ func main() {
 	app.Name = "vela-terraform"
 	app.HelpName = "vela-terraform"
 	app.Usage = "Vela Terraform plugin for running Terraform"
-	app.Copyright = "Copyright (c) 2021 Target Brands, Inc. All rights reserved."
+	app.Copyright = "Copyright (c) 2022 Target Brands, Inc. All rights reserved."
 	app.Authors = []*cli.Author{
 		{
 			Name:  "Vela Admins",
@@ -228,7 +228,6 @@ func main() {
 			Name:     "plan.destroy",
 			Usage:    "destroy all resources managed by the given configuration and state",
 		},
-		// nolint: lll // skip line length due to long parameter name
 		&cli.BoolFlag{
 			EnvVars:  []string{"PARAMETER_DETAILED_EXIT_CODE", "TERRAFORM_DETAILED_EXIT_CODE"},
 			FilePath: "/vela/parameters/terraform/detailed_exit_code,/vela/secrets/terraform/detailed_exit_code",
@@ -265,8 +264,6 @@ func main() {
 }
 
 // run executes the plugin based off the configuration provided.
-//
-// nolint: funlen // ignore function length due to comments and flags
 func run(c *cli.Context) error {
 	// set the log level for the plugin
 	switch c.String("log.level") {
@@ -411,9 +408,10 @@ func SupportsChdir(v *semver.Version) bool {
 	if v.Major() >= 1 {
 		return true
 	}
+
 	if v.Minor() >= 14 {
 		return true
-	} else {
-		return false
 	}
+
+	return false
 }

@@ -10,10 +10,10 @@ jobs:
   diff-review:
     runs-on: ubuntu-latest
     container:
-      image: golang:1.15
+      image: golang:1.17
     steps:
     - name: clone
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: golangci-lint
       uses: reviewdog/action-golangci-lint@v2
@@ -27,10 +27,10 @@ jobs:
   full-review:
     runs-on: ubuntu-latest
     container:
-      image: golang:1.15
+      image: golang:1.17
     steps:
     - name: clone
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: golangci-lint
       uses: reviewdog/action-golangci-lint@v2

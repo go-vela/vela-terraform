@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -34,6 +34,7 @@ func TestTerraform_Init_Command(t *testing.T) {
 		},
 	}
 
+	// nolint: gosec // ignore G204
 	want := exec.Command(
 		_terraform,
 		fmt.Sprintf("-chdir=%s", i.Directory),

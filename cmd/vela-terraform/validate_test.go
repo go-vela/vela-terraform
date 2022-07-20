@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Masterminds/semver"
+	"github.com/Masterminds/semver/v3"
 )
 
 func TestTerraform_Validation_Command(t *testing.T) {
@@ -25,6 +25,7 @@ func TestTerraform_Validation_Command(t *testing.T) {
 		Version:        ver,
 	}
 
+	// nolint: gosec // ignore G204
 	want := exec.Command(
 		_terraform,
 		fmt.Sprintf("-chdir=%s", v.Directory),
@@ -55,6 +56,7 @@ func TestTerraform_Validation_Command_tf13(t *testing.T) {
 		Version:        ver,
 	}
 
+	// nolint: gosec // ignore G204
 	want := exec.Command(
 		_terraform,
 		validationAction,
