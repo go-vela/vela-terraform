@@ -2,7 +2,7 @@
 
 [![GoDoc](https://godoc.org/github.com/go-vela/vela-terraform?status.svg)](https://godoc.org/github.com/go-vela/vela-terraform)
 [![Go Report Card](https://goreportcard.com/badge/go-vela/vela-terraform)](https://goreportcard.com/report/go-vela/vela-terraform)
-[![codecov](https://codecov.io/gh/go-vela/vela-terraform/branch/master/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-terraform)
+[![codecov](https://codecov.io/gh/go-vela/vela-terraform/branch/main/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-terraform)
 
 This is designed to run [Terraform](https://www.terraform.io/) against [providers](https://www.terraform.io/docs/providers/index.html) in a Vela pipeline.
 
