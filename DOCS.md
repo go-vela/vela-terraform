@@ -169,7 +169,7 @@ The following parameters are used to configure the image:
 | `machine`      | netrc machine name to communicate with      | `true`   | `github.com`    | `PARAMETER_MACHINE`<br>`TERRAFORM_MACHINE`<br>`VELA_NETRC_MACHINE`    |
 | `password`     | netrc password for authentication           | `true`   | **set by Vela** | `PARAMETER_PASSWORD`<br>`TERRAFORM_PASSWORD`<br>`VELA_NETRC_PASSWORD` |
 | `username`     | netrc user name for authentication          | `true`   | **set by Vela** | `PARAMETER_USERNAME`<br>`TERRAFORM_USERNAME`<br>`VELA_NETRC_USERNAME` |
-| `version`      | set the Terraform CLI version               | `true`   | `1.2.5`       | `PARAMETER_VERSION`<br>`TERRAFORM_VERSION`                            |
+| `version`      | set the Terraform CLI version               | `true`   | `1.2.7`         | `PARAMETER_VERSION`<br>`TERRAFORM_VERSION`                            |
 
 The following parameters can be used within the `init_options` to configure the image:
 
