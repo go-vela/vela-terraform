@@ -287,7 +287,7 @@ func run(c *cli.Context) error {
 
 	logrus.WithFields(logrus.Fields{
 		"code":     "https://github.com/go-vela/vela-terraform",
-		"docs":     "https://go-vela.github.io/docs/plugins/registry/terraform",
+		"docs":     "https://go-vela.github.io/docs/plugins/registry/pipeline/terraform",
 		"registry": "https://hub.docker.com/r/target/vela-terraform",
 	}).Info("Vela Terraform Plugin")
 
