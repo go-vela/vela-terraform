@@ -10,7 +10,7 @@ Internally, the plugin is a wrapper around the [Terraform CLI](https://github.co
 
 ## Documentation
 
-For installation and usage, please [visit our docs](https://go-vela.github.io/docs).
+For installation and usage, please [visit our docs](https://go-vela.github.io/docs/plugins/registry/pipeline/terraform/).
 
 ## Contributing
 
