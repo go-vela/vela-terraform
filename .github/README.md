@@ -27,7 +27,7 @@ Please see our [support](SUPPORT.md) documentation for further instructions.
 ## Copyright and License
 
 ```
-Copyright 2020 Target Brands, Inc.
+Copyright (c) 2022 Target Brands, Inc.
 ```
 
 [![license](https://img.shields.io/crates/l/gl.svg)](LICENSE)

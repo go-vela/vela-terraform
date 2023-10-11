@@ -1,4 +1,6 @@
-# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+#
+# Use of this source code is governed by the LICENSE file in this repository.
 
 # capture the current date we build the application from
 BUILD_DATE = $(shell date +%Y-%m-%dT%H:%M:%SZ)
