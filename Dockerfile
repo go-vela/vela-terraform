@@ -3,7 +3,7 @@
 # set a global Docker argument for the default CLI version
 #
 # https://github.com/moby/moby/issues/37345
-ARG TERRAFORM_VERSION=1.2.7
+ARG TERRAFORM_VERSION=1.6.1
 
 ################################################################################
 ##     docker build --no-cache --target binary -t vela-terraform:binary .     ##
@@ -29,7 +29,7 @@ RUN apk add --update --no-cache ca-certificates
 ##     docker build --no-cache -t vela-terraform:local .     ##
 ###############################################################
 
-FROM alpine:3.18.2
+FROM alpine:3.18.4
 
 ARG TERRAFORM_VERSION
 
