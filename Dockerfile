@@ -9,7 +9,7 @@ ARG TERRAFORM_VERSION=1.6.1
 ##     docker build --no-cache --target binary -t vela-terraform:binary .     ##
 ################################################################################
 
-FROM alpine:latest as binary
+FROM alpine:latest@sha256:51b67269f354137895d43f3b3d810bfacd3945438e94dc5ac55fdac340352f48 as binary
 
 ARG TERRAFORM_VERSION
 
@@ -21,7 +21,7 @@ RUN wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraf
 ##     docker build --no-cache --target certs -t vela-terraform:certs .     ##
 ##############################################################################
 
-FROM alpine:latest as certs
+FROM alpine:latest@sha256:51b67269f354137895d43f3b3d810bfacd3945438e94dc5ac55fdac340352f48 as certs
 
 RUN apk add --update --no-cache ca-certificates
 
@@ -29,7 +29,7 @@ RUN apk add --update --no-cache ca-certificates
 ##     docker build --no-cache -t vela-terraform:local .     ##
 ###############################################################
 
-FROM alpine:3.18.4
+FROM alpine:3.19.0@sha256:51b67269f354137895d43f3b3d810bfacd3945438e94dc5ac55fdac340352f48
 
 ARG TERRAFORM_VERSION
 
