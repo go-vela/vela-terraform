@@ -32,7 +32,7 @@ func TestTerraform_Init_Command(t *testing.T) {
 		},
 	}
 
-	// nolint: gosec // ignore G204
+	//nolint:gosec // ignore G204
 	want := exec.Command(
 		_terraform,
 		fmt.Sprintf("-chdir=%s", i.Directory),

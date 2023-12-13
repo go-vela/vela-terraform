@@ -161,7 +161,7 @@ func (p *Plan) Command() *exec.Cmd {
 
 	globalFlags = append(globalFlags, planAction)
 
-	// nolint: gosec // ignore G204
+	//nolint:gosec // ignore G204
 	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
