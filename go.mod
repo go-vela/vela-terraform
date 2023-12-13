@@ -2,8 +2,6 @@ module github.com/go-vela/vela-terraform
 
 go 1.21
 
-toolchain go1.21.5
-
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/go-vela/types v0.22.0
