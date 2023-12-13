@@ -80,7 +80,7 @@ func (v *Validation) Command() *exec.Cmd {
 
 	globalFlags = append(globalFlags, validationAction)
 
-	// nolint: gosec // ignore G204
+	//nolint:gosec // ignore G204
 	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 

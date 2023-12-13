@@ -145,7 +145,7 @@ func (d *Destroy) Command() *exec.Cmd {
 
 	globalFlags = append(globalFlags, destroyAction)
 
-	// nolint: gosec // ignore G204
+	//nolint:gosec // ignore G204
 	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 

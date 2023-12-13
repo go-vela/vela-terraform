@@ -76,7 +76,7 @@ func (f *FMT) Command() *exec.Cmd {
 
 	globalFlags = append(globalFlags, fmtAction)
 
-	// nolint: gosec // ignore G204
+	//nolint:gosec // ignore G204
 	return exec.Command(_terraform, append(globalFlags, flags...)...)
 }
 
