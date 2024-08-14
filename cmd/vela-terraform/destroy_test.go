@@ -97,7 +97,7 @@ func TestTerraform_Destroy_Command_tf13(t *testing.T) {
 		fmt.Sprintf("-var=%s", d.Vars[1]),
 		fmt.Sprintf("-var-file=%s", d.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", d.VarFiles[1]),
-		fmt.Sprintf(d.Directory),
+		fmt.Sprint(d.Directory),
 	)
 
 	got := d.Command()
