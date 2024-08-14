@@ -60,7 +60,7 @@ func TestTerraform_FMT_Command_tf13(t *testing.T) {
 		fmt.Sprintf("-write=%t", f.Write),
 		fmt.Sprintf("-diff=%t", f.Diff),
 		fmt.Sprintf("-check=%t", f.Check),
-		fmt.Sprintf(f.Directory),
+		fmt.Sprint(f.Directory),
 	)
 
 	got := f.Command()
