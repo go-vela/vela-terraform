@@ -23,7 +23,7 @@ RUN wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraf
 
 FROM alpine:latest@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b as certs
 
-RUN apk add --update --no-cache ca-certificates
+RUN apk add --update --no-cache ca-certificates curl
 
 ###############################################################
 ##     docker build --no-cache -t vela-terraform:local .     ##
