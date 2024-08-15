@@ -28,21 +28,18 @@ LD_FLAGS = -X github.com/go-vela/vela-terraform/version.Commit=${GITHUB_SHA} -X 
 # and prepare the local changes for submission.
 #
 # Usage: `make clean`
-.PHONY: clean
 clean: tidy vet fmt fix
 
 # The `run` target is intended to build and
 # execute the Docker image for the plugin.
 #
 # Usage: `make run`
-.PHONY: run
 run: build docker-build docker-run
 
 # The `tidy` target is intended to clean up
 # the Go module files (go.mod & go.sum).
 #
 # Usage: `make tidy`
-.PHONY: tidy
 tidy:
 	@echo
 	@echo "### Tidying Go module"
@@ -52,7 +49,6 @@ tidy:
 # Go source code for potential issues.
 #
 # Usage: `make vet`
-.PHONY: vet
 vet:
 	@echo
 	@echo "### Vetting Go code"
@@ -62,7 +58,6 @@ vet:
 # Go source code to meet the language standards.
 #
 # Usage: `make fmt`
-.PHONY: fmt
 fmt:
 	@echo
 	@echo "### Formatting Go Code"
@@ -72,7 +67,6 @@ fmt:
 # Go source code using old APIs.
 #
 # Usage: `make fix`
-.PHONY: fix
 fix:
 	@echo
 	@echo "### Fixing Go Code"
@@ -82,7 +76,6 @@ fix:
 # the tests for the Go source code.
 #
 # Usage: `make test`
-.PHONY: test
 test:
 	@echo
 	@echo "### Testing Go Code"
@@ -93,7 +86,6 @@ test:
 # open the test coverage report.
 #
 # Usage: `make test-cover`
-.PHONY: test-cover
 test-cover:
 	@echo
 	@echo "### Creating test coverage report"
@@ -106,7 +98,6 @@ test-cover:
 # the Go source code into a binary.
 #
 # Usage: `make build`
-.PHONY: build
 build:
 	@echo
 	@echo "### Building release/vela-terraform binary"
@@ -120,7 +111,6 @@ build:
 # the Go source code into a statically linked binary.
 #
 # Usage: `make build-static`
-.PHONY: build-static
 build-static:
 	@echo
 	@echo "### Building static release/vela-terraform binary"
@@ -135,7 +125,6 @@ build-static:
 # when used within a CI environment.
 #
 # Usage: `make build-static-ci`
-.PHONY: build-static-ci
 build-static-ci:
 	@echo
 	@echo "### Building CI static release/vela-terraform binary"
@@ -148,7 +137,6 @@ build-static-ci:
 # dependencies from the Go module that need updates.
 #
 # Usage: `make check`
-.PHONY: check
 check: check-install
 	@echo
 	@echo "### Checking dependencies for updates"
@@ -158,7 +146,6 @@ check: check-install
 # dependencies from the Go module that need updates.
 #
 # Usage: `make check-direct`
-.PHONY: check-direct
 check-direct: check-install
 	@echo
 	@echo "### Checking direct dependencies for updates"
@@ -168,7 +155,6 @@ check-direct: check-install
 # all dependencies from the Go module.
 #
 # Usage: `make check-full`
-.PHONY: check-full
 check-full: check-install
 	@echo
 	@echo "### Checking all dependencies for updates"
@@ -178,7 +164,6 @@ check-full: check-install
 # the tool used to check dependencies from the Go module.
 #
 # Usage: `make check-install`
-.PHONY: check-install
 check-install:
 	@echo
 	@echo "### Installing psampaz/go-mod-outdated"
@@ -188,7 +173,6 @@ check-install:
 # non-test dependencies for the Go module.
 #
 # Usage: `make bump-deps`
-.PHONY: bump-deps
 bump-deps: check
 	@echo
 	@echo "### Upgrading dependencies"
@@ -198,7 +182,6 @@ bump-deps: check
 # all dependencies for the Go module.
 #
 # Usage: `make bump-deps-full`
-.PHONY: bump-deps-full
 bump-deps-full: check
 	@echo
 	@echo "### Upgrading all dependencies"
@@ -208,7 +191,6 @@ bump-deps-full: check
 # the Docker image for the plugin.
 #
 # Usage: `make docker-build`
-.PHONY: docker-build
 docker-build:
 	@echo
 	@echo "### Building vela-terraform:local image"
@@ -218,7 +200,6 @@ docker-build:
 # the Docker image for the plugin with test variables.
 #
 # Usage: `make docker-test`
-.PHONY: docker-test
 docker-test:
 	@echo
 	@echo "### Testing vela-terraform:local image"
@@ -236,7 +217,6 @@ docker-test:
 # the Docker image for the plugin.
 #
 # Usage: `make docker-run`
-.PHONY: docker-run
 docker-run:
 	@echo
 	@echo "### Executing vela-terraform:local image"

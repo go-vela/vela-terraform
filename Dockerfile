@@ -13,9 +13,18 @@ FROM alpine:latest@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef
 
 ARG TERRAFORM_VERSION
 
-RUN wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip && \
-  unzip terraform.zip -d /bin && \
-  rm -f terraform.zip
+ENV TERRAFORM_ZIP="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+ENV CHECKSUM_URL="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS"
+ENV CHECKSUM_FILE="SHA256SUMS"
+
+# download and verify the Terraform binary
+RUN wget -q "${TERRAFORM_ZIP}" -O terraform.zip && \
+    wget -q "${CHECKSUM_URL}" -O "${CHECKSUM_FILE}" && \
+    EXPECTED_CHECKSUM=$(grep "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" "${CHECKSUM_FILE}" | awk '{ print $1 }') && \
+    ACTUAL_CHECKSUM=$(sha256sum terraform.zip | awk '{ print $1 }') && \
+    if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then echo "Checksum verification failed"; exit 1; fi && \
+    unzip terraform.zip -d /bin && \
+    rm -f terraform.zip "${CHECKSUM_FILE}"
 
 ##############################################################################
 ##     docker build --no-cache --target certs -t vela-terraform:certs .     ##
