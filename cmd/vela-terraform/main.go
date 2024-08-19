@@ -293,7 +293,7 @@ func run(c *cli.Context) error {
 	tfVersion := c.String("terraform.version")
 
 	// attempt to install the custom terraform tfVersion if different from default
-	err := install(tfVersion, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
+	err := installBinary(tfVersion, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
 	if err != nil {
 		return err
 	}
