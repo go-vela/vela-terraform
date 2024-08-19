@@ -20,8 +20,8 @@ import (
 )
 
 const (
-	_terraform  = "/bin/terraform"
 	_installDir = "/bin"
+	_terraform  = _installDir + "/" + "terraform"
 )
 
 func installBinary(customVer, defaultVer string) error {
