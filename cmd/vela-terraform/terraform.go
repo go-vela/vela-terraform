@@ -61,6 +61,7 @@ func installBinary(customVer, defaultVer string) error {
 			InstallDir: _installDir,
 		},
 	})
+
 	if err != nil {
 		return err
 	}
