@@ -64,7 +64,7 @@ func TestTerraform_Validation_Command_tf13(t *testing.T) {
 		fmt.Sprintf("-var=%s", v.Vars[1]),
 		fmt.Sprintf("-var-file=%s", v.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", v.VarFiles[1]),
-		fmt.Sprintf(v.Directory),
+		fmt.Sprint(v.Directory),
 	)
 
 	got := v.Command()
