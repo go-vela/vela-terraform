@@ -44,6 +44,8 @@ ENV PLUGIN_TERRAFORM_VERSION=${TERRAFORM_VERSION}
 
 COPY --from=binary /bin/terraform /bin/terraform
 
+COPY --from=certs /usr/bin/curl /bin/curl
+
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 COPY release/vela-terraform /bin/terraform-plugin
