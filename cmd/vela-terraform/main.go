@@ -9,13 +9,12 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-
-	"github.com/go-vela/vela-terraform/version"
-
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 
 	_ "github.com/joho/godotenv/autoload"
+
+	"github.com/go-vela/vela-terraform/version"
 )
 
 //nolint:funlen // ignore function length due to comments and flags

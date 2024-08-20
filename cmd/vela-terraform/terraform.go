@@ -9,14 +9,13 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
-
 	"github.com/hashicorp/go-version"
 	install "github.com/hashicorp/hc-install"
 	"github.com/hashicorp/hc-install/product"
 	"github.com/hashicorp/hc-install/releases"
 	"github.com/hashicorp/hc-install/src"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 const (
