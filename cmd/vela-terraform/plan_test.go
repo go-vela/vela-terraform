@@ -105,7 +105,7 @@ func TestTerraform_Plan_Command_tf13(t *testing.T) {
 		fmt.Sprintf("-var=%s", p.Vars[1]),
 		fmt.Sprintf("-var-file=%s", p.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", p.VarFiles[1]),
-		fmt.Sprintf(p.Directory),
+		fmt.Sprint(p.Directory),
 	)
 
 	got := p.Command()
