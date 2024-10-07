@@ -1,12 +1,12 @@
 module github.com/go-vela/vela-terraform
 
-go 1.23
+go 1.23.2
 
 require (
-	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/go-vela/types v0.24.0
+	github.com/Masterminds/semver/v3 v3.3.0
+	github.com/go-vela/types v0.25.1
 	github.com/hashicorp/go-version v1.7.0
-	github.com/hashicorp/hc-install v0.8.0
+	github.com/hashicorp/hc-install v0.9.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
@@ -25,7 +25,7 @@ require (
 	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/crypto v0.26.0 // indirect
-	golang.org/x/mod v0.19.0 // indirect
+	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
