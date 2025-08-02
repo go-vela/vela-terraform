@@ -23,7 +23,7 @@ const (
 	_terraform  = _installDir + "/" + "terraform"
 )
 
-func installBinary(customVer, defaultVer string) error {
+func installBinary(ctx context.Context, customVer, defaultVer string) error {
 	// use custom filesystem which enables us to test
 	a := &afero.Afero{
 		Fs: appFS,
@@ -53,7 +53,7 @@ func installBinary(customVer, defaultVer string) error {
 
 	// use hc-install to install the custom version
 	installer := install.NewInstaller()
-	_, err = installer.Install(context.Background(), []src.Installable{
+	_, err = installer.Install(ctx, []src.Installable{
 		&releases.ExactVersion{
 			Product:    product.Terraform,
 			Version:    v,
