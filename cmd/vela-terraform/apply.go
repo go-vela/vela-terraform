@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -49,7 +50,7 @@ type Apply struct {
 
 // Command formats and outputs the Apply command from
 // the provided configuration to apply to resources.
-func (a *Apply) Command() *exec.Cmd {
+func (a *Apply) Command(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating terraform apply command from plugin configuration")
 
 	// global Variables
@@ -153,15 +154,15 @@ func (a *Apply) Command() *exec.Cmd {
 	globalFlags = append(globalFlags, applyAction)
 
 	//nolint:gosec // ignore G204
-	return exec.Command(_terraform, append(globalFlags, flags...)...)
+	return exec.CommandContext(ctx, _terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for applying Terraform.
-func (a *Apply) Exec() error {
+func (a *Apply) Exec(ctx context.Context) error {
 	logrus.Trace("running apply with provided configuration")
 
 	// create the apply command for the file
-	cmd := a.Command()
+	cmd := a.Command(ctx)
 
 	// run the apply command for the file
 	err := execCmd(cmd)

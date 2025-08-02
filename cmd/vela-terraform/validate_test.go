@@ -24,7 +24,8 @@ func TestTerraform_Validation_Command(t *testing.T) {
 	}
 
 	//nolint:gosec // ignore G204
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		_terraform,
 		fmt.Sprintf("-chdir=%s", v.Directory),
 		validationAction,
@@ -36,9 +37,13 @@ func TestTerraform_Validation_Command(t *testing.T) {
 		fmt.Sprintf("-var-file=%s", v.VarFiles[1]),
 	)
 
-	got := v.Command()
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Command is %v, want %v", got, want)
+	got := v.Command(t.Context())
+	if got.Path != want.Path {
+		t.Errorf("Command path is %v, want %v", got.Path, want.Path)
+	}
+
+	if !reflect.DeepEqual(got.Args, want.Args) {
+		t.Errorf("Command args is %v, want %v", got.Args, want.Args)
 	}
 }
 
@@ -55,7 +60,8 @@ func TestTerraform_Validation_Command_tf13(t *testing.T) {
 	}
 
 	//nolint:gosec // ignore G204
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		_terraform,
 		validationAction,
 		fmt.Sprintf("-check-variables=%t", v.CheckVariables),
@@ -67,9 +73,13 @@ func TestTerraform_Validation_Command_tf13(t *testing.T) {
 		fmt.Sprint(v.Directory),
 	)
 
-	got := v.Command()
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Command is %v, want %v", got, want)
+	got := v.Command(t.Context())
+	if got.Path != want.Path {
+		t.Errorf("Command path is %v, want %v", got.Path, want.Path)
+	}
+
+	if !reflect.DeepEqual(got.Args, want.Args) {
+		t.Errorf("Command args is %v, want %v", got.Args, want.Args)
 	}
 }
 
@@ -81,7 +91,7 @@ func TestTerraform_Validation_Exec(t *testing.T) {
 		Version:   ver,
 	}
 
-	err := v.Exec()
+	err := v.Exec(t.Context())
 	if err == nil {
 		t.Errorf("Exec should have returned err")
 	}

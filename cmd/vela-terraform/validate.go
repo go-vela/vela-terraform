@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -30,7 +31,7 @@ type Validation struct {
 
 // Command formats and outputs the Validate command from
 // the provided configuration to validate to resources.
-func (v *Validation) Command() *exec.Cmd {
+func (v *Validation) Command(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating terraform validate command from plugin configuration")
 
 	// global Variables
@@ -80,15 +81,15 @@ func (v *Validation) Command() *exec.Cmd {
 	globalFlags = append(globalFlags, validationAction)
 
 	//nolint:gosec // ignore G204
-	return exec.Command(_terraform, append(globalFlags, flags...)...)
+	return exec.CommandContext(ctx, _terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for validating Terraform.
-func (v *Validation) Exec() error {
+func (v *Validation) Exec(ctx context.Context) error {
 	logrus.Trace("running validate with provided configuration")
 
 	// create the validate command for the file
-	cmd := v.Command()
+	cmd := v.Command(ctx)
 
 	// run the validate command for the file
 	err := execCmd(cmd)

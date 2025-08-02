@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -30,7 +31,7 @@ type FMT struct {
 
 // Command formats and outputs the FMT command from
 // the provided configuration to fmt to resources.
-func (f *FMT) Command() *exec.Cmd {
+func (f *FMT) Command(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating terraform fmt command from plugin configuration")
 
 	// global Variables
@@ -76,15 +77,15 @@ func (f *FMT) Command() *exec.Cmd {
 	globalFlags = append(globalFlags, fmtAction)
 
 	//nolint:gosec // ignore G204
-	return exec.Command(_terraform, append(globalFlags, flags...)...)
+	return exec.CommandContext(ctx, _terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for formatting Terraform files.
-func (f *FMT) Exec() error {
+func (f *FMT) Exec(ctx context.Context) error {
 	logrus.Trace("running fmt with provided configuration")
 
 	// create the fmt command for the file
-	cmd := f.Command()
+	cmd := f.Command(ctx)
 
 	// run the fmt command for the file
 	err := execCmd(cmd)

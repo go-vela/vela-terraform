@@ -38,7 +38,8 @@ func TestTerraform_Apply_Command(t *testing.T) {
 	}
 
 	//nolint:gosec // ignore G204
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		_terraform,
 		fmt.Sprintf("-chdir=%s", a.Directory),
 		applyAction,
@@ -59,9 +60,13 @@ func TestTerraform_Apply_Command(t *testing.T) {
 		fmt.Sprintf("-var-file=%s", a.VarFiles[1]),
 	)
 
-	got := a.Command()
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Command is %v, want %v", got, want)
+	got := a.Command(t.Context())
+	if got.Path != want.Path {
+		t.Errorf("Command path is %v, want %v", got.Path, want.Path)
+	}
+
+	if !reflect.DeepEqual(got.Args, want.Args) {
+		t.Errorf("Command args is %v, want %v", got.Args, want.Args)
 	}
 }
 
@@ -91,7 +96,8 @@ func TestTerraform_Apply_Command_tf13(t *testing.T) {
 	}
 
 	//nolint:gosec // ignore G204
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		_terraform,
 		applyAction,
 		"-auto-approve",
@@ -112,9 +118,13 @@ func TestTerraform_Apply_Command_tf13(t *testing.T) {
 		fmt.Sprint(a.Directory),
 	)
 
-	got := a.Command()
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Command is %v, want %v", got, want)
+	got := a.Command(t.Context())
+	if got.Path != want.Path {
+		t.Errorf("Command path is %v, want %v", got.Path, want.Path)
+	}
+
+	if !reflect.DeepEqual(got.Args, want.Args) {
+		t.Errorf("Command args is %v, want %v", got.Args, want.Args)
 	}
 }
 
@@ -126,7 +136,7 @@ func TestTerraform_Apply_Exec_Error(t *testing.T) {
 		Version:   v,
 	}
 
-	err := a.Exec()
+	err := a.Exec(t.Context())
 	if err == nil {
 		t.Errorf("Exec should have returned err")
 	}

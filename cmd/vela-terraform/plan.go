@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -51,7 +52,7 @@ type Plan struct {
 
 // Command formats and outputs the Plan command from
 // the provided configuration to plan to resources.
-func (p *Plan) Command() *exec.Cmd {
+func (p *Plan) Command(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating terraform plan command from plugin configuration")
 
 	// global Variables
@@ -161,15 +162,15 @@ func (p *Plan) Command() *exec.Cmd {
 	globalFlags = append(globalFlags, planAction)
 
 	//nolint:gosec // ignore G204
-	return exec.Command(_terraform, append(globalFlags, flags...)...)
+	return exec.CommandContext(ctx, _terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for planning Terraform.
-func (p *Plan) Exec() error {
+func (p *Plan) Exec(ctx context.Context) error {
 	logrus.Trace("running plan with provided configuration")
 
 	// create the plan command for the file
-	cmd := p.Command()
+	cmd := p.Command(ctx)
 
 	// run the plan command for the file
 	err := execCmd(cmd)

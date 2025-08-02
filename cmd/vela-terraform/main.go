@@ -509,7 +509,7 @@ func run(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	return p.Exec()
+	return p.Exec(ctx)
 }
 
 func SupportsChdir(v *semver.Version) bool {
