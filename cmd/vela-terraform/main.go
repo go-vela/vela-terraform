@@ -3,14 +3,15 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"net/mail"
 	"os"
-	"time"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 
 	_ "github.com/joho/godotenv/autoload"
 
@@ -32,238 +33,348 @@ func main() {
 	fmt.Fprintf(os.Stdout, "%s\n", string(bytes))
 
 	// create new CLI application
-	app := cli.NewApp()
+	app := &cli.Command{
+		Name:      "vela-terraform",
+		Usage:     "Vela Terraform plugin for running Terraform",
+		Copyright: "Copyright 2020 Target Brands, Inc. All rights reserved.",
+		Authors: []any{
+			&mail.Address{
+				Name:    "Vela Admins",
+				Address: "vela@target.com",
+			},
+		},
+		Action:  run,
+		Version: v.Semantic(),
+		Flags: []cli.Flag{
 
-	// Plugin Information
+			&cli.BoolFlag{
+				Name:  "auto_approve",
+				Usage: "skip interactive approval of running command",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_AUTO_APPROVE"),
+					cli.EnvVar("TERRAFORM_AUTO_APPROVE"),
+					cli.File("/vela/parameters/terraform/auto_approve"),
+					cli.File("/vela/secrets/terraform/auto_approve"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "backup",
+				Usage: "path to backup the existing state file",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_BACKUP"),
+					cli.EnvVar("TERRAFORM_BACKUP"),
+					cli.File("/vela/parameters/terraform/backup"),
+					cli.File("/vela/secrets/terraform/backup"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "directory",
+				Value: ".",
+				Usage: "the directory for action to be performed on",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_DIRECTORY"),
+					cli.EnvVar("TERRAFORM_DIRECTORY"),
+					cli.File("/vela/parameters/terraform/directory"),
+					cli.File("/vela/secrets/terraform/directory"),
+				),
+			},
+			&cli.BoolFlag{
+				Name:  "lock",
+				Usage: "lock the state file when locking is supported",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_LOCK"),
+					cli.EnvVar("TERRAFORM_LOCK"),
+					cli.File("/vela/parameters/terraform/lock"),
+					cli.File("/vela/secrets/terraform/lock"),
+				),
+			},
+			&cli.DurationFlag{
+				Name:  "lock_timeout",
+				Usage: "duration to retry a state lock",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_LOCK_TIMEOUT"),
+					cli.EnvVar("TERRAFORM_LOCK_TIMEOUT"),
+					cli.File("/vela/parameters/terraform/lock_timeout"),
+					cli.File("/vela/secrets/terraform/lock_timeout"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "log.level",
+				Value: "info",
+				Usage: "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_LOG_LEVEL"),
+					cli.EnvVar("TERRAFORM_LOG_LEVEL"),
+					cli.File("/vela/parameters/terraform/log_level"),
+					cli.File("/vela/secrets/terraform/log_level"),
+				),
+			},
+			&cli.BoolFlag{
+				Name:  "no_color",
+				Usage: "disables colors in output",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_NO_COLOR"),
+					cli.EnvVar("TERRAFORM_NO_COLOR"),
+					cli.File("/vela/parameters/terraform/no_color"),
+					cli.File("/vela/secrets/terraform/no_color"),
+				),
+			},
+			&cli.IntFlag{
+				Name:  "parallelism",
+				Usage: "number of concurrent operations as Terraform walks its graph",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_PARALLELISM"),
+					cli.EnvVar("TERRAFORM_PARALLELISM"),
+					cli.File("/vela/parameters/terraform/parallelism"),
+					cli.File("/vela/secrets/terraform/parallelism"),
+				),
+			},
+			&cli.BoolFlag{
+				Name:  "refresh",
+				Usage: "update state prior to checking for differences",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_REFRESH"),
+					cli.EnvVar("TERRAFORM_REFRESH"),
+					cli.File("/vela/parameters/terraform/refresh"),
+					cli.File("/vela/secrets/terraform/refresh"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "state",
+				Usage: "path to read and save state",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_STATE"),
+					cli.EnvVar("TERRAFORM_STATE"),
+					cli.File("/vela/parameters/terraform/state"),
+					cli.File("/vela/secrets/terraform/state"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "state_out",
+				Usage: "path to write updated state file",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_STATE_OUT"),
+					cli.EnvVar("TERRAFORM_STATE_OUT"),
+					cli.File("/vela/parameters/terraform/state_out"),
+					cli.File("/vela/secrets/terraform/state_out"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "target",
+				Usage: "resource to target",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_TARGET"),
+					cli.EnvVar("TERRAFORM_TARGET"),
+					cli.File("/vela/parameters/terraform/target"),
+					cli.File("/vela/secrets/terraform/target"),
+				),
+			},
+			&cli.StringSliceFlag{
+				Name:  "vars",
+				Usage: "a map of variables to pass to the Terraform (`<key>=<value>`)",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_VARS"),
+					cli.EnvVar("TERRAFORM_VARS"),
+					cli.File("/vela/parameters/terraform/vars"),
+					cli.File("/vela/secrets/terraform/vars"),
+				),
+			},
+			&cli.StringSliceFlag{
+				Name:  "var_files",
+				Usage: "a list of var files to use",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_VAR_FILES"),
+					cli.EnvVar("TERRAFORM_VAR_FILES"),
+					cli.File("/vela/parameters/terraform/var_files"),
+					cli.File("/vela/secrets/terraform/var_files"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "terraform.version",
+				Usage: "set terraform version for plugin",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_VERSION"),
+					cli.EnvVar("TERRAFORM_VERSION"),
+					cli.EnvVar("PLUGIN_TERRAFORM_VERSION"),
+					cli.File("/vela/parameters/terraform/version"),
+					cli.File("/vela/secrets/terraform/version"),
+				),
+			},
 
-	app.Name = "vela-terraform"
-	app.HelpName = "vela-terraform"
-	app.Usage = "Vela Terraform plugin for running Terraform"
-	app.Copyright = "Copyright 2020 Target Brands, Inc. All rights reserved."
-	app.Authors = []*cli.Author{
-		{
-			Name:  "Vela Admins",
-			Email: "vela@target.com",
+			// Config Flags
+
+			&cli.StringFlag{
+				Name:  "config.action",
+				Usage: "the action to have terraform perform",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_ACTION"),
+					cli.EnvVar("TERRAFORM_ACTION"),
+					cli.File("/vela/parameters/terraform/action"),
+					cli.File("/vela/secrets/terraform/action"),
+				),
+			},
+
+			// FMT Flags
+
+			&cli.BoolFlag{
+				Name:  "fmt.check",
+				Usage: "validate if the input is formatted",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_CHECK"),
+					cli.EnvVar("TERRAFORM_CHECK"),
+					cli.File("/vela/parameters/terraform/check"),
+					cli.File("/vela/secrets/terraform/check"),
+				),
+			},
+			&cli.BoolFlag{
+				Name:  "fmt.diff",
+				Usage: "diffs of formatting changes",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_DIFF"),
+					cli.EnvVar("TERRAFORM_DIFF"),
+					cli.File("/vela/parameters/terraform/diff"),
+					cli.File("/vela/secrets/terraform/diff"),
+				),
+			},
+			&cli.BoolFlag{
+				Name:  "fmt.list",
+				Usage: "list files whose formatting differs",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_LIST"),
+					cli.EnvVar("TERRAFORM_LIST"),
+					cli.File("/vela/parameters/terraform/list"),
+					cli.File("/vela/secrets/terraform/list"),
+				),
+			},
+			&cli.BoolFlag{
+				Name:  "fmt.write",
+				Usage: "write result to source file instead of STDOUT",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_WRITE"),
+					cli.EnvVar("TERRAFORM_WRITE"),
+					cli.File("/vela/parameters/terraform/write"),
+					cli.File("/vela/secrets/terraform/write"),
+				),
+			},
+
+			// InitOptions Flags
+
+			&cli.StringFlag{
+				Name:  "init.options",
+				Usage: "properties to set on terraform init action",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_INIT_OPTIONS"),
+					cli.EnvVar("TERRAFORM_INIT_OPTIONS"),
+					cli.File("/vela/parameters/terraform/init_options"),
+					cli.File("/vela/secrets/terraform/init_options"),
+				),
+			},
+
+			// Netrc Flags
+
+			&cli.StringFlag{
+				Name:  "netrc.machine",
+				Value: "github.com",
+				Usage: "remote machine name to communicate with",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_MACHINE"),
+					cli.EnvVar("TERRAFORM_MACHINE"),
+					cli.EnvVar("VELA_NETRC_MACHINE"),
+					cli.File("/vela/parameters/terraform/machine"),
+					cli.File("/vela/secrets/terraform/machine"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "netrc.username",
+				Usage: "user name for communication with the remote machine",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_USERNAME"),
+					cli.EnvVar("TERRAFORM_USERNAME"),
+					cli.EnvVar("VELA_NETRC_USERNAME"),
+					cli.File("/vela/parameters/terraform/username"),
+					cli.File("/vela/secrets/terraform/username"),
+				),
+			},
+			&cli.StringFlag{
+				Name:  "netrc.password",
+				Usage: "password for communication with the remote machine",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_PASSWORD"),
+					cli.EnvVar("TERRAFORM_PASSWORD"),
+					cli.EnvVar("VELA_NETRC_PASSWORD"),
+					cli.File("/vela/parameters/terraform/password"),
+					cli.File("/vela/secrets/terraform/password"),
+				),
+			},
+
+			// Plan Flags
+
+			&cli.BoolFlag{
+				Name:  "plan.destroy",
+				Usage: "destroy all resources managed by the given configuration and state",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_DESTROY"),
+					cli.EnvVar("TERRAFORM_DESTROY"),
+					cli.File("/vela/parameters/terraform/destroy"),
+					cli.File("/vela/secrets/terraform/destroy"),
+				),
+			},
+			&cli.BoolFlag{
+				Name:  "plan.detailed_exit_code",
+				Usage: "return detailed exit codes when the command exits",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_DETAILED_EXIT_CODE"),
+					cli.EnvVar("TERRAFORM_DETAILED_EXIT_CODE"),
+					cli.File("/vela/parameters/terraform/detailed_exit_code"),
+					cli.File("/vela/secrets/terraform/detailed_exit_code"),
+				),
+			},
+			&cli.BoolFlag{
+				Name:  "plan.input",
+				Usage: "ask for input for variables if not directly set",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_INPUT"),
+					cli.EnvVar("TERRAFORM_INPUT"),
+					cli.File("/vela/parameters/terraform/input"),
+					cli.File("/vela/secrets/terraform/input"),
+				),
+			},
+			&cli.IntFlag{
+				Name:  "plan.module_depth",
+				Usage: "specifies the depth of modules to show in the output",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_MODULE_DEPTH"),
+					cli.EnvVar("TERRAFORM_MODULE_DEPTH"),
+					cli.File("/vela/parameters/terraform/module_depth"),
+					cli.File("/vela/secrets/terraform/module_depth"),
+				),
+			},
+
+			// Validation Flags
+
+			&cli.BoolFlag{
+				Name:  "validation.check_variables",
+				Usage: "command will check whether all required variables have been specified",
+				Sources: cli.NewValueSourceChain(
+					cli.EnvVar("PARAMETER_CHECK_VARIABLES"),
+					cli.EnvVar("TERRAFORM_CHECK_VARIABLES"),
+					cli.File("/vela/parameters/terraform/check_variables"),
+					cli.File("/vela/secrets/terraform/check_variables"),
+				),
+			},
 		},
 	}
 
-	// Plugin Metadata
-
-	app.Action = run
-	app.Compiled = time.Now()
-	app.Version = v.Semantic()
-
-	// Plugin Flags
-
-	app.Flags = []cli.Flag{
-
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_AUTO_APPROVE", "TERRAFORM_AUTO_APPROVE"},
-			FilePath: "/vela/parameters/terraform/auto_approve,/vela/secrets/terraform/auto_approve",
-			Name:     "auto_approve",
-			Usage:    "skip interactive approval of running command",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_BACKUP", "TERRAFORM_BACKUP"},
-			FilePath: "/vela/parameters/terraform/backup,/vela/secrets/terraform/backup",
-			Name:     "backup",
-			Usage:    "path to backup the existing state file",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_DIRECTORY", "TERRAFORM_DIRECTORY"},
-			FilePath: "/vela/parameters/terraform/directory,/vela/secrets/terraform/directory",
-			Name:     "directory",
-			Usage:    "the directory for action to be performed on",
-			Value:    ".",
-		},
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_LOCK", "TERRAFORM_LOCK"},
-			FilePath: "/vela/parameters/terraform/lock,/vela/secrets/terraform/lock",
-			Name:     "lock",
-			Usage:    "lock the state file when locking is supported",
-		},
-		&cli.DurationFlag{
-			EnvVars:  []string{"PARAMETER_LOCK_TIMEOUT", "TERRAFORM_LOCK_TIMEOUT"},
-			FilePath: "/vela/parameters/terraform/lock_timeout,/vela/secrets/terraform/lock_timeout",
-			Name:     "lock_timeout",
-			Usage:    "duration to retry a state lock",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_LOG_LEVEL", "TERRAFORM_LOG_LEVEL"},
-			FilePath: "/vela/parameters/terraform/log_level,/vela/secrets/terraform/log_level",
-			Name:     "log.level",
-			Usage:    "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
-			Value:    "info",
-		},
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_NO_COLOR", "TERRAFORM_NO_COLOR"},
-			FilePath: "/vela/parameters/terraform/no_color,/vela/secrets/terraform/no_color",
-			Name:     "no_color",
-			Usage:    "disables colors in output",
-		},
-		&cli.IntFlag{
-			EnvVars:  []string{"PARAMETER_PARALLELISM", "TERRAFORM_PARALLELISM"},
-			FilePath: "/vela/parameters/terraform/parallelism,/vela/secrets/terraform/parallelism",
-			Name:     "parallelism",
-			Usage:    "number of concurrent operations as Terraform walks its graph",
-		},
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_REFRESH", "TERRAFORM_REFRESH"},
-			FilePath: "/vela/parameters/terraform/refresh,/vela/secrets/terraform/refresh",
-			Name:     "refresh",
-			Usage:    "update state prior to checking for differences",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_STATE", "TERRAFORM_STATE"},
-			FilePath: "/vela/parameters/terraform/state,/vela/secrets/terraform/state",
-			Name:     "state",
-			Usage:    "path to read and save state",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_STATE_OUT", "TERRAFORM_STATE_OUT"},
-			FilePath: "/vela/parameters/terraform/state_out,/vela/secrets/terraform/state_out",
-			Name:     "state_out",
-			Usage:    "path to write updated state file",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_TARGET", "TERRAFORM_TARGET"},
-			FilePath: "/vela/parameters/terraform/target,/vela/secrets/terraform/target",
-			Name:     "target",
-			Usage:    "resource to target",
-		},
-		&cli.StringSliceFlag{
-			EnvVars:  []string{"PARAMETER_VARS", "TERRAFORM_VARS"},
-			FilePath: "/vela/parameters/terraform/vars,/vela/secrets/terraform/vars",
-			Name:     "vars",
-			Usage:    "a map of variables to pass to the Terraform (`<key>=<value>`)",
-		},
-		&cli.StringSliceFlag{
-			EnvVars:  []string{"PARAMETER_VAR_FILES", "TERRAFORM_VAR_FILES"},
-			FilePath: "/vela/parameters/terraform/var_files,/vela/secrets/terraform/var_files",
-			Name:     "var_files",
-			Usage:    "a list of var files to use",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_VERSION", "TERRAFORM_VERSION", "PLUGIN_TERRAFORM_VERSION"},
-			FilePath: "/vela/parameters/terraform/version,/vela/secrets/terraform/version",
-			Name:     "terraform.version",
-			Usage:    "set terraform version for plugin",
-		},
-
-		// Config Flags
-
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_ACTION", "TERRAFORM_ACTION"},
-			FilePath: "/vela/parameters/terraform/action,/vela/secrets/terraform/action",
-			Name:     "config.action",
-			Usage:    "the action to have terraform perform",
-		},
-
-		// FMT Flags
-
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_CHECK", "TERRAFORM_CHECK"},
-			FilePath: "/vela/parameters/terraform/check,/vela/secrets/terraform/check",
-			Name:     "fmt.check",
-			Usage:    "validate if the input is formatted",
-		},
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_DIFF", "TERRAFORM_DIFF"},
-			FilePath: "/vela/parameters/terraform/diff,/vela/secrets/terraform/diff",
-			Name:     "fmt.diff",
-			Usage:    "diffs of formatting changes",
-		},
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_LIST", "TERRAFORM_LIST"},
-			FilePath: "/vela/parameters/terraform/list,/vela/secrets/terraform/list",
-			Name:     "fmt.list",
-			Usage:    "list files whose formatting differs",
-		},
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_WRITE", "TERRAFORM_WRITE"},
-			FilePath: "/vela/parameters/terraform/write,/vela/secrets/terraform/write",
-			Name:     "fmt.write",
-			Usage:    "write result to source file instead of STDOUT",
-		},
-
-		// InitOptions Flags
-
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_INIT_OPTIONS", "TERRAFORM_INIT_OPTIONS"},
-			FilePath: "/vela/parameters/terraform/init_options,/vela/secrets/terraform/init_options",
-			Name:     "init.options",
-			Usage:    "properties to set on terraform init action",
-		},
-
-		// Netrc Flags
-
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_MACHINE", "TERRAFORM_MACHINE", "VELA_NETRC_MACHINE"},
-			FilePath: "/vela/parameters/terraform/machine,/vela/secrets/terraform/machine",
-			Name:     "netrc.machine",
-			Usage:    "remote machine name to communicate with",
-			Value:    "github.com",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_USERNAME", "TERRAFORM_USERNAME", "VELA_NETRC_USERNAME"},
-			FilePath: "/vela/parameters/terraform/username,/vela/secrets/terraform/username",
-			Name:     "netrc.username",
-			Usage:    "user name for communication with the remote machine",
-		},
-		&cli.StringFlag{
-			EnvVars:  []string{"PARAMETER_PASSWORD", "TERRAFORM_PASSWORD", "VELA_NETRC_PASSWORD"},
-			FilePath: "/vela/parameters/terraform/password,/vela/secrets/terraform/password",
-			Name:     "netrc.password",
-			Usage:    "password for communication with the remote machine",
-		},
-
-		// Plan Flags
-
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_DESTROY", "TERRAFORM_DESTROY"},
-			FilePath: "/vela/parameters/terraform/destroy,/vela/secrets/terraform/destroy",
-			Name:     "plan.destroy",
-			Usage:    "destroy all resources managed by the given configuration and state",
-		},
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_DETAILED_EXIT_CODE", "TERRAFORM_DETAILED_EXIT_CODE"},
-			FilePath: "/vela/parameters/terraform/detailed_exit_code,/vela/secrets/terraform/detailed_exit_code",
-			Name:     "plan.detailed_exit_code",
-			Usage:    "return detailed exit codes when the command exits",
-		},
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_INPUT", "TERRAFORM_INPUT"},
-			FilePath: "/vela/parameters/terraform/input,/vela/secrets/terraform/input",
-			Name:     "plan.input",
-			Usage:    "ask for input for variables if not directly set",
-		},
-		&cli.IntFlag{
-			EnvVars:  []string{"PARAMETER_MODULE_DEPTH", "TERRAFORM_MODULE_DEPTH"},
-			FilePath: "/vela/parameters/terraform/module_depth,/vela/secrets/terraform/module_depth",
-			Name:     "plan.module_depth",
-			Usage:    "specifies the depth of modules to show in the output",
-		},
-
-		// Validation Flags
-
-		&cli.BoolFlag{
-			EnvVars:  []string{"PARAMETER_CHECK_VARIABLES", "TERRAFORM_CHECK_VARIABLES"},
-			FilePath: "/vela/parameters/terraform/check_variables,/vela/secrets/terraform/check_variables",
-			Name:     "validation.check_variables",
-			Usage:    "command will check whether all required variables have been specified",
-		},
-	}
-
-	err = app.Run(os.Args)
+	err = app.Run(context.Background(), os.Args)
 	if err != nil {
 		logrus.Fatal(err)
 	}
 }
 
 // run executes the plugin based off the configuration provided.
-func run(c *cli.Context) error {
+func run(ctx context.Context, cmd *cli.Command) error {
 	// set the log level for the plugin
-	switch c.String("log.level") {
+	switch cmd.String("log.level") {
 	case "t", "trace", "Trace", "TRACE":
 		logrus.SetLevel(logrus.TraceLevel)
 	case "d", "debug", "Debug", "DEBUG":
@@ -289,10 +400,10 @@ func run(c *cli.Context) error {
 	}).Info("Vela Terraform Plugin")
 
 	// capture custom terraform tfVersion requested
-	tfVersion := c.String("terraform.version")
+	tfVersion := cmd.String("terraform.version")
 
 	// attempt to install the custom terraform tfVersion if different from default
-	err := installBinary(tfVersion, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
+	err := installBinary(ctx, tfVersion, os.Getenv("PLUGIN_TERRAFORM_VERSION"))
 	if err != nil {
 		return err
 	}
@@ -307,87 +418,87 @@ func run(c *cli.Context) error {
 	p := Plugin{
 		// Apply configuration
 		Apply: &Apply{
-			AutoApprove: c.Bool("auto_approve"),
-			Backup:      c.String("backup"),
-			Directory:   c.String("directory"),
-			Lock:        c.Bool("lock"),
-			LockTimeout: c.Duration("lock_timeout"),
-			NoColor:     c.Bool("no_color"),
-			Parallelism: c.Int("parallelism"),
-			Refresh:     c.Bool("refresh"),
-			State:       c.String("state"),
-			StateOut:    c.String("state_out"),
-			Target:      c.String("target"),
-			Vars:        c.StringSlice("vars"),
-			VarFiles:    c.StringSlice("var_files"),
+			AutoApprove: cmd.Bool("auto_approve"),
+			Backup:      cmd.String("backup"),
+			Directory:   cmd.String("directory"),
+			Lock:        cmd.Bool("lock"),
+			LockTimeout: cmd.Duration("lock_timeout"),
+			NoColor:     cmd.Bool("no_color"),
+			Parallelism: cmd.Int("parallelism"),
+			Refresh:     cmd.Bool("refresh"),
+			State:       cmd.String("state"),
+			StateOut:    cmd.String("state_out"),
+			Target:      cmd.String("target"),
+			Vars:        cmd.StringSlice("vars"),
+			VarFiles:    cmd.StringSlice("var_files"),
 			Version:     tfSemVersion,
 		},
 		// Config configuration
 		Config: &Config{
-			Action: c.String("config.action"),
+			Action: cmd.String("config.action"),
 			Netrc: &Netrc{
-				Login:    c.String("netrc.username"),
-				Machine:  c.String("netrc.machine"),
-				Password: c.String("netrc.password"),
+				Login:    cmd.String("netrc.username"),
+				Machine:  cmd.String("netrc.machine"),
+				Password: cmd.String("netrc.password"),
 			},
 		},
 		// Destroy configuration
 		Destroy: &Destroy{
-			AutoApprove: c.Bool("auto_approve"),
-			Backup:      c.String("backup"),
-			Directory:   c.String("directory"),
-			Lock:        c.Bool("lock"),
-			LockTimeout: c.Duration("lock_timeout"),
-			NoColor:     c.Bool("no_color"),
-			Parallelism: c.Int("parallelism"),
-			Refresh:     c.Bool("refresh"),
-			State:       c.String("state"),
-			StateOut:    c.String("state_out"),
-			Target:      c.String("target"),
-			Vars:        c.StringSlice("vars"),
-			VarFiles:    c.StringSlice("var_files"),
+			AutoApprove: cmd.Bool("auto_approve"),
+			Backup:      cmd.String("backup"),
+			Directory:   cmd.String("directory"),
+			Lock:        cmd.Bool("lock"),
+			LockTimeout: cmd.Duration("lock_timeout"),
+			NoColor:     cmd.Bool("no_color"),
+			Parallelism: cmd.Int("parallelism"),
+			Refresh:     cmd.Bool("refresh"),
+			State:       cmd.String("state"),
+			StateOut:    cmd.String("state_out"),
+			Target:      cmd.String("target"),
+			Vars:        cmd.StringSlice("vars"),
+			VarFiles:    cmd.StringSlice("var_files"),
 			Version:     tfSemVersion,
 		},
 		// FMT configuration
 		FMT: &FMT{
-			Check:     c.Bool("fmt.check"),
-			Diff:      c.Bool("fmt.diff"),
-			Directory: c.String("directory"),
-			List:      c.Bool("fmt.list"),
-			Write:     c.Bool("fmt.write"),
+			Check:     cmd.Bool("fmt.check"),
+			Diff:      cmd.Bool("fmt.diff"),
+			Directory: cmd.String("directory"),
+			List:      cmd.Bool("fmt.list"),
+			Write:     cmd.Bool("fmt.write"),
 			Version:   tfSemVersion,
 		},
 		// InitOptions configuration
 		Init: &Init{
-			Directory: c.String("directory"),
-			RawInit:   c.String("init.options"),
+			Directory: cmd.String("directory"),
+			RawInit:   cmd.String("init.options"),
 		},
 		// Plan configuration
 		Plan: &Plan{
-			Destroy:          c.Bool("plan.destroy"),
-			DetailedExitCode: c.Bool("plan.detailed_exit_code"),
-			Directory:        c.String("directory"),
-			Input:            c.Bool("plan.input"),
-			Lock:             c.Bool("lock"),
-			LockTimeout:      c.Duration("lock_timeout"),
-			ModuleDepth:      c.Int("plan.module_depth"),
-			NoColor:          c.Bool("no_color"),
-			Parallelism:      c.Int("parallelism"),
-			Refresh:          c.Bool("refresh"),
-			State:            c.String("state"),
-			Out:              c.String("state_out"),
-			Target:           c.String("target"),
-			Vars:             c.StringSlice("vars"),
-			VarFiles:         c.StringSlice("var_files"),
+			Destroy:          cmd.Bool("plan.destroy"),
+			DetailedExitCode: cmd.Bool("plan.detailed_exit_code"),
+			Directory:        cmd.String("directory"),
+			Input:            cmd.Bool("plan.input"),
+			Lock:             cmd.Bool("lock"),
+			LockTimeout:      cmd.Duration("lock_timeout"),
+			ModuleDepth:      cmd.Int("plan.module_depth"),
+			NoColor:          cmd.Bool("no_color"),
+			Parallelism:      cmd.Int("parallelism"),
+			Refresh:          cmd.Bool("refresh"),
+			State:            cmd.String("state"),
+			Out:              cmd.String("state_out"),
+			Target:           cmd.String("target"),
+			Vars:             cmd.StringSlice("vars"),
+			VarFiles:         cmd.StringSlice("var_files"),
 			Version:          tfSemVersion,
 		},
 		// Validation configuration
 		Validation: &Validation{
-			CheckVariables: c.Bool("validation.check_variables"),
-			Directory:      c.String("directory"),
-			NoColor:        c.Bool("no_color"),
-			Vars:           c.StringSlice("vars"),
-			VarFiles:       c.StringSlice("var_files"),
+			CheckVariables: cmd.Bool("validation.check_variables"),
+			Directory:      cmd.String("directory"),
+			NoColor:        cmd.Bool("no_color"),
+			Vars:           cmd.StringSlice("vars"),
+			VarFiles:       cmd.StringSlice("var_files"),
 			Version:        tfSemVersion,
 		},
 	}
@@ -398,7 +509,7 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	return p.Exec()
+	return p.Exec(ctx)
 }
 
 func SupportsChdir(v *semver.Version) bool {

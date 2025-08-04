@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -29,10 +30,13 @@ func execCmd(e *exec.Cmd) error {
 
 // getCmd is a helper function to retrieve
 // the terraform modules required for the files.
-func getCmd(dir string) *exec.Cmd {
-	// default cmd and arg
-	name := "terraform"
+func getCmd(ctx context.Context, dir string) *exec.Cmd {
+	logrus.Trace("creating terraform get command")
 
+	// terraform binary name
+	name := _terraform
+
+	// variable to store flags for command
 	var args []string
 
 	// check if Directory is provided
@@ -42,7 +46,7 @@ func getCmd(dir string) *exec.Cmd {
 
 	args = append(args, "get")
 
-	return exec.Command(
+	return exec.CommandContext(ctx,
 		name,
 		args...,
 	)
@@ -50,7 +54,7 @@ func getCmd(dir string) *exec.Cmd {
 
 // versionCmd is a helper function to output
 // the client and server version information.
-func versionCmd() *exec.Cmd {
+func versionCmd(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating terraform version command")
 
 	// variable to store flags for command
@@ -59,5 +63,5 @@ func versionCmd() *exec.Cmd {
 	// add flag for version kubectl command
 	flags = append(flags, "version")
 
-	return exec.Command(_terraform, flags...)
+	return exec.CommandContext(ctx, _terraform, flags...)
 }

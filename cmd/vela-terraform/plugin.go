@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -36,7 +37,7 @@ var (
 )
 
 // Exec formats and runs the commands for running Terraform commands.
-func (p *Plugin) Exec() error {
+func (p *Plugin) Exec(ctx context.Context) error {
 	logrus.Debug("running plugin with provided configuration")
 
 	// write the .netrc file with Github credentials
@@ -46,19 +47,19 @@ func (p *Plugin) Exec() error {
 	}
 
 	// output terraform version for troubleshooting
-	err = execCmd(versionCmd())
+	err = execCmd(versionCmd(ctx))
 	if err != nil {
 		return err
 	}
 
 	// initialize a new or existing Terraform working directory
-	err = p.Init.Exec()
+	err = p.Init.Exec(ctx)
 	if err != nil {
 		return err
 	}
 
 	// retrieve terraform modules for actions
-	err = execCmd(getCmd(p.Init.Directory))
+	err = execCmd(getCmd(ctx, p.Init.Directory))
 	if err != nil {
 		return err
 	}
@@ -73,19 +74,19 @@ func (p *Plugin) Exec() error {
 	switch p.Config.Action {
 	case applyAction:
 		// execute apply action
-		return p.Apply.Exec()
+		return p.Apply.Exec(ctx)
 	case destroyAction:
 		// execute destroy action
-		return p.Destroy.Exec()
+		return p.Destroy.Exec(ctx)
 	case fmtAction:
 		// execute fmt action
-		return p.FMT.Exec()
+		return p.FMT.Exec(ctx)
 	case planAction:
 		// execute plan action
-		return p.Plan.Exec()
+		return p.Plan.Exec(ctx)
 	case validationAction:
 		// execute validate action
-		return p.Validation.Exec()
+		return p.Validation.Exec(ctx)
 	default:
 		return fmt.Errorf(
 			"%w: %s (Valid actions: %s, %s, %s, %s, %s)",

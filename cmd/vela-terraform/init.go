@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os/exec"
@@ -63,7 +64,7 @@ type (
 
 // Command formats and outputs the Init command from
 // the provided configuration to init to resources.
-func (i *Init) Command() *exec.Cmd {
+func (i *Init) Command(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating terraform init command from plugin configuration")
 
 	// global Variables
@@ -168,15 +169,15 @@ func (i *Init) Command() *exec.Cmd {
 	globalFlags = append(globalFlags, initAction)
 
 	//nolint:gosec // ignore G204
-	return exec.Command(_terraform, append(globalFlags, flags...)...)
+	return exec.CommandContext(ctx, _terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for initing Terraform.
-func (i *Init) Exec() error {
+func (i *Init) Exec(ctx context.Context) error {
 	logrus.Trace("running init with provided configuration")
 
 	// create the init command for the file
-	cmd := i.Command()
+	cmd := i.Command(ctx)
 
 	// run the init command for the file
 	err := execCmd(cmd)

@@ -14,7 +14,7 @@ func TestTerraform_install(t *testing.T) {
 	appFS = afero.NewMemMapFs()
 
 	// run test
-	err := installBinary("0.11.0", "0.11.0")
+	err := installBinary(t.Context(), "0.11.0", "0.11.0")
 	if err != nil {
 		t.Errorf("install returned err: %v", err)
 	}
@@ -25,7 +25,7 @@ func TestTerraform_install_NoBinary(t *testing.T) {
 	appFS = afero.NewMemMapFs()
 
 	// run test
-	err := installBinary("0.11.0", "0.12.0")
+	err := installBinary(t.Context(), "0.11.0", "0.12.0")
 	if err == nil {
 		t.Errorf("install should have returned err")
 	}
@@ -46,7 +46,7 @@ func TestTerraform_install_NotWritable(t *testing.T) {
 	}
 
 	// run test
-	err = installBinary("0.11.0", "0.12.0")
+	err = installBinary(t.Context(), "0.11.0", "0.12.0")
 	if err == nil {
 		t.Errorf("install should have returned err")
 	}

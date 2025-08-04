@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -47,7 +48,7 @@ type Destroy struct {
 
 // Command formats and outputs the Destroy command from
 // the provided configuration to destroy to resources.
-func (d *Destroy) Command() *exec.Cmd {
+func (d *Destroy) Command(ctx context.Context) *exec.Cmd {
 	logrus.Trace("creating terraform destroy command from plugin configuration")
 
 	// global Variables
@@ -145,15 +146,15 @@ func (d *Destroy) Command() *exec.Cmd {
 	globalFlags = append(globalFlags, destroyAction)
 
 	//nolint:gosec // ignore G204
-	return exec.Command(_terraform, append(globalFlags, flags...)...)
+	return exec.CommandContext(ctx, _terraform, append(globalFlags, flags...)...)
 }
 
 // Exec formats and runs the commands for destroying resources with Terraform.
-func (d *Destroy) Exec() error {
+func (d *Destroy) Exec(ctx context.Context) error {
 	logrus.Trace("running destroy with provided configuration")
 
 	// create the destroy command for the file
-	cmd := d.Command()
+	cmd := d.Command(ctx)
 
 	// run the destroy command for the file
 	err := execCmd(cmd)

@@ -4,13 +4,13 @@ package main
 
 import (
 	"os/exec"
-	"reflect"
+	"slices"
 	"testing"
 )
 
 func TestTerraform_execCmd(t *testing.T) {
 	// setup types
-	e := exec.Command("echo", "hello")
+	e := exec.CommandContext(t.Context(), "echo", "hello")
 
 	err := execCmd(e)
 	if err != nil {
@@ -20,14 +20,18 @@ func TestTerraform_execCmd(t *testing.T) {
 
 func TestTerraform_versionCmd(t *testing.T) {
 	// setup types
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		_terraform,
 		"version",
 	)
 
-	got := versionCmd()
+	got := versionCmd(t.Context())
+	if got.Path != want.Path {
+		t.Errorf("versionCmd path is %v, want %v", got.Path, want.Path)
+	}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("versionCmd is %v, want %v", got, want)
+	if !slices.Equal(got.Args, want.Args) {
+		t.Errorf("versionCmd args is %v, want %v", got.Args, want.Args)
 	}
 }

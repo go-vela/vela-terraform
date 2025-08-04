@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 	"os/exec"
-	"reflect"
+	"slices"
 	"testing"
 	"time"
 
@@ -33,7 +33,8 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 	}
 
 	//nolint:gosec // ignore G204
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		_terraform,
 		fmt.Sprintf("-chdir=%s", d.Directory),
 		destroyAction,
@@ -53,9 +54,13 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 		fmt.Sprintf("-var-file=%s", d.VarFiles[1]),
 	)
 
-	got := d.Command()
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Command is %v, want %v", got, want)
+	got := d.Command(t.Context())
+	if got.Path != want.Path {
+		t.Errorf("Command path is %v, want %v", got.Path, want.Path)
+	}
+
+	if !slices.Equal(got.Args, want.Args) {
+		t.Errorf("Command args is %v, want %v", got.Args, want.Args)
 	}
 }
 
@@ -80,7 +85,8 @@ func TestTerraform_Destroy_Command_tf13(t *testing.T) {
 	}
 
 	//nolint:gosec // ignore G204
-	want := exec.Command(
+	want := exec.CommandContext(
+		t.Context(),
 		_terraform,
 		destroyAction,
 		"-auto-approve",
@@ -100,9 +106,13 @@ func TestTerraform_Destroy_Command_tf13(t *testing.T) {
 		fmt.Sprint(d.Directory),
 	)
 
-	got := d.Command()
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Command is %v, want %v", got, want)
+	got := d.Command(t.Context())
+	if got.Path != want.Path {
+		t.Errorf("Command path is %v, want %v", got.Path, want.Path)
+	}
+
+	if !slices.Equal(got.Args, want.Args) {
+		t.Errorf("Command args is %v, want %v", got.Args, want.Args)
 	}
 }
 
@@ -114,7 +124,7 @@ func TestTerraform_Destroy_Exec_Error(t *testing.T) {
 		Version:   v,
 	}
 
-	err := d.Exec()
+	err := d.Exec(t.Context())
 	if err == nil {
 		t.Errorf("Exec should have returned err")
 	}
