@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 	"os/exec"
-	"reflect"
+	"slices"
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
@@ -40,7 +40,7 @@ func TestTerraform_FMT_Command(t *testing.T) {
 		t.Errorf("Command path is %v, want %v", got.Path, want.Path)
 	}
 
-	if !reflect.DeepEqual(got.Args, want.Args) {
+	if !slices.Equal(got.Args, want.Args) {
 		t.Errorf("Command args is %v, want %v", got.Args, want.Args)
 	}
 }
@@ -74,7 +74,7 @@ func TestTerraform_FMT_Command_tf13(t *testing.T) {
 		t.Errorf("Command path is %v, want %v", got.Path, want.Path)
 	}
 
-	if !reflect.DeepEqual(got.Args, want.Args) {
+	if !slices.Equal(got.Args, want.Args) {
 		t.Errorf("Command args is %v, want %v", got.Args, want.Args)
 	}
 }

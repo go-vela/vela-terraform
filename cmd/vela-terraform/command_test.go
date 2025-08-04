@@ -4,7 +4,7 @@ package main
 
 import (
 	"os/exec"
-	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -31,7 +31,7 @@ func TestTerraform_versionCmd(t *testing.T) {
 		t.Errorf("versionCmd path is %v, want %v", got.Path, want.Path)
 	}
 
-	if !reflect.DeepEqual(got.Args, want.Args) {
+	if !slices.Equal(got.Args, want.Args) {
 		t.Errorf("versionCmd args is %v, want %v", got.Args, want.Args)
 	}
 }
