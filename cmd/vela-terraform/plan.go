@@ -138,19 +138,19 @@ func (p *Plan) Command(ctx context.Context) *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("-target=%s", p.Target))
 	}
 
-	// check if Vars is provided
-	if len(p.Vars) > 0 {
-		for _, v := range p.Vars {
-			// add flag for Vars from provided command
-			flags = append(flags, fmt.Sprintf(`-var=%s`, v))
-		}
-	}
-
 	// check if VarFiles is provided
 	if len(p.VarFiles) > 0 {
 		for _, v := range p.VarFiles {
 			// add flag for VarFiles from provided command
 			flags = append(flags, fmt.Sprintf(`-var-file=%s`, v))
+		}
+	}
+
+	// check if Vars is provided
+	if len(p.Vars) > 0 {
+		for _, v := range p.Vars {
+			// add flag for Vars from provided command
+			flags = append(flags, fmt.Sprintf(`-var=%s`, v))
 		}
 	}
 
