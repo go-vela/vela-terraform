@@ -48,10 +48,10 @@ func TestTerraform_Destroy_Command(t *testing.T) {
 		fmt.Sprintf("-state=%s", d.State),
 		fmt.Sprintf("-state-out=%s", d.StateOut),
 		fmt.Sprintf("-target=%s", d.Target),
-		fmt.Sprintf("-var=%s", d.Vars[0]),
-		fmt.Sprintf("-var=%s", d.Vars[1]),
 		fmt.Sprintf("-var-file=%s", d.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", d.VarFiles[1]),
+		fmt.Sprintf("-var=%s", d.Vars[0]),
+		fmt.Sprintf("-var=%s", d.Vars[1]),
 	)
 
 	got := d.Command(t.Context())
@@ -99,10 +99,10 @@ func TestTerraform_Destroy_Command_tf13(t *testing.T) {
 		fmt.Sprintf("-state=%s", d.State),
 		fmt.Sprintf("-state-out=%s", d.StateOut),
 		fmt.Sprintf("-target=%s", d.Target),
-		fmt.Sprintf("-var=%s", d.Vars[0]),
-		fmt.Sprintf("-var=%s", d.Vars[1]),
 		fmt.Sprintf("-var-file=%s", d.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", d.VarFiles[1]),
+		fmt.Sprintf("-var=%s", d.Vars[0]),
+		fmt.Sprintf("-var=%s", d.Vars[1]),
 		fmt.Sprint(d.Directory),
 	)
 

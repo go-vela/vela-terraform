@@ -52,10 +52,10 @@ func TestTerraform_Plan_Command(t *testing.T) {
 		"-refresh=true",
 		fmt.Sprintf("-state=%s", p.State),
 		fmt.Sprintf("-target=%s", p.Target),
-		fmt.Sprintf("-var=%s", p.Vars[0]),
-		fmt.Sprintf("-var=%s", p.Vars[1]),
 		fmt.Sprintf("-var-file=%s", p.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", p.VarFiles[1]),
+		fmt.Sprintf("-var=%s", p.Vars[0]),
+		fmt.Sprintf("-var=%s", p.Vars[1]),
 	)
 
 	got := p.Command(t.Context())
@@ -107,10 +107,10 @@ func TestTerraform_Plan_Command_tf13(t *testing.T) {
 		"-refresh=true",
 		fmt.Sprintf("-state=%s", p.State),
 		fmt.Sprintf("-target=%s", p.Target),
-		fmt.Sprintf("-var=%s", p.Vars[0]),
-		fmt.Sprintf("-var=%s", p.Vars[1]),
 		fmt.Sprintf("-var-file=%s", p.VarFiles[0]),
 		fmt.Sprintf("-var-file=%s", p.VarFiles[1]),
+		fmt.Sprintf("-var=%s", p.Vars[0]),
+		fmt.Sprintf("-var=%s", p.Vars[1]),
 		fmt.Sprint(p.Directory),
 	)
 

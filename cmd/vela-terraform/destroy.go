@@ -122,19 +122,19 @@ func (d *Destroy) Command(ctx context.Context) *exec.Cmd {
 		flags = append(flags, fmt.Sprintf("-target=%s", d.Target))
 	}
 
-	// check if Vars is provided
-	if len(d.Vars) > 0 {
-		for _, v := range d.Vars {
-			// add flag for Vars from provided command
-			flags = append(flags, fmt.Sprintf(`-var=%s`, v))
-		}
-	}
-
 	// check if VarFiles is provided
 	if len(d.VarFiles) > 0 {
 		for _, v := range d.VarFiles {
 			// add flag for VarFiles from provided command
 			flags = append(flags, fmt.Sprintf(`-var-file=%s`, v))
+		}
+	}
+
+	// check if Vars is provided
+	if len(d.Vars) > 0 {
+		for _, v := range d.Vars {
+			// add flag for Vars from provided command
+			flags = append(flags, fmt.Sprintf(`-var=%s`, v))
 		}
 	}
 
