@@ -157,7 +157,7 @@ func (i *Init) Command(ctx context.Context) *exec.Cmd {
 	// check if Upgrade is provided
 	if i.InitOptions.Upgrade {
 		// add flag for Upgrade from provided init command
-		flags = append(flags, "-upgrade=false")
+		flags = append(flags, "-upgrade")
 	}
 
 	// check if VerifyPlugins is provided
