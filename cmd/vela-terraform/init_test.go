@@ -52,7 +52,7 @@ func TestTerraform_Init_Command(t *testing.T) {
 		fmt.Sprintf("-plugin-dir=%s", i.InitOptions.PluginDirs[0]),
 		fmt.Sprintf("-plugin-dir=%s", i.InitOptions.PluginDirs[1]),
 		"-reconfigure",
-		"-upgrade=false",
+		"-upgrade",
 		"-verify-plugins=true",
 	)
 
