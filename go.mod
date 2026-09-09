@@ -8,9 +8,9 @@ require (
 	github.com/hashicorp/go-version v1.9.0
 	github.com/hashicorp/hc-install v0.9.5
 	github.com/joho/godotenv v1.5.1
-	github.com/sirupsen/logrus v1.9.4
+	github.com/sirupsen/logrus v1.10.2
 	github.com/spf13/afero v1.15.0
-	github.com/urfave/cli/v3 v3.10.0
+	github.com/urfave/cli/v3 v3.11.0
 )
 
 require (
